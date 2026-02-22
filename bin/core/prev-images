@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Choose the program you want to use to open images.
+# Examples: xdg-open (default desktop app), feh, sxiv, gthumb, etc.
+VIEWER="xdg-open"   # <-- change this if you prefer another program
+
+find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
+               -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
+fzf \
+  --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
+             --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
+  --bind "enter:execute(${VIEWER} {} > /dev/null 2>&1)"
+
