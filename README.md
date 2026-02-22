@@ -7,7 +7,7 @@ Scripts to improve quality of life while using the Kitty terminal emulator and C
 Clone the repository to somewhere in your home directory, and add the `bin` and `core` folders to the PATH when you start your shell. For this example, we'll clone the repo to the `$HOME/.local/` folder.
 
 ```bash
-git clone ssh/https url
+git clone git@github.com:numbertheory/qol-scripts.git
 
 # In your shell's RC file (.zshrc, .bashrc, etc.)
 
