@@ -5,10 +5,10 @@
 
 CORE_COMMAND=${1:-"xdg-open"}   # <-- change this if you prefer another program
 
-find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
+find $PWD -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
                -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
 fzf \
   --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
              --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-  --bind "enter:execute(${CORE_COMMAND} $PWD/{})"
+  --bind "enter:execute(${CORE_COMMAND} {})"
 
