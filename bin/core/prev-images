@@ -10,5 +10,5 @@ find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
 fzf \
   --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
              --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-  --bind "enter:execute(${CORE_COMMAND} $PWD{} > /dev/null 2>&1)"
+  --bind "enter:execute(${CORE_COMMAND} \"${PWD}/${{${}#:2}}\" > /dev/null 2>&1)"
 
