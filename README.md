@@ -7,7 +7,7 @@ Scripts to improve quality of life while using the Kitty terminal emulator and C
 Clone the repository to somewhere in your home directory, and add the `bin` and `core` folders to the PATH when you start your shell. For this example, we'll clone the repo to the `$HOME/.local/` folder.
 
 ```bash
-git clone git@github.com:numbertheory/qol-scripts.git
+git clone git@github.com:numbertheory/qol-scripts.git ~/.local/qol-scripts
 
 # In your shell's RC file (.zshrc, .bashrc, etc.)
 
@@ -16,7 +16,7 @@ export PATH=$PATH:$HOME/.local/qol-scripts/bin:$HOME/.local/qol-scripts/bin/core
 
 To install an optional script, link the script from the `src/` directory to `qol-scripts/bin`, which should be empty:
 
-```
+```bash
 ln -s $HOME/.local/qol-scripts/src/wallpaper-pick ~/.local/qol-scripts/bin/wallpaper-pick
 ```
 
