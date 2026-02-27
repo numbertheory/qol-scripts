@@ -3,6 +3,16 @@
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
 
+if [[ -z "${QOL_SCRIPTS_PATH}" ]]; then
+    echo "Set QOL_SCRIPTS_PATH in your environment to use this helper."
+    # Note: do not copy from this line into your shell RC (setting QOL_SCRIPTS_PATH to PWD). 
+    # This is to make the error show the path it should be 
+    # in the terminal.
+    echo "Example: export QOL_SCRIPTS_PATH=$PWD"
+    exit 1
+fi   
+    
+
 if [ "$1" == "install" ]; then
 
     if [ "$#" -lt 2 ]; then
@@ -11,7 +21,7 @@ if [ "$1" == "install" ]; then
     exit 1
     fi
 
-    echo "it runs"
+    ln -s $QOL_SCRIPTS_PATH/src/wallpaper-pick $QOL_SCRIPTS_PATH/bin/wallpaper-pick
 
 elif [ "$1" == "list" ]; then
 
