@@ -54,6 +54,6 @@ else
    echo -e "       qol uninstall <script> \t Removes a script"
    echo -e "       qol update \t\t Updates qol to latest"
    echo -e "       qol list \t\t Shows scripts available to install"
-   echo -e "       qol version \t\t Shows qol version and exits.
+   echo -e "       qol version \t\t Shows qol version and exits."
 
 fi
