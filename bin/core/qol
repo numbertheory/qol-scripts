@@ -45,8 +45,14 @@ elif [ "$1" == "update" ]; then
 
    $QOL_SCRIPTS_PATH/bin/core/qol-scripts-update
 
+elif [ "$1" == "version" ]; then
+
+   git -C $QOL_SCRIPTS_PATH --no-pager tag -l
+
 else
-   echo "Usage: $0 install <app> - Installs a candidate script"
-   echo "       $0 list - shows scripts to install"
+   echo -e "Usage: qol install <script> \t Installs a script"
+   echo -e "       qol uninstall <script> \t Removes a script"
+   echo -e "       qol update \t\t Updates qol to latest" 
+   echo -e "       qol list \t\t Shows scripts available to install"
 
 fi
