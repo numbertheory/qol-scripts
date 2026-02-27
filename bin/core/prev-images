@@ -5,7 +5,7 @@
 
 CORE_COMMAND=${1:-"xdg-open"}   # <-- change this if you prefer another program
 
-find $PWD -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
+find "$PWD" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
                -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
 fzf \
   --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
