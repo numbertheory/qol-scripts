@@ -3,7 +3,7 @@
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
 
-if [ "$1" -eq "install" ]; then
+if [ "$1" == "install" ]; then
 
     if [ "$#" -lt 2 ]; then
     echo "Error: Two arguments are required."
@@ -13,9 +13,9 @@ if [ "$1" -eq "install" ]; then
 
     echo "it runs"
 
-elif [ "$1" -eq "list" ]; then
+elif [ "$1" == "list" ]; then
 
-   ls "$QOL_SCRIPTS_PATH/src"
+   ls -1 "$QOL_SCRIPTS_PATH/src"
 
 else
    echo "Usage: $0 install <app> - Installs a candidate script"
