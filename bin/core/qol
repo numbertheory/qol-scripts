@@ -43,7 +43,7 @@ elif [ "$1" == "list" ]; then
 
 elif [ "$1" == "update" ]; then
 
-   ./"$QOL_SCRIPTS_PATH/bin/core/qol-scripts-update"
+   ."$QOL_SCRIPTS_PATH/bin/core/qol-scripts-update"
 
 else
    echo "Usage: $0 install <app> - Installs a candidate script"
