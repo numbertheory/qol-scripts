@@ -21,7 +21,12 @@ if [ "$1" == "install" ]; then
     exit 1
     fi
 
-    ln -s $QOL_SCRIPTS_PATH/src/wallpaper-pick $QOL_SCRIPTS_PATH/bin/wallpaper-pick
+    ln -s $QOL_SCRIPTS_PATH/src/$2 $QOL_SCRIPTS_PATH/bin/$2
+    if [ "$?" -eq 0 ]; then
+        echo "$2 successfully installed"
+    else
+        echo "$2 did not install successfully."
+    fi
 
 elif [ "$1" == "list" ]; then
 
