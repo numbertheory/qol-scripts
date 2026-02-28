@@ -1,28 +1,42 @@
 #!/usr/bin/env bash
 
-QOL_LOCAL=${QOL_LOCATION:-"40.7484,-73.9857"} # Empire State Bulding, New York City, NY default
+# --- 1. CONFIGURATION ---
+QOL_LOCAL=${QOL_LOCATION:-"40.7484,-73.9857"}
 
-FORECAST_URL=$(echo $(curl -Ss https://api.weather.gov/points/$QOL_LOCAL) | jq .properties.forecast -r)
-FORECAST_ZONE=$(echo $(curl -Ss https://api.weather.gov/points/$QOL_LOCAL) | jq .properties.forecastZone -r)
-FORECAST_LOCATION=$(echo $(curl -Ss $FORECAST_ZONE) | jq -r .properties.name)
-FORECAST_CONTENT=$(echo $(curl -Ss $FORECAST_URL) | jq .properties)
+# --- 2. FETCH DATA ---
+POINTS_DATA=$(curl -Ss "https://api.weather.gov/points/$QOL_LOCAL" | jq -r '.properties | "\(.forecast)\t\(.forecastZone)"')
+IFS=$'\t' read -r FORECAST_URL FORECAST_ZONE <<< "$POINTS_DATA"
 
+FORECAST_LOCATION=$(curl -Ss "$FORECAST_ZONE" | jq -r .properties.name)
+RAW_DATA=$(curl -Ss "$FORECAST_URL")
 
+# --- 3. RELATIVE TIME CALCULATION (Universal jq Math) ---
+# We calculate the difference in seconds between 'now' and the NWS updateTime.
+UPDATED_AT=$(echo "$RAW_DATA" | jq -r '
+  (.properties.updateTime | sub("(?<t>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}).*"; "\(.t)Z") | fromdate) as $updated |
+  (now) as $now |
+  ($now - $updated) as $diff |
+  if $diff < 60 then "just now"
+  elif $diff < 3600 then "\(($diff / 60 | floor)) mins ago"
+  elif $diff < 86400 then "\(($diff / 3600 | floor)) hours ago"
+  else "\(($diff / 86400 | floor)) days ago"
+  end')
 
+FORECAST_CONTENT=$(echo "$RAW_DATA" | jq .properties)
+
+# --- 4. LAUNCH UI ---
 echo -e "$FORECAST_CONTENT" | jq -r '.periods[] | 
     (if .temperature >= 50 then "\u001b[33m" else "\u001b[36m" end) as $color |
-    
-    # We use @text to ensure the name is treated as a string, then pad it.
-    # The \u001b[0m at the start clears any leftover formatting.
     "\u001b[0m\(.name + "                    " | .[0:20])\t\($color)\(.temperature)°\(.temperatureUnit)\u001b[0m\t\(.shortForecast)\t\(.detailedForecast)"' | \
     fzf --ansi \
         --reverse \
         --delimiter='\t' \
         --no-input \
         --info=hidden \
-        --border-label="☁️ $FORECAST_LOCATION" \
+        --border-label=" ☁️  $FORECAST_LOCATION " \
+        --header=" 🕒 Last Updated: $UPDATED_AT " \
         --with-nth=1,2 \
-        --preview='echo -e "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}""' \
+        --preview='printf "\n  \033[1;34m%s\033[0m | %s\n  \033[1;33mConditions:\033[0m %s\n\n  --------------------------------------------------\n\n  %s\n" "{1}" "{2}" "{3}" "{4}"' \
         --preview-window=right:60%:wrap \
         --border=rounded \
         --margin=1,2 \
