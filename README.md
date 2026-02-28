@@ -10,9 +10,11 @@ Clone the repository to somewhere in your home directory, and add the `bin` and 
 git clone git@github.com:numbertheory/qol-scripts.git ~/.local/qol-scripts
 
 # In your shell's RC file (.zshrc, .bashrc, etc.) set the path and the variable for the script updater to know where the repo is.
+# Additionally, set a QOL_LOCATION, so the weather script knows what your coordinates are
 
 export PATH=$PATH:$HOME/.local/qol-scripts/bin:$HOME/.local/qol-scripts/bin/core
 export QOL_SCRIPTS_PATH=$HOME/.local/qol-scripts
+export QOL_LOCATION=38.89500,77.03639
 ```
 
 To install an optional script, link the script from the `src/` directory to `qol-scripts/bin`, which should be empty:

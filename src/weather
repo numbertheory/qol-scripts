@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+QOL_LOCAL=${QOL_LOCATION:-"40.7484,-73.9857"} # Empire State Bulding, New York City, NY default
+
+FORECAST_URL=$(echo $(curl -Ss https://api.weather.gov/points/$QOL_LOCAL) | jq .properties.forecast -r)
+FORECAST_ZONE=$(echo $(curl -Ss https://api.weather.gov/points/$QOL_LOCAL) | jq .properties.forecastZone -r)
+FORECAST_LOCATION=$(echo $(curl -Ss $FORECAST_ZONE) | jq -r .properties.name)
+FORECAST_CONTENT=$(echo $(curl -Ss $FORECAST_URL) | jq .properties)
+
+
+
+echo -e "$FORECAST_CONTENT" | jq -r '.periods[] | 
+    (if .temperature >= 50 then "\u001b[33m" else "\u001b[36m" end) as $color |
+    
+    # We use @text to ensure the name is treated as a string, then pad it.
+    # The \u001b[0m at the start clears any leftover formatting.
+    "\u001b[0m\(.name + "                    " | .[0:20])\t\($color)\(.temperature)°\(.temperatureUnit)\u001b[0m\t\(.shortForecast)\t\(.detailedForecast)"' | \
+    fzf --ansi \
+        --reverse \
+        --delimiter='\t' \
+        --no-input \
+        --info=hidden \
+        --border-label="☁️ $FORECAST_LOCATION" \
+        --with-nth=1,2 \
+        --preview='echo -e "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}""' \
+        --preview-window=right:60%:wrap \
+        --border=rounded \
+        --margin=1,2 \
+        --padding=1
