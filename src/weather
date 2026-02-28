@@ -34,9 +34,9 @@ echo -e "$FORECAST_CONTENT" | jq -r '.periods[] |
         --no-input \
         --info=hidden \
         --border-label=" ☁️  $FORECAST_LOCATION " \
-        --header=" 🕒 Last Updated: $UPDATED_AT " \
+        --footer=" 🕒 Last Updated: $UPDATED_AT " \
         --with-nth=1,2 \
-        --preview='printf "\n  \033[1;34m%s\033[0m | %s\n  \033[1;33mConditions:\033[0m %s\n\n  --------------------------------------------------\n\n  %s\n" "{1}" "{2}" "{3}" "{4}"' \
+        --preview='echo -e "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}""' \
         --preview-window=right:60%:wrap \
         --border=rounded \
         --margin=1,2 \
