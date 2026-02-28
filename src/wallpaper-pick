@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-prev-images plasma-apply-wallpaperimage
+if [[ $(uname -s) == "Darwin" ]]; then
+    prev-images plasma-apply-wallpaperimage
+elif [[ $(uname -s) == "Linux" ]]; then
+    prev-images plasma-apply-wallpaperimage
+fi
+
