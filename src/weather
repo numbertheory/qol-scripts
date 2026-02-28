@@ -26,8 +26,20 @@ FORECAST_CONTENT=$(echo "$RAW_DATA" | jq .properties)
 
 # --- 4. LAUNCH UI ---
 echo -e "$FORECAST_CONTENT" | jq -r '.periods[] | 
+    # 1. Logic for Emoji Icons
+    (if (.shortForecast | test("Sun|Clear"; "i")) then "☀️ "
+     elif (.shortForecast | test("Rain|Showers|Drizzle"; "i")) then "🌧️ "
+     elif (.shortForecast | test("Snow|Ice|Flurries"; "i")) then "❄️ "
+     elif (.shortForecast | test("Cloud|Overcast|Bkn|Sct"; "i")) then "☁️ "
+     elif (.shortForecast | test("Fog|Mist"; "i")) then "🌫️ "
+     elif (.shortForecast | test("Thunder|Storm"; "i")) then "⚡ "
+     else "🌡️ " end) as $icon |
+
+    # 2. Logic for Heat Colors
     (if .temperature >= 50 then "\u001b[33m" else "\u001b[36m" end) as $color |
-    "\u001b[0m\(.name + "                    " | .[0:20])\t\($color)\(.temperature)°\(.temperatureUnit)\u001b[0m\t\(.shortForecast)\t\(.detailedForecast)"' | \
+    
+    # 3. Construction (The icon goes before the padded name)
+    "\u001b[0m\($icon)\(.name + "                  " | .[0:18])\t\($color)\(.temperature)°\(.temperatureUnit)\u001b[0m\t\(.shortForecast)\t\(.detailedForecast)"' | \
     fzf --ansi \
         --reverse \
         --delimiter='\t' \
@@ -36,7 +48,7 @@ echo -e "$FORECAST_CONTENT" | jq -r '.periods[] |
         --border-label=" ☁️  $FORECAST_LOCATION " \
         --footer="$(printf "\033[2m 🕒 Last Updated: %s \033[0m" "$UPDATED_AT")" \
         --with-nth=1,2 \
-        --preview='echo -e "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}""' \
+        --preview='printf "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}"" | fold -s -w 60' \
         --preview-window=right:60%:wrap \
         --border=rounded \
         --margin=1,2 \
