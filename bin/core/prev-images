@@ -5,41 +5,18 @@
 
 CORE_COMMAND=${1:-"xdg-open"}   # <-- change this if you prefer another program
 
+
 if [[ "$CORE_COMMAND" == "xdg-open" ]]; then
   if [[ $(uname -s) == "Darwin" ]]; then
-    find "$PWD" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
-                  -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
-    fzf \
-      --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
-                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-      --bind "enter:execute(open {})"
-
+    find-files | fzf-prev "open {}"
   elif [[ $(uname -s) == "Linux" ]]; then
-    find "$PWD" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
-                  -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
-    fzf \
-      --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
-                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-      --bind "enter:execute(${CORE_COMMAND} {})"
-
+    find-files | fzf-prev "${CORE_COMMAND} {}"
   fi
 elif [[ "$CORE_COMMAND" == "plasma-apply-wallpaperimage" ]]; then
   if [[ $(uname -s) == "Darwin" ]]; then
-    find "$PWD" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
-                  -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
-    fzf \
-      --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
-                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-      --bind "enter:execute(osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"')"
-
+    find-files -q | fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
   elif [[ $(uname -s) == "Linux" ]]; then
-    find "$PWD" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
-                  -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.webp" \) |
-    fzf \
-      --preview 'kitty icat --clear --transfer-mode=memory --stdin=no \
-                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" {}' \
-      --bind "enter:execute(${CORE_COMMAND} {})"
-
+    find-files | fzf-prev "${CORE_COMMAND} {}"
   fi
 fi
 

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# Default extensions for images
+DEFAULT_EXTENSIONS="jpg,jpeg,png,gif,bmp,webp"
+
+# parse options
+QUOTE=false
+while getopts ":q" opt; do
+    case $opt in
+        q)
+            QUOTE=true
+            ;;
+        \?)
+            echo "Usage: $0 [-q] [extensions]" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# drop processed options
+shift $((OPTIND - 1))
+
+# Use provided extensions or default
+EXTENSIONS="${1:-$DEFAULT_EXTENSIONS}"
+
+# Build the find command with the provided/default extensions
+IFS=',' read -ra EXT_ARRAY <<< "$EXTENSIONS"
+
+# Start building the find conditions
+FIND_CONDITIONS=""
+for ext in "${EXT_ARRAY[@]}"; do
+    ext=$(echo "$ext" | xargs)  # trim whitespace
+    if [ -z "$FIND_CONDITIONS" ]; then
+        FIND_CONDITIONS="-iname \"*.$ext\""
+    else
+        FIND_CONDITIONS="$FIND_CONDITIONS -o -iname \"*.$ext\""
+    fi
+done
+
+# run find and optionally wrap results in double quotes
+# using null delimiters to handle spaces/newlines
+if command -v find >/dev/null 2>&1; then
+    if [ "$QUOTE" = true ]; then
+        eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \) -print0" \
+            | while IFS= read -r -d '' file; do
+            printf '"%s"\n' "${file}";
+        done
+    else
+        eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \)"
+    fi
+else
+    # fallback should never happen, but keep original behavior
+    eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \)"
+fi
+
