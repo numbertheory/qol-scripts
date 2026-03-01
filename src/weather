@@ -48,7 +48,7 @@ echo -e "$FORECAST_CONTENT" | jq -r '.periods[] |
         --border-label=" ☁️  $FORECAST_LOCATION " \
         --footer="$(printf "\033[2m 🕒 Last Updated: %s \033[0m" "$UPDATED_AT")" \
         --with-nth=1,2 \
-        --preview='printf "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}"" | fold -s -w 60' \
+        --preview='echo -e "\n  \033[1;34m"{1}"\033[0m: "{2}"\n  \033[1;33mConditions:\033[0m "{3}"\n\n  --------------------------------------------------\n\n  "{4}"" | fold -s -w 60' \
         --preview-window=right:60%:wrap \
         --border=rounded \
         --margin=1,2 \
