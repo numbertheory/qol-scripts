@@ -5,19 +5,11 @@
 
 CORE_COMMAND=${1:-"xdg-open"}   # <-- change this if you prefer another program
 
-
-if [[ "$CORE_COMMAND" == "xdg-open" ]]; then
-  if [[ $(uname -s) == "Darwin" ]]; then
-    find-files | fzf-prev "open {}"
-  elif [[ $(uname -s) == "Linux" ]]; then
-    find-files | fzf-prev "${CORE_COMMAND} {}"
-  fi
-elif [[ "$CORE_COMMAND" == "plasma-apply-wallpaperimage" ]]; then
-  if [[ $(uname -s) == "Darwin" ]]; then
-    find-files -q | fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
-  elif [[ $(uname -s) == "Linux" ]]; then
-    find-files | fzf-prev "${CORE_COMMAND} {}"
-  fi
+if [[ $(uname -s) == "Darwin" ]]; then
+  find-files | fzf-prev "open {}"
+elif [[ $(uname -s) == "Linux" ]]; then
+  find-files | fzf-prev "${CORE_COMMAND} {}"
 fi
+
 
 

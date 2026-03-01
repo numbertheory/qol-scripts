@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $(uname -s) == "Darwin" ]]; then
-    prev-images plasma-apply-wallpaperimage
-elif [[ $(uname -s) == "Linux" ]]; then
-    prev-images plasma-apply-wallpaperimage
+    find-files -q | fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
+  elif [[ $(uname -s) == "Linux" ]]; then
+    find-files | fzf-prev "${CORE_COMMAND} {}"
 fi
-
