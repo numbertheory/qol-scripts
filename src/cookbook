@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+RECIPES_FOLDER="$QOL_RECIPES_FOLDER"
+
+if [[ -z "${RECIPES_FOLDER}" ]]; then
+    echo "Set QOL_RECIPES_FOLDER in your environment where JSON recipes are found."
+    echo "export QOL_RECIPES_FOLDER=<full-path-to-recipes>"
+    exit 1
+fi
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FORMAT_JQ="$SCRIPTDIR/../util/format_recipe.jq"
+# compute a rough preview width in columns (60% of terminal width)
+PREVIEW_WIDTH=$(tput cols 2>/dev/null || echo 80)
+PREVIEW_WIDTH=$(( PREVIEW_WIDTH * 85 / 100 ))
+
+find-files -f "$RECIPES_FOLDER" -e json | \
+while IFS= read -r p; do
+    n=${p##*/}; n=${n%.*}
+    printf '%s\t%s\n' "$n" "$p"
+done | fzf --delimiter=$'\t' --with-nth=1 \
+    --preview 'jq -r -f '"$FORMAT_JQ"' {2} | fold -s -w '$PREVIEW_WIDTH'' \
+    --preview-window=right:60%:wrap

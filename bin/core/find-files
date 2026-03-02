@@ -1,17 +1,27 @@
 #!/usr/bin/env bash
 
-# Default extensions for images
-DEFAULT_EXTENSIONS="jpg,jpeg,png,gif,bmp,webp"
-
 # parse options
 QUOTE=false
-while getopts ":q" opt; do
+RELATIVE=false
+FILE_FOLDER=$PWD
+DEFAULT_EXTENSIONS="jpg,jpeg,png,gif,bmp,webp"
+while getopts ":qf:e:r" opt; do
     case $opt in
         q)
             QUOTE=true
             ;;
+        f)
+            FILE_FOLDER="$OPTARG"
+            ;;
+        e)
+            DEFAULT_EXTENSIONS="$OPTARG"
+            ;;
+        r)
+            RELATIVE=true
+            ;;
+        
         \?)
-            echo "Usage: $0 [-q] [extensions]" >&2
+            echo "Usage: $0 [-q] [-r] [extensions]" >&2
             exit 1
             ;;
     esac
@@ -21,7 +31,7 @@ done
 shift $((OPTIND - 1))
 
 # Use provided extensions or default
-EXTENSIONS="${1:-$DEFAULT_EXTENSIONS}"
+EXTENSIONS="$DEFAULT_EXTENSIONS"
 
 # Build the find command with the provided/default extensions
 IFS=',' read -ra EXT_ARRAY <<< "$EXTENSIONS"
@@ -37,19 +47,28 @@ for ext in "${EXT_ARRAY[@]}"; do
     fi
 done
 
-# run find and optionally wrap results in double quotes
+# run find and process results (quote/relative as requested)
 # using null delimiters to handle spaces/newlines
 if command -v find >/dev/null 2>&1; then
-    if [ "$QUOTE" = true ]; then
-        eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \) -print0" \
+    if [ "$QUOTE" = true ] || [ "$RELATIVE" = true ]; then
+        eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \) -print0" \
             | while IFS= read -r -d '' file; do
-            printf '"%s"\n' "${file}";
-        done
+                out="$file"
+                if [ "$RELATIVE" = true ]; then
+                    # strip leading folder path and any trailing slash
+                    out="${out#$FILE_FOLDER/}"
+                fi
+                if [ "$QUOTE" = true ]; then
+                    printf '"%s"\n' "$out"
+                else
+                    printf '%s\n' "$out"
+                fi
+            done
     else
-        eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \)"
+        eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \)"
     fi
 else
     # fallback should never happen, but keep original behavior
-    eval "find \"$PWD\" -type f \( $FIND_CONDITIONS \)"
+    eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \)"
 fi
 

@@ -1,0 +1,31 @@
+.recipe as $r | (
+  $r.title,
+  ($r.subtitle // ""),
+  "",
+  "[33mIngredients:[0m",
+  ($r.ingredients[]? | " - " + .),
+
+  "",
+  "Pre-cooking steps:",
+  ($r.pre_cooking_steps[]? | " - " + .),
+  "",
+  "[33mInstructions:[0m",
+  ($r.instructions[]? | (("\n\u001b[1;32mStep " + (.step|tostring) + ": " + (.title) + "\u001b[0m\n"), .action)),
+  "",
+  "Nutrition (per serving):",
+  ("  calories: " + ($r.nutrition_per_serving.calories|tostring // "")),
+  ("  carbs: " + ($r.nutrition_per_serving.carbs // "")),
+  ("  fat: " + ($r.nutrition_per_serving.fat // "")),
+  ("  protein: " + ($r.nutrition_per_serving.protein // "")),
+  ("  sodium: " + ($r.nutrition_per_serving.sodium // "")),
+  "",
+  "Equipment:",
+  ($r.equipment_needed[]? | " - " + .),
+  "",
+  ("Difficulty: " + ($r.difficulty // "")),
+  ("Prep time: " + ($r.prep_time // "")),
+  ("Cook within: " + ($r.cook_within // "")),
+  ("Spice level: " + ($r.spice_level // "")),
+  ("Servings: " + ($r.servings|tostring // ""))
+
+)
