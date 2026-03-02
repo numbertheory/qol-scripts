@@ -47,7 +47,7 @@ elif [ "$1" == "update" ]; then
 
 elif [ "$1" == "version" ]; then
 
-   git -C $QOL_SCRIPTS_PATH --no-pager tag -l
+   git -C $QOL_SCRIPTS_PATH --no-pager describe --tags HEAD
 
 else
    echo -e "Usage: qol install <script> \t Installs a script"
