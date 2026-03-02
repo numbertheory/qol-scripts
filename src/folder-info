@@ -2,18 +2,46 @@
 
 FOLDER=${1:-"$PWD"}
 
-GIT_FOLDER="false"
+# Color definitions for Kitty terminal
+BOLD="\033[1m"
+DIM="\033[2m"
+RESET="\033[0m"
+
+# Kitty 256 colors
+CYAN="\033[38;5;6m"
+BLUE="\033[38;5;4m"
+GREEN="\033[38;5;2m"
+YELLOW="\033[38;5;3m"
+MAGENTA="\033[38;5;5m"
+WHITE="\033[38;5;15m"
+GRAY="\033[38;5;8m"
+RED="\033[38;5;1m"
+
+# Helper function for section headers
+section_header() {
+    echo -e "\n${BOLD}${CYAN}→${RESET} ${BOLD}$1${RESET}"
+}
+
+# Helper function for key-value pairs
+print_kv() {
+    echo -e "  ${BLUE}$(printf '%-20s' "$1")${RESET} ${WHITE}${2}${RESET}"
+}
+
+# Gather info
 SIMPLE_COUNT=$(ls -1 $FOLDER | wc -l)
 RECURSIVE_COUNT=$(find $FOLDER | wc -l)
 SYMLINK_COUNT=$(find $FOLDER -type l | wc -l)
-FOLDER_COUNT=$(find $FOLDER -type f | wc -l)
-FOLDER_SIZE=$(du -sh)
+FILE_COUNT=$(find $FOLDER -type f | wc -l)
+FOLDER_COUNT=$(find $FOLDER -type d | wc -l)
+FOLDER_SIZE=$(du -sh | awk '{print $1}')
 LARGEST_FILES=$(du -a -h | sort -n -r | head -n 6 | tail -n 5)
-FILE_BREAKDOWN=$(find $FOLDER -maxdepth 1 -type f | sed 's|.*/||' | awk -F. '{if (NF==1) print "no_extension"; else print $NF}' | sort | uniq -c | sort -rn | awk '{if ($2=="no_extension") sum+=$1; else print} END {if (sum>0) print "   " sum " no extension"}')
 LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" $FOLDER)
 PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" $FOLDER)
+
+# Git info
+HAS_GIT=false
 if [[ -d "${FOLDER}/.git" ]]; then
-    GIT_FOLDER="true"
+    HAS_GIT=true
     GIT_COMMIT_COUNT=$(git rev-list --count HEAD)
     GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     GIT_SHORT_COMMIT=$(git rev-parse --short HEAD)
@@ -21,27 +49,77 @@ if [[ -d "${FOLDER}/.git" ]]; then
     GIT_STATUS=$(git status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
     GIT_LAST_COMMIT_TS=$(git --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
 fi
-echo "Totals for $FOLDER:"
-echo "simple: $SIMPLE_COUNT"
-echo "recursive: $RECURSIVE_COUNT"
-echo "symlink: $SYMLINK_COUNT"
-echo "folder: $FOLDER_COUNT"
-echo "folder size: $FOLDER_SIZE"
-echo "largest files: "
-echo "$LARGEST_FILES"
-echo "file breakdown:"
-echo "$FILE_BREAKDOWN"
-echo "last modified: $LAST_MODIFIED"
-echo "permissions: $PERMISSION_BREAKDOWN"
-if [[ -d "${FOLDER}/.git" ]]; then
-    echo "git folder: $GIT_FOLDER"
-    echo "commit: $GIT_COMMIT_COUNT"
-    echo "current branch: $GIT_CURRENT_BRANCH"
-    echo "short commit: $GIT_SHORT_COMMIT"
-    echo "remote url: $GIT_REMOTE_URL"
-    echo "git status: $GIT_STATUS"
-    echo "git commit timestamp: $GIT_LAST_COMMIT_TS"
+
+# Output header
+echo -e "\n${BOLD}${BLUE}📁 Folder Information${RESET}"
+echo -e "${GREEN}$(echo $FOLDER | sed "s|$HOME|~|")${RESET}"
+
+# Totals section
+section_header "Counts"
+print_kv "Simple" "$SIMPLE_COUNT items"
+print_kv "Recursive" "$RECURSIVE_COUNT items"
+print_kv "Files" "$FILE_COUNT files"
+print_kv "Folders" "$FOLDER_COUNT folders"
+print_kv "Symlinks" "$SYMLINK_COUNT links"
+
+# Size section
+section_header "Size"
+print_kv "Total" "$FOLDER_SIZE"
+
+# Largest files
+section_header "Largest Files"
+echo "$LARGEST_FILES" | while read line; do
+    echo -e "  ${GREEN}$(echo "$line" | awk '{printf "%-10s %s\n", $1, $2}')${RESET}"
+done
+
+# File breakdown
+section_header "File Types"
+find "$FOLDER" -name ".git" -type d -prune -o -type d -print | sort | while read -r subfolder; do
+    breakdown=$(find "$subfolder" -maxdepth 1 -type f | sed 's|.*/||' | awk -F. '{if (NF==1) print "no_extension"; else print $NF}' | sort | uniq -c | sort -rn | awk '{if ($2=="no_extension") sum+=$1; else print} END {if (sum>0) print "   " sum " no extension"}')
+    if [[ -n "$breakdown" ]]; then
+        rel_path="${subfolder#$FOLDER}"
+        rel_path="${rel_path#/}"
+        if [[ -z "$rel_path" ]]; then
+            display_name="$(echo "$FOLDER" | sed "s|$HOME|~|")"
+            echo -e "  ${BLUE}${display_name}${RESET}"
+        else
+            display_name="$rel_path"
+            echo -e "  ▶${BLUE}${display_name}${RESET}"
+        fi
+        echo "$breakdown" | while read -r line; do
+            echo -e "    ${GREEN}${line}${RESET}"
+        done
+    fi
+done
+
+# Metadata
+section_header "Details"
+print_kv "Modified" "$LAST_MODIFIED"
+print_kv "Permissions" "$(echo $PERMISSION_BREAKDOWN | awk '{print $1}')"
+print_kv "Owner" "$(echo $PERMISSION_BREAKDOWN | awk '{print $2}')"
+
+# Git section - only show if git repo exists
+if [[ "$HAS_GIT" == true ]]; then
+    section_header "Git"
+    
+    # Status indicator with color
+    if [[ "$GIT_STATUS" == "clean" ]]; then
+        STATUS_COLOR=$GREEN
+        STATUS_SYMBOL="✓"
+    else
+        STATUS_COLOR=$RED
+        STATUS_SYMBOL="✘"
+    fi
+    
+    print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
+    print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
+    print_kv "Total Commits" "$GIT_COMMIT_COUNT"
+    print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
+    print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
+    print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
 fi
+
+echo ""
 
 
 
