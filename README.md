@@ -14,18 +14,25 @@ git clone git@github.com:numbertheory/qol-scripts.git ~/.local/qol-scripts
 
 export PATH=$PATH:$HOME/.local/qol-scripts/bin:$HOME/.local/qol-scripts/bin/core
 export QOL_SCRIPTS_PATH=$HOME/.local/qol-scripts
-export QOL_LOCATION=38.89500,77.03639
+
+# These values are for optional scripts that you isntall with qol install
+# Only use the ones that are active in your system
+
+# Weather
+export QOL_LOCATION=38.8950,77.0363 # only four significant digits are allowed
+
+# Cookbook
+export QOL_RECIPES_FOLDER=<absolute path where your recipes are>
 ```
 
-To install an optional script, link the script from the `src/` directory to `qol-scripts/bin`, which should be empty:
+To install an optional script, a symlink is created from the `src/` directory to `qol-scripts/bin`, which should be empty. Use the `qol install` command to install and uninstall scripts.
 
 ```bash
-ln -s $HOME/.local/qol-scripts/src/wallpaper-pick ~/.local/qol-scripts/bin/wallpaper-pick
+qol install wallpaper-pick
+qol install weather
+etc.
 ```
 
 This way, you have more control over what is being added, and don't have to add everything in `src` to your PATH.
 
-### Script Library
-
-- qol-check
 
