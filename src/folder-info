@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+FOLDER=${1:-"$PWD"}
+
+GIT_FOLDER="false"
+SIMPLE_COUNT=$(ls -1 $FOLDER | wc -l)
+RECURSIVE_COUNT=$(find $FOLDER | wc -l)
+SYMLINK_COUNT=$(find $FOLDER -type l | wc -l)
+FOLDER_COUNT=$(find $FOLDER -type f | wc -l)
+FOLDER_SIZE=$(du -sh)
+LARGEST_FILES=$(du -a -h | sort -n -r | head -n 6 | tail -n 5)
+FILE_BREAKDOWN=$(find $FOLDER -maxdepth 1 -type f | sed 's|.*/||' | awk -F. '{if (NF==1) print "no_extension"; else print $NF}' | sort | uniq -c | sort -rn | awk '{if ($2=="no_extension") sum+=$1; else print} END {if (sum>0) print "   " sum " no extension"}')
+LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" $FOLDER)
+PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" $FOLDER)
+if [[ -d "${FOLDER}/.git" ]]; then
+    GIT_FOLDER="true"
+    GIT_COMMIT_COUNT=$(git rev-list --count HEAD)
+    GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    GIT_SHORT_COMMIT=$(git rev-parse --short HEAD)
+    GIT_REMOTE_URL=$(git remote get-url origin)
+    GIT_STATUS=$(git status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
+    GIT_LAST_COMMIT_TS=$(git --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
+fi
+echo "Totals for $FOLDER:"
+echo "simple: $SIMPLE_COUNT"
+echo "recursive: $RECURSIVE_COUNT"
+echo "symlink: $SYMLINK_COUNT"
+echo "folder: $FOLDER_COUNT"
+echo "folder size: $FOLDER_SIZE"
+echo "largest files: "
+echo "$LARGEST_FILES"
+echo "file breakdown:"
+echo "$FILE_BREAKDOWN"
+echo "last modified: $LAST_MODIFIED"
+echo "permissions: $PERMISSION_BREAKDOWN"
+if [[ -d "${FOLDER}/.git" ]]; then
+    echo "git folder: $GIT_FOLDER"
+    echo "commit: $GIT_COMMIT_COUNT"
+    echo "current branch: $GIT_CURRENT_BRANCH"
+    echo "short commit: $GIT_SHORT_COMMIT"
+    echo "remote url: $GIT_REMOTE_URL"
+    echo "git status: $GIT_STATUS"
+    echo "git commit timestamp: $GIT_LAST_COMMIT_TS"
+fi
+
+
+
+
