@@ -1,6 +1,87 @@
 #!/usr/bin/env bash
 
-FOLDER=${1:-"$PWD"}
+# =============================================================================
+# Folder Info Script
+# =============================================================================
+# This script provides a detailed summary of a specified directory (or the 
+# current working directory by default). It outputs formatted information 
+# to the terminal, including:
+#   - Item counts (files, folders, symlinks)
+#   - Total folder size
+#   - Largest files in the directory tree
+#   - A breakdown of file types for each sub-directory (hidden .git/* folders excluded)
+#   - Metadata (last modified, permissions, owner)
+#   - Git repository status (if applicable)
+#
+# Sections can be hidden using various flags (e.g., --no-git, --no-size).
+# Use `folder-info --help` to see all available flags and options.
+# Pass in a positional argument to view folder information of a different folder
+#   Example: folder-info ~/Downloads
+# =============================================================================
+
+# Default flags
+SHOW_DETAILS=true
+SHOW_FILE_BREAKDOWN=true
+SHOW_LARGEST_FILES=true
+SHOW_SIZE=true
+SHOW_COUNTS=true
+SHOW_GIT=true
+
+FOLDER="$PWD"
+FOLDER_ARG_SET=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --no-details)
+            SHOW_DETAILS=false
+            shift
+            ;;
+        --no-file-breakdown)
+            SHOW_FILE_BREAKDOWN=false
+            shift
+            ;;
+        --no-largest-files)
+            SHOW_LARGEST_FILES=false
+            shift
+            ;;
+        --no-size)
+            SHOW_SIZE=false
+            shift
+            ;;
+        --no-counts)
+            SHOW_COUNTS=false
+            shift
+            ;;
+        --no-git)
+            SHOW_GIT=false
+            shift
+            ;;
+        --help)
+            echo "Usage:  folder-info [OPTIONS] FOLDER (FOLDER defaults to PWD)"
+            echo -e "    --no-details \t\t Skip details "
+            echo -e "    --no-file-breakdown \t Skip filetype breakdown "
+            echo -e "    --no-largest-files \t Skip listing largest files" 
+            echo -e "    --no-size \t\t\t Skip showing total size "
+            echo -e "    --no-counts \t\t Skip showing file, folder, and symlink counts."
+            echo -e "    --no-git \t\t\t Skip showing git information."
+            exit 0
+            shift
+            ;;
+        -*)
+            echo "Unknown flag: $1"
+            echo "Valid flags: --help, --no-details,  --no-file-breakdown, --no-largest-files, --no-size, --no-counts, --no-git"
+            shift
+            ;;
+        *)
+            if [[ "$FOLDER_ARG_SET" == false ]]; then
+                FOLDER="$1"
+                FOLDER_ARG_SET=true
+            fi
+            shift
+            ;;
+    esac
+done
 
 # Color definitions for Kitty terminal
 BOLD="\033[1m"
@@ -28,79 +109,119 @@ print_kv() {
 }
 
 # Gather info
-SIMPLE_COUNT=$(ls -1 $FOLDER | wc -l)
-RECURSIVE_COUNT=$(find $FOLDER | wc -l)
-SYMLINK_COUNT=$(find $FOLDER -type l | wc -l)
-FILE_COUNT=$(find $FOLDER -type f | wc -l)
-FOLDER_COUNT=$(find $FOLDER -type d | wc -l)
-FOLDER_SIZE=$(du -sh $FOLDER | awk '{print $1}')
-LARGEST_FILES=$(du -a -h $FOLDER | sort -n -r | head -n 6 | tail -n 5)
-LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" $FOLDER)
-PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" $FOLDER)
+if [[ "$SHOW_COUNTS" == true ]]; then
+    SIMPLE_COUNT=$(ls -1 "$FOLDER" | wc -l)
+    RECURSIVE_COUNT=$(find "$FOLDER" | wc -l)
+    SYMLINK_COUNT=$(find "$FOLDER" -type l | wc -l)
+    FILE_COUNT=$(find "$FOLDER" -type f | wc -l)
+    FOLDER_COUNT=$(find "$FOLDER" -type d | wc -l)
+fi
+
+if [[ "$SHOW_SIZE" == true ]]; then
+    FOLDER_SIZE=$(du -sh "$FOLDER" | awk '{print $1}')
+fi
+
+if [[ "$SHOW_LARGEST_FILES" == true ]]; then
+    ABS_FOLDER=$(cd "$FOLDER" 2>/dev/null && pwd || echo "$FOLDER")
+    LARGEST_FILES=$(find "$ABS_FOLDER" -type f -exec stat -f "%z %N" {} + 2>/dev/null | sort -rn | head -n 5 | awk '{
+        size = $1;
+        $1 = "";
+        file = substr($0, 2);
+        split("B K M G T P", unit, " ");
+        u = 1;
+        while (size >= 1024 && u < 6) {
+            size /= 1024;
+            u++;
+        }
+        if (u == 1) {
+            size_str = size unit[u];
+        } else {
+            size_str = sprintf("%.1f%s", size, unit[u]);
+        }
+        printf "%-10s %s\n", size_str, file;
+    }')
+fi
+
+if [[ "$SHOW_DETAILS" == true ]]; then
+    LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" "$FOLDER")
+    PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" "$FOLDER")
+fi
 
 # Git info
 HAS_GIT=false
-if [[ -d "${FOLDER}/.git" ]]; then
+if [[ "$SHOW_GIT" == true ]] && [[ -d "${FOLDER}/.git" ]]; then
     HAS_GIT=true
-    GIT_COMMIT_COUNT=$(git -C $FOLDER rev-list --count HEAD)
-    GIT_CURRENT_BRANCH=$(git -C $FOLDER rev-parse --abbrev-ref HEAD)
-    GIT_SHORT_COMMIT=$(git -C $FOLDER rev-parse --short HEAD)
-    GIT_REMOTE_URL=$(git -C $FOLDER remote get-url origin)
-    GIT_STATUS=$(git -C $FOLDER status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
-    GIT_LAST_COMMIT_TS=$(git -C $FOLDER --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
-    GIT_LATEST_TAG=$(git -C $FOLDER --no-pager describe --tags HEAD)
+    GIT_COMMIT_COUNT=$(git -C "$FOLDER" rev-list --count HEAD)
+    GIT_CURRENT_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD)
+    GIT_SHORT_COMMIT=$(git -C "$FOLDER" rev-parse --short HEAD)
+    GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
+    GIT_STATUS=$(git -C "$FOLDER" status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
+    GIT_LAST_COMMIT_TS=$(git -C "$FOLDER" --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
+    GIT_LATEST_TAG=$(git -C "$FOLDER" --no-pager describe --tags HEAD 2>/dev/null || echo "")
 fi
 
 # Output header
 echo -e "\n${BOLD}${BLUE}📁 Folder Information${RESET}"
-echo -e "${GREEN}$(echo $FOLDER | sed "s|$HOME|~|")${RESET}"
+echo -e "${GREEN}$(echo "$FOLDER" | sed "s|$HOME|~|")${RESET}"
 
 # Totals section
-section_header "Counts"
-print_kv "Simple" "$SIMPLE_COUNT items"
-print_kv "Recursive" "$RECURSIVE_COUNT items"
-print_kv "Files" "$FILE_COUNT files"
-print_kv "Folders" "$FOLDER_COUNT folders"
-print_kv "Symlinks" "$SYMLINK_COUNT links"
+if [[ "$SHOW_COUNTS" == true ]]; then
+    section_header "Counts"
+    print_kv "Simple" "$SIMPLE_COUNT items"
+    print_kv "Recursive" "$RECURSIVE_COUNT items"
+    print_kv "Files" "$FILE_COUNT files"
+    print_kv "Folders" "$FOLDER_COUNT folders"
+    print_kv "Symlinks" "$SYMLINK_COUNT links"
+fi
 
 # Size section
-section_header "Size"
-print_kv "Total" "$FOLDER_SIZE"
+if [[ "$SHOW_SIZE" == true ]]; then
+    section_header "Size"
+    print_kv "Total" "$FOLDER_SIZE"
+fi
 
 # Largest files
-section_header "Largest Files"
-echo "$LARGEST_FILES" | while read line; do
-    echo -e "  ${GREEN}$(echo "$line" | awk '{printf "%-10s %s\n", $1, $2}')${RESET}"
-done
-
-# File breakdown
-section_header "File Types"
-find "$FOLDER" -name ".git" -type d -prune -o -type d -print | sort | while read -r subfolder; do
-    breakdown=$(find "$subfolder" -maxdepth 1 -type f | sed 's|.*/||' | awk -F. '{if (NF==1) print "no_extension"; else print $NF}' | sort | uniq -c | sort -rn | awk '{if ($2=="no_extension") sum+=$1; else print} END {if (sum>0) print "   " sum " no extension"}')
-    if [[ -n "$breakdown" ]]; then
-        rel_path="${subfolder#$FOLDER}"
-        rel_path="${rel_path#/}"
-        if [[ -z "$rel_path" ]]; then
-            display_name="$(echo "$FOLDER" | sed "s|$HOME|~|")"
-            echo -e "  ${BLUE}${display_name}${RESET}"
-        else
-            display_name="$rel_path"
-            echo -e "  ▶${BLUE}${display_name}${RESET}"
-        fi
-        echo "$breakdown" | while read -r line; do
-            echo -e "    ${GREEN}${line}${RESET}"
+if [[ "$SHOW_LARGEST_FILES" == true ]]; then
+    section_header "Largest Files"
+    if [[ -n "$LARGEST_FILES" ]]; then
+        echo "$LARGEST_FILES" | while read -r line; do
+            echo -e "  ${GREEN}${line}${RESET}"
         done
     fi
-done
+fi
+
+# File breakdown
+if [[ "$SHOW_FILE_BREAKDOWN" == true ]]; then
+    section_header "File Types"
+    find "$FOLDER" -name ".git" -type d -prune -o -type d -print | sort | while read -r subfolder; do
+        breakdown=$(find "$subfolder" -maxdepth 1 -type f | sed 's|.*/||' | awk -F. '{if (NF==1) print "no_extension"; else print $NF}' | sort | uniq -c | sort -rn | awk '{if ($2=="no_extension") sum+=$1; else print} END {if (sum>0) print "   " sum " no extension"}')
+        if [[ -n "$breakdown" ]]; then
+            rel_path="${subfolder#$FOLDER}"
+            rel_path="${rel_path#/}"
+            if [[ -z "$rel_path" ]]; then
+                display_name="$(echo "$FOLDER" | sed "s|$HOME|~|")"
+                echo -e "  ${BLUE}${display_name}${RESET}"
+            else
+                display_name="$rel_path"
+                echo -e "  ▶${BLUE}${display_name}${RESET}"
+            fi
+            echo "$breakdown" | while read -r line; do
+                echo -e "    ${GREEN}${line}${RESET}"
+            done
+        fi
+    done
+fi
 
 # Metadata
-section_header "Details"
-print_kv "Modified" "$LAST_MODIFIED"
-print_kv "Permissions" "$(echo $PERMISSION_BREAKDOWN | awk '{print $1}')"
-print_kv "Owner" "$(echo $PERMISSION_BREAKDOWN | awk '{print $2}')"
+if [[ "$SHOW_DETAILS" == true ]]; then
+    section_header "Details"
+    print_kv "Modified" "$LAST_MODIFIED"
+    print_kv "Permissions" "$(echo $PERMISSION_BREAKDOWN | awk '{print $1}')"
+    print_kv "Owner" "$(echo $PERMISSION_BREAKDOWN | awk '{print $2}')"
+fi
 
 # Git section - only show if git repo exists
-if [[ "$HAS_GIT" == true ]]; then
+if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
     section_header "Git"
     
     # Status indicator with color
@@ -121,7 +242,3 @@ if [[ "$HAS_GIT" == true ]]; then
 fi
 
 echo ""
-
-
-
-
