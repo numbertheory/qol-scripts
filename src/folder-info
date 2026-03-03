@@ -123,7 +123,7 @@ fi
 
 if [[ "$SHOW_LARGEST_FILES" == true ]]; then
     ABS_FOLDER=$(cd "$FOLDER" 2>/dev/null && pwd || echo "$FOLDER")
-    LARGEST_FILES=$(find "$ABS_FOLDER" -type f -exec stat -f "%z %N" {} + 2>/dev/null | sort -rn | head -n 5 | awk '{
+    LARGEST_FILES=$(find "$ABS_FOLDER" -name ".git" -type d -prune -o -type f -exec stat -f "%z %N" {} + 2>/dev/null | sort -rn | head -n 5 | awk '{
         size = $1;
         $1 = "";
         file = substr($0, 2);
