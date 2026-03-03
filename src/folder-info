@@ -157,7 +157,7 @@ if [[ "$SHOW_GIT" == true ]] && [[ -d "${FOLDER}/.git" ]]; then
     GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
     GIT_STATUS=$(git -C "$FOLDER" status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
     GIT_LAST_COMMIT_TS=$(git -C "$FOLDER" --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
-    GIT_LATEST_TAG=$(git -C "$FOLDER" --no-pager describe --tags HEAD 2>/dev/null || echo "")
+    GIT_LATEST_TAG=$(git -C "$FOLDER" --no-pager describe --tags HEAD 2>/dev/null || echo "${GRAY}no tags set${RESET}")
 fi
 
 # Output header
@@ -238,6 +238,7 @@ if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
     print_kv "Total Commits" "$GIT_COMMIT_COUNT"
     print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
     print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
+    print_kv "Tag" "$GIT_LATEST_TAG"
     print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
 fi
 
