@@ -61,7 +61,7 @@ while [[ $# -gt 0 ]]; do
             echo "Usage:  folder-info [OPTIONS] FOLDER (FOLDER defaults to PWD)"
             echo -e "    --no-details \t\t Skip details "
             echo -e "    --no-file-breakdown \t Skip filetype breakdown "
-            echo -e "    --no-largest-files \t Skip listing largest files" 
+            echo -e "    --no-largest-files \t\t Skip listing largest files" 
             echo -e "    --no-size \t\t\t Skip showing total size "
             echo -e "    --no-counts \t\t Skip showing file, folder, and symlink counts."
             echo -e "    --no-git \t\t\t Skip showing git information."
