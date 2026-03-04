@@ -155,14 +155,20 @@ if [[ "$SHOW_LARGEST_FILES" == true ]]; then
             printf "%-10s %s\n", size_str, file;
         }')
     else
-        LARGEST_FILES=$( find $PWD -type d -name .git -prune -o -type f -exec du -h --apparent-size {} + | sort -rh | head -n 5 | awk '{printf "%-12s %s\n", $1, $2}')
+        LARGEST_FILES=$( find $FOLDER -type d -name .git -prune -o -type f -exec du -h --apparent-size {} + | sort -rh | head -n 5 | awk '{printf "%-12s %s\n", $1, $2}')
     fi
 
 fi
 
 if [[ "$SHOW_DETAILS" == true ]]; then
-    LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" "$FOLDER")
-    PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" "$FOLDER")
+    if [[ $(uname -s) == "Darwin" ]]; then
+        LAST_MODIFIED=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" "$FOLDER")
+        PERMISSION_BREAKDOWN=$(stat -f "%A %Su:%Sg %N" "$FOLDER")
+    else
+        LAST_MODIFIED=$(stat -c '%y' "$FOLDER")
+        PERMISSION_BREAKDOWN=$(stat -c "%a %U:%G %n" "$FOLDER")
+    fi
+
 fi
 
 # Git info
