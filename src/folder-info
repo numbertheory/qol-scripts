@@ -190,7 +190,11 @@ echo -e "${GREEN}$(echo "$FOLDER" | sed "s|$HOME|~|")${RESET}"
 
 # Totals section
 if [[ "$SHOW_COUNTS" == true ]]; then
-    section_header "Counts"
+    if [[ "$HAS_GIT" == true ]]; then
+        section_header "Counts (excludes .git/ folder)"
+    else
+        section_header "Counts"
+    fi
     print_kv "Simple" "$SIMPLE_COUNT items"
     print_kv "Recursive" "$RECURSIVE_COUNT items"
     print_kv "Files" "$FILE_COUNT files"
@@ -200,7 +204,11 @@ fi
 
 # Size section
 if [[ "$SHOW_SIZE" == true ]]; then
-    section_header "Size"
+    if [[ "$HAS_GIT" == true ]]; then
+        section_header "Size (includes .git/ folder)"
+    else
+        section_header "Size"
+    fi
     print_kv "Total" "$FOLDER_SIZE"
 fi
 
