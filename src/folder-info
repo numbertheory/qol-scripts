@@ -124,10 +124,10 @@ print_kv() {
 # Gather info
 if [[ "$SHOW_COUNTS" == true ]]; then
     SIMPLE_COUNT=$(ls -1 "$FOLDER" | wc -l)
-    RECURSIVE_COUNT=$(find "$FOLDER" | wc -l)
+    RECURSIVE_COUNT=$(find "$FOLDER" -type d -name .git -prune -o -type f -printf '.' | wc -c)
     SYMLINK_COUNT=$(find "$FOLDER" -type l | wc -l)
-    FILE_COUNT=$(find "$FOLDER" -type f | wc -l)
-    FOLDER_COUNT=$(find "$FOLDER" -type d | wc -l)
+    FILE_COUNT=$(find "$FOLDER" -mindepth 1 -maxdepth 1 -type d -prune -o -type f -print | wc -l)
+    FOLDER_COUNT=$(find "$FOLDER" -mindepth 1 -type d -name .git -prune -o -type d -print | wc -l)
 fi
 
 if [[ "$SHOW_SIZE" == true ]]; then
