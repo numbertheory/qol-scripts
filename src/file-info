@@ -192,7 +192,7 @@ print_kv "PDF Version" "$PDF_VERSION"
 fi
 
 if [[ ${FILE_KIND,,} == *"image"* ]]; then
-echo -e "\n${BOLD}${BLUE}📄 Image Information${RESET}"
+echo -e "\n${BOLD}${BLUE}🖼️ Image Information${RESET}"
 print_kv "Image Resolution" "$IMG_RESOLUTION"
 print_kv "Image Orientation" "$IMG_ORIENTATION"
 fi
