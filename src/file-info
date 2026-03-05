@@ -143,15 +143,21 @@ print_kv "Size" "$FILE_SIZE"
 print_kv "Created" "$FILE_CREATED_DATE"
 print_kv "Modified" "$FILE_MODIFIED_DATE"
 print_kv "Permissions ($NUMERIC_PERMS)" "" "-n"
+# Get the numeric version (OS-agnostic check)
+if [[ $(uname -s) == "Darwin" ]]; then
+    EXTRA_SPACE=""
+else
+    EXTRA_SPACE="  "
+fi
 echo -e "┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
-echo -e "\t\t     ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
-echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t     ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$U_R" "$U_W" "$U_X"
-echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t     ┃ Group  ┃%s  ┃%s  ┃%s    ┃\n" "$G_R" "$G_W" "$G_X"
-echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t     ┃ Others ┃%s  ┃%s  ┃%s    ┃\n" "$O_R" "$O_W" "$O_X"
-echo -e "\t\t     ┗━━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━━━┛"
+echo -e "\t\t  ${EXTRA_SPACE}   ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
+echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t   %s  ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$U_R" "$U_W" "$U_X"
+echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t   %s  ┃ Group  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$G_R" "$G_W" "$G_X"
+echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t   %s  ┃ Others ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$O_R" "$O_W" "$O_X"
+echo -e "\t\t  ${EXTRA_SPACE}   ┗━━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━━━┛"
 
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 echo -e "\n${BOLD}${BLUE}📄 PDF Information${RESET}"
