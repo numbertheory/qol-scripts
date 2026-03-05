@@ -115,6 +115,7 @@ else
 fi
 
 # Pages
+PDF_PAGES=$(pdfinfo "$ABS_PATH" | grep "Pages:" | awk '{print $2}')
 # Resolution
 # Orientation (use resolution numbers)
 # Version
@@ -163,4 +164,5 @@ if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 echo -e "\n${BOLD}${BLUE}📄 PDF Information${RESET}"
 print_kv "Title" "$PDF_TITLE"
 print_kv "Author" "${PDF_AUTHORS}"
+print_kv "Pages" "${PDF_PAGES}"
 fi
