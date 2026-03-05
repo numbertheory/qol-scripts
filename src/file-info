@@ -13,7 +13,7 @@ section_header() {
 
 # Helper function for key-value pairs
 print_kv() {
-    echo -e "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
+    echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
 }
 
 source set-colors
@@ -67,6 +67,32 @@ else
 fi
 
 # Permissions
+PERMS=$(ls -ld "$FILENAME" | awk '{print $1}')
+# Get the numeric version (OS-agnostic check)
+if [[ $(uname -s) == "Darwin" ]]; then
+    NUMERIC_PERMS=$(stat -f "%Lp" "$FILENAME")
+else
+    NUMERIC_PERMS=$(stat -c "%a" "$FILENAME")
+fi
+
+# Helper function to format the 'rwx' triplets
+parse_bit() {
+    [[ $1 == "$2" ]] && echo "  ●  " || echo "  ○  "
+}
+# Extract triplets
+U_R=$(parse_bit "${PERMS:1:1}" "r")
+U_W=$(parse_bit "${PERMS:2:1}" "w")
+U_X=$(parse_bit "${PERMS:3:1}" "x")
+
+G_R=$(parse_bit "${PERMS:4:1}" "r")
+G_W=$(parse_bit "${PERMS:5:1}" "w")
+G_X=$(parse_bit "${PERMS:6:1}" "x")
+
+O_R=$(parse_bit "${PERMS:7:1}" "r")
+O_W=$(parse_bit "${PERMS:8:1}" "w")
+O_X=$(parse_bit "${PERMS:9:1}" "x")
+
+
 
 # PDF info
 # Title
@@ -96,3 +122,14 @@ print_kv "Kind" "$FILE_KIND"
 print_kv "Size" "$FILE_SIZE"
 print_kv "Created" "$FILE_CREATED_DATE"
 print_kv "Modified" "$FILE_MODIFIED_DATE"
+print_kv "Permissions ($NUMERIC_PERMS)" "" "-n"
+echo -e "┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
+echo -e "\t\t     ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
+echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t     ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$U_R" "$U_W" "$U_X"
+echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t     ┃ Group  ┃%s  ┃%s  ┃%s    ┃\n" "$G_R" "$G_W" "$G_X"
+echo -e "\t\t     ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+printf "\t\t     ┃ Others ┃%s  ┃%s  ┃%s    ┃\n" "$O_R" "$O_W" "$O_X"
+echo -e "\t\t     ┗━━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━━━┛"
+
