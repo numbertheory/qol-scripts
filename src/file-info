@@ -51,7 +51,7 @@ fi
 # Created Date
 if [[ "$HAS_GIT" == false ]]; then
     if [[ $(uname -s) == "Darwin" ]]; then
-        FILE_CREATED_DATE=$(mdls -name kMDItemFSCreationDate "$ABS_PATH" | awk '{print $3, $4}' | xargs -I {} date -f "%Y-%m-%d %H:%M:%S" -j "{}" "+%A, %B %d, %Y at %I:%M %p")
+        FILE_CREATED_DATE=$(stat -f "%SB" -t "%Y-%m-%d %H:%M:%S" "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -f "%Y-%m-%d %H:%M:%S" -j "{}" "+%A, %B %d, %Y at %I:%M %p")
     else
         FILE_CREATED_DATE=$(stat -c %w "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -d "{}" "+%A, %B %d, %Y at %I:%M %p")
     fi
@@ -61,7 +61,7 @@ fi
 
 # Modified Date - Doesn't use git, because we want the last modification of the file, even if it is not committed
 if [[ $(uname -s) == "Darwin" ]]; then
-    FILE_MODIFIED_DATE=$(mdls -name kMDItemFSContentChangeDate "$ABS_PATH" | awk '{print $3, $4, $5}' | xargs -I {} date -f "%Y-%m-%d %H:%M:%S %z" -j "{}" "+%A, %B %d, %Y at %I:%M %p")
+    FILE_MODIFIED_DATE=$(stat -f "%SB" -t "%Y-%m-%d %H:%M:%S" "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -f "%Y-%m-%d %H:%M:%S" -j "{}" "+%A, %B %d, %Y at %I:%M %p")
 else
     FILE_MODIFIED_DATE=$(stat -c %y "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -d "{}" "+%A, %B %d, %Y at %I:%M %p")
 fi
