@@ -29,23 +29,23 @@ fi
 
 # Basic Info
 # Absolute path
-ABS_PATH=$(realpath $FILENAME)
-FOLDER=$(dirname $ABS_PATH)
+ABS_PATH=$(realpath "$FILENAME")
+FOLDER=$(dirname "$ABS_PATH")
 if [[ -d "${FOLDER}/.git" ]]; then
     HAS_GIT=true
 fi
 # Kind
 if [[ $(uname -s) == "Darwin" ]]; then
-    FILE_KIND=$(mdls -name kMDItemKind $ABS_PATH | awk -F'"' '{print $2}')
+    FILE_KIND=$(mdls -name kMDItemKind "$ABS_PATH" | awk -F'"' '{print $2}')
 else
-    FILE_KIND=$(xdg-mime query filetype $ABS_PATH)
+    FILE_KIND=$(xdg-mime query filetype "$ABS_PATH")
 fi
 
 # Apparent size
 if [[ $(uname -s) == "Darwin" ]]; then
-    FILE_SIZE=$(ls -lh $ABS_PATH | awk '{print $5}')
+    FILE_SIZE=$(ls -lh "$ABS_PATH" | awk '{print $5}')
 else
-    FILE_SIZE=$(du -shA $ABS_PATH | awk '{print $1}')
+    FILE_SIZE=$(du -shA "$ABS_PATH" | awk '{print $1}')
 fi
 
 # Created Date
