@@ -131,8 +131,21 @@ fi
 
 
 # Image file info
-# Resolution
-# Orientation (use resolution numbers)
+if [[ ${FILE_KIND,,} == *"image"* ]]; then
+        
+# Resolution and Orientation
+    if [[ $(uname -s) == "Darwin" ]]; then
+        IMG_RESOLUTION=$(mdls --name kMDItemPixelWidth --name kMDItemPixelHeight "$ABS_PATH" | awk -F'=' '{
+            gsub(/ /,"",$2);
+            val[NR]=$2
+        } END {
+            print val[2] "x" val[1]
+        }')
+    else
+        IMG_RESOLUTION=$(identify -format "%wx%h" "$ABS_PATH")
+    fi
+    IMG_ORIENTATION=$(echo "$IMG_RESOLUTION" | awk -F'x' '{if ($1 > $2) print "Landscape"; else if ($1 < $2) print "Portrait"; else print "Square"}')
+fi
 
 # Text file info
 # Number of characters
@@ -176,4 +189,10 @@ print_kv "PDF Creation Date" "$PDF_CREATION_DATE"
 print_kv "PDF Modified Date" "$PDF_MODIFIED_DATE"
 print_kv "Orientation" "$PDF_ORIENTATION"
 print_kv "PDF Version" "$PDF_VERSION"
+fi
+
+if [[ ${FILE_KIND,,} == *"image"* ]]; then
+echo -e "\n${BOLD}${BLUE}📄 Image Information${RESET}"
+print_kv "Image Resolution" "$IMG_RESOLUTION"
+print_kv "Image Orientation" "$IMG_ORIENTATION"
 fi
