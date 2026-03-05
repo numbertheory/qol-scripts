@@ -116,9 +116,16 @@ fi
 
 # Pages
 PDF_PAGES=$(pdfinfo "$ABS_PATH" | grep "Pages:" | awk '{print $2}')
+# Creation Date
+PDF_CREATION_DATE=$(pdfinfo "$ABS_PATH" | grep "CreationDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
+# Modified Date
+PDF_MODIFIED_DATE=$(pdfinfo "$ABS_PATH" | grep "ModDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
 # Resolution
+PDF_RESOLUTION=$(pdfinfo "$ABS_PATH" | grep "Page size:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
 # Orientation (use resolution numbers)
+PDF_ORIENTATION=$(echo $PDF_RESOLUTION | awk '{if ($1 > $3) print "Landscape"; else print "Portrait"}')
 # Version
+PDF_VERSION=$(pdfinfo "$ABS_PATH" | grep "PDF version:" | awk '{print $3}')
 fi
 
 
@@ -165,4 +172,8 @@ echo -e "\n${BOLD}${BLUE}📄 PDF Information${RESET}"
 print_kv "Title" "$PDF_TITLE"
 print_kv "Author" "${PDF_AUTHORS}"
 print_kv "Pages" "${PDF_PAGES}"
+print_kv "PDF Creation Date" "$PDF_CREATION_DATE"
+print_kv "PDF Modified Date" "$PDF_MODIFIED_DATE"
+print_kv "Orientation" "$PDF_ORIENTATION"
+print_kv "PDF Version" "$PDF_VERSION"
 fi
