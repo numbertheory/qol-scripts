@@ -148,7 +148,7 @@ if [[ ${FILE_KIND,,} == *"image"* ]]; then
 fi
 
 # Text file info
-if [[ ${FILE_KIND,,} == *"text"* ]]; then
+if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; then
     WC_OUTPUT=$(wc -l -w -c "$FILENAME")
     TEXT_FILE_LINES=$(echo "$WC_OUTPUT" | awk '{print $1}')
     TEXT_FILE_WORDS=$(echo "$WC_OUTPUT" | awk '{print $2}')
@@ -200,7 +200,7 @@ print_kv "Image Resolution" "$IMG_RESOLUTION"
 print_kv "Image Orientation" "$IMG_ORIENTATION"
 fi
 
-if [[ ${FILE_KIND,,} == *"text"* ]]; then
+if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; then
     print_kv "Lines" "$TEXT_FILE_LINES"
     print_kv "Words" "$TEXT_FILE_WORDS"
     print_kv "Characters" "$TEXT_FILE_CHARS"
