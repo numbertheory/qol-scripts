@@ -170,7 +170,7 @@ if [[ $(uname -s) == "Darwin" ]]; then
 else
     EXTRA_SPACE="  "
 fi
-echo -e "┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
+echo -e "${EXTRA_SPACE}┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
 echo -e "\t\t  ${EXTRA_SPACE}   ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
 echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
 printf "\t\t   %s  ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$U_R" "$U_W" "$U_X"
