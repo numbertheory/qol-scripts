@@ -148,10 +148,13 @@ if [[ ${FILE_KIND,,} == *"image"* ]]; then
 fi
 
 # Text file info
-# Number of characters
-# Number of words
-# Number of lines
-# Encoding format
+if [[ ${FILE_KIND,,} == *"text"* ]]; then
+    WC_OUTPUT=$(wc -l -w -c "$FILENAME")
+    TEXT_FILE_LINES=$(echo "$WC_OUTPUT" | awk '{print $1}')
+    TEXT_FILE_WORDS=$(echo "$WC_OUTPUT" | awk '{print $2}')
+    TEXT_FILE_CHARS=$(echo "$WC_OUTPUT" | awk '{print $3}')
+    TEXT_FILE_ENCODING=$(file -b --mime-encoding "$FILENAME" 2>/dev/null)
+fi
 
 # Git info (if applicable)
 
@@ -195,4 +198,11 @@ if [[ ${FILE_KIND,,} == *"image"* ]]; then
 echo -e "\n${BOLD}${BLUE}🖼️ Image Information${RESET}"
 print_kv "Image Resolution" "$IMG_RESOLUTION"
 print_kv "Image Orientation" "$IMG_ORIENTATION"
+fi
+
+if [[ ${FILE_KIND,,} == *"text"* ]]; then
+    print_kv "Lines" "$TEXT_FILE_LINES"
+    print_kv "Words" "$TEXT_FILE_WORDS"
+    print_kv "Characters" "$TEXT_FILE_CHARS"
+    print_kv "Encoding" "$TEXT_FILE_ENCODING"
 fi
