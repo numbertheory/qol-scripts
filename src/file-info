@@ -2,6 +2,7 @@
 
 FILENAME=$1
 HAS_GIT=false
+SHOW_GIT=true
 
 print_usage() {
     echo "Usage:  file-info [FILE]"
@@ -56,7 +57,11 @@ if [[ "$HAS_GIT" == false ]]; then
         FILE_CREATED_DATE=$(stat -c %w "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -d "{}" "+%A, %B %d, %Y at %I:%M %p")
     fi
 else
-    FILE_CREATED_DATE=$(git log --follow --format=%at --reverse "$ABS_PATH" | head -1 | xargs -I {} date -r {} "+%A, %B %d, %Y at %I:%M %p")
+    if [[ $(uname -s) == "Darwin" ]]; then
+        FILE_CREATED_DATE=$(git log --follow --format=%at --reverse "$ABS_PATH" | head -1 | xargs -I {} date -r {} "+%A, %B %d, %Y at %I:%M %p")
+    else
+        FILE_CREATED_DATE=$(git log --diff-filter=A --format=%ad --date=iso -- README.md | xargs -I {} date -d {} +"%A, %B %-d, %Y at %-I:%M %p")
+    fi
 fi
 
 # Modified Date - Doesn't use git, because we want the last modification of the file, even if it is not committed
@@ -157,7 +162,15 @@ if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; the
 fi
 
 # Git info (if applicable)
-
+if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
+    GIT_COMMIT_COUNT=$(git rev-list --count HEAD "$ABS_PATH")
+    GIT_CURRENT_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD)
+    GIT_COMMIT_MSG=$(git log -n 1 --pretty=format:%s -- "$ABS_PATH")
+    GIT_SHORT_COMMIT=$(git log -n 1 --pretty=format:%h -- "$ABS_PATH")
+    GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
+    GIT_STATUS=$(git status --porcelain "$ABS_PATH" | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
+    GIT_LAST_COMMIT_TS=$(git --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S" "$ABS_PATH")
+fi
 
 # Output header
 echo -e "\n${BOLD}${BLUE}📄 File Information${RESET}"
@@ -205,4 +218,25 @@ if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; the
     print_kv "Words" "$TEXT_FILE_WORDS"
     print_kv "Characters" "$TEXT_FILE_CHARS"
     print_kv "Encoding" "$TEXT_FILE_ENCODING"
+fi
+
+if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
+    section_header "Git"
+    
+    # Status indicator with color
+    if [[ "$GIT_STATUS" == "clean" ]]; then
+        STATUS_COLOR=$GREEN
+        STATUS_SYMBOL="✓"
+    else
+        STATUS_COLOR=$RED
+        STATUS_SYMBOL="✘"
+    fi
+    
+    print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
+    print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
+    print_kv "Commit Message" "${YELLOW}${GIT_COMMIT_MSG}${RESET}"
+    print_kv "Total Commits" "$GIT_COMMIT_COUNT"
+    print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
+    print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
+    print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
 fi
