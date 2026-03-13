@@ -13,7 +13,9 @@ while true; do
     target_year=$(date -d "$offset month" +"%Y")
     display_name=$(date -d "$offset month" +"%B %Y")
 
-    echo -e "${BOLD}${CYAN}>> 12-Month View starting: $display_name <<${RESET}"
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "  Viewing 12 Months starting: ${YELLOW}$display_name${RESET}"
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
     echo -e "${BOLD}Controls: [n] Next, [p] Prev, [s] Search Year, [t] Today, [q] Quit${RESET}\n"
 
     # Display the 12-month block
