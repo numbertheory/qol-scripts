@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Assuming set-colors defines BOLD, CYAN, REVERSE, and RESET
+source set-colors
+
+offset=0
+
+while true; do
+    clear
+
+    # Calculate target month/year based on offset
+    target_month=$(date -d "$offset month" +"%m")
+    target_year=$(date -d "$offset month" +"%Y")
+    display_name=$(date -d "$offset month" +"%B %Y")
+
+    echo -e "${BOLD}${CYAN}>> 12-Month View starting: $display_name <<${RESET}"
+    echo -e "${BOLD}Controls: [n] Next, [p] Prev, [s] Search Year, [t] Today, [q] Quit${RESET}\n"
+
+    # Display the 12-month block
+    cal --twelve "$target_month" "$target_year" | col -b
+
+    # Wait for user input
+    read -n 1 -s -r char
+    case "$char" in
+        n) ((offset++)) ;;
+        p) ((offset--)) ;;
+        t) offset=0 ;;
+        s) 
+            echo -ne "\n${BOLD}${CYAN}Enter Year (YYYY): ${RESET}"
+            read -r user_year
+            # Validate input is a number
+            if [[ "$user_year" =~ ^[0-9]{4}$ ]]; then
+                # Calculate new offset: (TargetYear - CurrentYear) * 12
+                current_year=$(date +"%Y")
+                offset=$(( (user_year - current_year) * 12 ))
+            else
+                echo -e "${REVERSE} Invalid Year ${RESET}"
+                sleep 1
+            fi
+            ;;
+        q) echo -e "\nExiting..."; break ;;
+    esac
+done
