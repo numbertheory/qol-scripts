@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+FOLDER=${PWD:-$1}
+
+rg --line-number --no-heading '' "$FOLDER" |
+fzf --delimiter ':' --preview 'bat --style=numbers --color=always {1} --highlight-line {2}'

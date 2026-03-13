@@ -10,7 +10,7 @@ else
     exit 1
 fi
 
-git branch --all \
+git -C "$FOLDER" branch --all \
   | sed -E 's/^[* ]+//' \
   | sed 's|remotes/||' \
   | grep -v '^origin/HEAD' \
