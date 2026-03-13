@@ -4,6 +4,7 @@
 export BOLD="\033[1m"
 export DIM="\033[2m"
 export RESET="\033[0m"
+export REVERSE="\033[7m"
 
 # Kitty 256 colors
 export CYAN="\033[38;5;6m"
