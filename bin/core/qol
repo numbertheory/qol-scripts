@@ -49,6 +49,7 @@ elif [ "$1" == "list" ]; then
    OPTIONAL_INSTALLS=("$QOL_SCRIPTS_PATH/src"/*)
    CORE_INSTALLS=("$QOL_SCRIPTS_PATH/bin/core"/*)
    echo
+   echo -e "* ${DIM}These scripts are optional. Install with \`qol install <script-name>\` ${RESET}"
    echo -e "${BLUE}===== Optional Installs =====${RESET}"
    for item in "${OPTIONAL_INSTALLS[@]}"; do
        cmd_name=$(basename "$item")
@@ -63,6 +64,7 @@ elif [ "$1" == "list" ]; then
        # echo -e "$cmd_name \t $status \t $desc"
    done
    echo
+   echo -e "* ${DIM}These scripts are part of the shared core. They do not need to be installed. ${RESET}"
    echo -e "${BLUE}===== Core Functions =====${RESET}"
    for item in "${CORE_INSTALLS[@]}"; do
        cmd_name=$(basename "$item")
