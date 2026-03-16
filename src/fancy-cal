@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Show a 12 month glance at the year
+
 # Assuming set-colors defines BOLD, CYAN, REVERSE, and RESET
 source set-colors
 
@@ -27,7 +29,7 @@ while true; do
         n) ((offset++)) ;;
         p) ((offset--)) ;;
         t) offset=0 ;;
-        s) 
+        s)
             echo -ne "\n${BOLD}${CYAN}Enter Year (YYYY): ${RESET}"
             read -r user_year
             # Validate input is a number

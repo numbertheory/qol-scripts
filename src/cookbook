@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Show recipes from a JSON cookbook (see util/schema.json for details)
+
 RECIPES_FOLDER="$QOL_RECIPES_FOLDER"
 
 if [[ -z "${RECIPES_FOLDER}" ]]; then

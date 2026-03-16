@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Docker inspect all the local images on your system
+
 # Check for syntax highlighting tools and set the preview command accordingly
 if command -v bat >/dev/null 2>&1; then
     # Use bat if available (preferred)

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Search code with fzf
+
 FOLDER=${PWD:-$1}
 
 rg --line-number --no-heading '' "$FOLDER" |

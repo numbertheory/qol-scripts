@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
+# Description: The tool you are using right now. Run `qol help` for commands
 
+source set-colors
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
 
 if [[ -z "${QOL_SCRIPTS_PATH}" ]]; then
     echo "Set QOL_SCRIPTS_PATH in your environment to use this helper."
-    # Note: do not copy from this line into your shell RC (setting QOL_SCRIPTS_PATH to PWD). 
-    # This is to make the error show the path it should be 
+    # Note: do not copy from this line into your shell RC (setting QOL_SCRIPTS_PATH to PWD).
+    # This is to make the error show the path it should be
     # in the terminal.
     echo "Example: export QOL_SCRIPTS_PATH=$PWD"
     exit 1
-fi   
-    
+fi
+
 
 if [ "$1" == "install" ]; then
 
@@ -44,7 +46,29 @@ elif [ "$1" == "uninstall" ]; then
 
 elif [ "$1" == "list" ]; then
 
-   ls -1 "$QOL_SCRIPTS_PATH/src"
+   OPTIONAL_INSTALLS=("$QOL_SCRIPTS_PATH/src"/*)
+   CORE_INSTALLS=("$QOL_SCRIPTS_PATH/bin/core"/*)
+   echo
+   echo -e "${BLUE}===== Optional Installs =====${RESET}"
+   for item in "${OPTIONAL_INSTALLS[@]}"; do
+       cmd_name=$(basename "$item")
+       if command -v "$cmd_name" >/dev/null 2>&1; then
+            status="[ Installed ]"
+       else
+            status="             "
+       fi
+       desc=$(grep -m 1 "^# Description:" "$item" | sed 's/^# Description: //')
+       desc="${desc:-No description provided.}"
+       printf "${CYAN}%-15s${RESET} ${GREEN}%s${RESET} ${WHITE}%s${RESET}\n" "$cmd_name" "$status" "${desc:-No description.}"
+       # echo -e "$cmd_name \t $status \t $desc"
+   done
+   echo
+   echo -e "${BLUE}===== Core Functions =====${RESET}"
+   for item in "${CORE_INSTALLS[@]}"; do
+       cmd_name=$(basename "$item")
+       desc=$(grep -m 1 "^# Description:" "$item" | sed 's/^# Description: //')
+       printf "${CYAN}%-25s${RESET} ${WHITE}%s${RESET}\n" "$cmd_name" "${desc:-No description.}"
+   done
 
 elif [ "$1" == "update" ]; then
 

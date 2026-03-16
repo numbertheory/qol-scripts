@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Description: Show all git branches and commits with fzf
 
 FOLDER=${PWD:-$1}
 

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+# Description: Update the Quality of life scripts
+
 git -C $QOL_SCRIPTS_PATH pull

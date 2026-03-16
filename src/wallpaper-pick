@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Show images in your folder, and select the image for wallpaper
+
 if [[ $(uname -s) == "Darwin" ]]; then
     find-files -q | fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
   elif [[ $(uname -s) == "Linux" ]]; then

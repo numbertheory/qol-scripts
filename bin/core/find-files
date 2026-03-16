@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Find files of a specific type and display with fzf
+
 # parse options
 QUOTE=false
 RELATIVE=false
@@ -19,7 +21,7 @@ while getopts ":qf:e:r" opt; do
         r)
             RELATIVE=true
             ;;
-        
+
         \?)
             echo "Usage: $0 [-q] [-r] [extensions]" >&2
             exit 1
@@ -71,4 +73,3 @@ else
     # fallback should never happen, but keep original behavior
     eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \)"
 fi
-

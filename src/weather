@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Show weather in the terminal, using api.weather.gov
+
 # --- 1. CONFIGURATION ---
 QOL_LOCAL=${QOL_LOCATION:-"40.7484,-73.9857"}
 
@@ -25,7 +27,7 @@ UPDATED_AT=$(echo "$RAW_DATA" | jq -r '
 FORECAST_CONTENT=$(echo "$RAW_DATA" | jq .properties)
 
 # --- 4. LAUNCH UI ---
-echo -e "$FORECAST_CONTENT" | jq -r '.periods[] | 
+echo -e "$FORECAST_CONTENT" | jq -r '.periods[] |
     # 1. Logic for Emoji Icons
     (if (.shortForecast | test("Sun|Clear"; "i")) then "☀️ "
      elif (.shortForecast | test("Rain|Showers|Drizzle"; "i")) then "🌧️ "
@@ -37,7 +39,7 @@ echo -e "$FORECAST_CONTENT" | jq -r '.periods[] |
 
     # 2. Logic for Heat Colors
     (if .temperature >= 50 then "\u001b[33m" else "\u001b[36m" end) as $color |
-    
+
     # 3. Construction (The icon goes before the padded name)
     "\u001b[0m\($icon)\(.name + "                  " | .[0:18])\t\($color)\(.temperature)°\(.temperatureUnit)\u001b[0m\t\(.shortForecast)\t\(.detailedForecast)"' | \
     fzf --ansi \

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Description: Use pyenv to set up virtualenv with the correct python version
+#
 #  Wrapper of virtualenvwrapper to work nicely with pyenv
 #
 #  Put this script in the path, and simply run. You will be prompted
@@ -15,7 +17,7 @@ source virtualenvwrapper.sh
 
 # Function to check if a command is available
 check_command() {
-    command -v "$1" >/dev/null 2>&1 || { 
+    command -v "$1" >/dev/null 2>&1 || {
         echo "$1 is not installed. Exiting."
         exit 1
     }

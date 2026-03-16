@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Set convenient color values for scripts.
+
 # Color definitions for Kitty terminal
 export BOLD="\033[1m"
 export DIM="\033[2m"

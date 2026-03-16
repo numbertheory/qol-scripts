@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Create an fzf on a set of files that executes a specific command
+
 fzf --preview 'echo {} | sed "s/\"//g" | xargs -I FILE kitty icat --clear --transfer-mode=memory --stdin=no \
                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" FILE' \
     --bind "enter:execute($1)"

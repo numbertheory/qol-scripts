@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# Description: Show folder information in an easy to understand format
 
 # =============================================================================
 # Folder Info Script
 # =============================================================================
-# This script provides a detailed summary of a specified directory (or the 
-# current working directory by default). It outputs formatted information 
+# This script provides a detailed summary of a specified directory (or the
+# current working directory by default). It outputs formatted information
 # to the terminal, including:
 #   - Item counts (files, folders, symlinks)
 #   - Total folder size
@@ -49,7 +50,7 @@ print_usage() {
     echo "Usage:  folder-info [OPTIONS] FOLDER (FOLDER defaults to PWD)"
     echo -e "    --no-details \t\t Skip details "
     echo -e "    --no-file-breakdown \t Skip filetype breakdown "
-    echo -e "    --no-largest-files \t\t Skip listing largest files" 
+    echo -e "    --no-largest-files \t\t Skip listing largest files"
     echo -e "    --no-size \t\t\t Skip showing total size "
     echo -e "    --no-counts \t\t Skip showing file, folder, and symlink counts."
     echo -e "    --no-git \t\t\t Skip showing git information."
@@ -136,7 +137,7 @@ fi
 
 if [[ "$SHOW_LARGEST_FILES" == true ]]; then
     ABS_FOLDER=$(cd "$FOLDER" 2>/dev/null && pwd || echo "$FOLDER")
-    if [[ $(uname -s) == "Darwin" ]]; then 
+    if [[ $(uname -s) == "Darwin" ]]; then
         LARGEST_FILES=$(find "$ABS_FOLDER" -name ".git" -type d -prune -o -type f -exec stat -f "%z %N" {} + 2>/dev/null | sort -rn | head -n 5 | awk '{
             size = $1;
             $1 = "";
@@ -255,7 +256,7 @@ fi
 # Git section - only show if git repo exists
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
     section_header "Git"
-    
+
     # Status indicator with color
     if [[ "$GIT_STATUS" == "clean" ]]; then
         STATUS_COLOR=$GREEN
@@ -264,7 +265,7 @@ if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
         STATUS_COLOR=$RED
         STATUS_SYMBOL="✘"
     fi
-    
+
     print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
     print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
     print_kv "Total Commits" "$GIT_COMMIT_COUNT"

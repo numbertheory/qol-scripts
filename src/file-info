@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Description: Show file-info in a human ready format
+
+
 FILENAME=$1
 HAS_GIT=false
 SHOW_GIT=true
@@ -137,7 +140,7 @@ fi
 
 # Image file info
 if [[ ${FILE_KIND,,} == *"image"* ]]; then
-        
+
 # Resolution and Orientation
     if [[ $(uname -s) == "Darwin" ]]; then
         IMG_RESOLUTION=$(mdls --name kMDItemPixelWidth --name kMDItemPixelHeight "$ABS_PATH" | awk -F'=' '{
@@ -222,7 +225,7 @@ fi
 
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
     section_header "Git"
-    
+
     # Status indicator with color
     if [[ "$GIT_STATUS" == "clean" ]]; then
         STATUS_COLOR=$GREEN
@@ -231,7 +234,7 @@ if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
         STATUS_COLOR=$RED
         STATUS_SYMBOL="✘"
     fi
-    
+
     print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
     print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
     print_kv "Commit Message" "${YELLOW}${GIT_COMMIT_MSG}${RESET}"

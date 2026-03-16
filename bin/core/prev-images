@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Preview all images in a folder with kitty's image renderer
+
 # Choose the program you want to use to open images.
 # Examples: xdg-open (default desktop app), feh, sxiv, gthumb, etc.
 
@@ -10,6 +12,3 @@ if [[ $(uname -s) == "Darwin" ]]; then
 elif [[ $(uname -s) == "Linux" ]]; then
   find-files | fzf-prev "${CORE_COMMAND} {}"
 fi
-
-
-
