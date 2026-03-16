@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Check for syntax highlighting tools and set the preview command accordingly
+if command -v bat >/dev/null 2>&1; then
+    # Use bat if available (preferred)
+    PREVIEW_CMD="docker inspect {3} | bat --color=always -l json"
+elif command -v jq >/dev/null 2>&1; then
+    # Fallback to jq if bat is not installed
+    PREVIEW_CMD="docker inspect {3} | jq -C ."
+else
+    # Fallback to plain text if neither tool is found
+    PREVIEW_CMD="docker inspect {3}"
+fi
+
+# Run docker images and pipe it into fzf with the configured preview command
+docker images | fzf --header-lines=1 --preview "$PREVIEW_CMD"
