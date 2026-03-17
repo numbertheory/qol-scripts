@@ -69,7 +69,7 @@ show_colors() {
     done
     echo -e "\n${BOLD}Sample Code:${RESET}"
     echo -e "\n   Use normal color names to set foreground and add \"BG_\" to set background color."
-    echo -e "\n   Remember to use ${RESET} to switch the colors back to the terminal default."
+    echo -e "\n   Remember to use \${RESET} to switch the colors back to the terminal default."
     echo -e "\n   echo -e \"\${ORANGE}\${BG_${bg_label}}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.\${RESET}\""
     echo -e "\n   ${ORANGE}${active_bg}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.${RESET}"
 }
