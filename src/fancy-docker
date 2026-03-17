@@ -22,5 +22,11 @@ selected=$(docker images --format "{{.ID}}\t{{.Repository}}:{{.Tag}}\t{{.Size}}"
 if [ -n "$selected" ]; then
     # Extract the first column (the ID) and output the raw JSON
     image_id=$(echo "$selected" | awk '{print $1}')
-    docker inspect "$image_id"
+    if command -v bat >/dev/null 2>&1; then
+        docker inspect "$image_id" | bat --color=always -l json
+    elif command -v jq >/dev/null 2>&1; then
+        docker inspect "$image_id" | jq -C .
+    else
+        docker inspect "$image_id"
+    fi
 fi
