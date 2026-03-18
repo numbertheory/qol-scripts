@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# 1. Get a unique list of all executables in your PATH
+# We use 'compgen -c' which is a bash builtin to list all commands
+# On macOS/Linux, this is much faster than searching directories manually.
+compgen -c | sort -u | fzf \
+    --header "Manual Page Explorer (Type to search commands)" \
+    --prompt "🔍 Command: " \
+    --cycle \
+    --preview "man {1} 2>/dev/null | col -b || echo 'No manual entry for {1}'" \
+    --preview-window="right,65%,border-rounded" \
+    --bind "ctrl-d:preview-page-down,ctrl-u:preview-page-up" \
+    --bind "enter:execute(man {1})" \
+    --bind "alt-c:execute-silent(echo {1} | pbcopy || echo {1} | xclip -sel clip)+abort"
