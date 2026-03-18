@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Description: The tool you are using right now. Run `qol help` for commands
+bash set-colors
 
-source set-colors
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
 
