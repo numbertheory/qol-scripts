@@ -46,6 +46,8 @@ WHITE="\033[38;5;15m"
 GRAY="\033[38;5;8m"
 RED="\033[38;5;1m"
 
+source string-tools
+
 print_usage() {
     echo "Usage:  folder-info [OPTIONS] FOLDER (FOLDER defaults to PWD)"
     echo -e "    --no-details \t\t Skip details "
@@ -111,16 +113,6 @@ if [[ ! -d "$FOLDER" ]]; then
     print_usage
     exit 1
 fi
-
-# Helper function for section headers
-section_header() {
-    echo -e "\n${BOLD}${CYAN}→${RESET} ${BOLD}$1${RESET}"
-}
-
-# Helper function for key-value pairs
-print_kv() {
-    echo -e "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
-}
 
 # Gather info
 if [[ "$SHOW_COUNTS" == true ]]; then
@@ -215,6 +207,8 @@ if [[ "$SHOW_LARGEST_FILES" == true ]]; then
         done
     fi
 fi
+echo ""
+permissions_calc $FOLDER
 
 # File breakdown
 if [[ "$SHOW_FILE_BREAKDOWN" == true ]]; then

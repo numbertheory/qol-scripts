@@ -11,16 +11,7 @@ print_usage() {
     echo "Usage:  file-info [FILE]"
 }
 
-section_header() {
-    echo -e "\n${BOLD}${CYAN}→${RESET} ${BOLD}$1${RESET}"
-}
-
-# Helper function for key-value pairs
-print_kv() {
-    echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
-}
-
-source set-colors
+source string-tools
 
 if [[ ! -f "$FILENAME" ]]; then
     echo ""
@@ -73,34 +64,6 @@ if [[ $(uname -s) == "Darwin" ]]; then
 else
     FILE_MODIFIED_DATE=$(stat -c %y "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -d "{}" "+%A, %B %d, %Y at %I:%M %p")
 fi
-
-# Permissions
-PERMS=$(ls -ld "$FILENAME" | awk '{print $1}')
-# Get the numeric version (OS-agnostic check)
-if [[ $(uname -s) == "Darwin" ]]; then
-    NUMERIC_PERMS=$(stat -f "%Lp" "$FILENAME")
-else
-    NUMERIC_PERMS=$(stat -c "%a" "$FILENAME")
-fi
-
-# Helper function to format the 'rwx' triplets
-parse_bit() {
-    [[ $1 == "$2" ]] && echo "  ●  " || echo "  ○  "
-}
-# Extract triplets
-U_R=$(parse_bit "${PERMS:1:1}" "r")
-U_W=$(parse_bit "${PERMS:2:1}" "w")
-U_X=$(parse_bit "${PERMS:3:1}" "x")
-
-G_R=$(parse_bit "${PERMS:4:1}" "r")
-G_W=$(parse_bit "${PERMS:5:1}" "w")
-G_X=$(parse_bit "${PERMS:6:1}" "x")
-
-O_R=$(parse_bit "${PERMS:7:1}" "r")
-O_W=$(parse_bit "${PERMS:8:1}" "w")
-O_X=$(parse_bit "${PERMS:9:1}" "x")
-
-
 
 # PDF info
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
@@ -155,15 +118,6 @@ if [[ ${FILE_KIND,,} == *"image"* ]]; then
     IMG_ORIENTATION=$(echo "$IMG_RESOLUTION" | awk -F'x' '{if ($1 > $2) print "Landscape"; else if ($1 < $2) print "Portrait"; else print "Square"}')
 fi
 
-# Text file info
-if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; then
-    WC_OUTPUT=$(wc -l -w -c "$FILENAME")
-    TEXT_FILE_LINES=$(echo "$WC_OUTPUT" | awk '{print $1}')
-    TEXT_FILE_WORDS=$(echo "$WC_OUTPUT" | awk '{print $2}')
-    TEXT_FILE_CHARS=$(echo "$WC_OUTPUT" | awk '{print $3}')
-    TEXT_FILE_ENCODING=$(file -b --mime-encoding "$FILENAME" 2>/dev/null)
-fi
-
 # Output header
 echo -e "\n${BOLD}${BLUE}📄 File Information${RESET}"
 print_kv "Location" "$ABS_PATH"
@@ -171,22 +125,7 @@ print_kv "Kind" "$FILE_KIND"
 print_kv "Size" "$FILE_SIZE"
 print_kv "Created" "$FILE_CREATED_DATE"
 print_kv "Modified" "$FILE_MODIFIED_DATE"
-print_kv "Permissions ($NUMERIC_PERMS)" "" "-n"
-# Get the numeric version (OS-agnostic check)
-if [[ $(uname -s) == "Darwin" ]]; then
-    EXTRA_SPACE=""
-else
-    EXTRA_SPACE="  "
-fi
-echo -e "${EXTRA_SPACE}┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
-echo -e "\t\t  ${EXTRA_SPACE}   ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
-echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t   %s  ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$U_R" "$U_W" "$U_X"
-echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t   %s  ┃ Group  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$G_R" "$G_W" "$G_X"
-echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
-printf "\t\t   %s  ┃ Others ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$O_R" "$O_W" "$O_X"
-echo -e "\t\t  ${EXTRA_SPACE}   ┗━━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━━━┛"
+permissions_calc $ABS_PATH
 
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 echo -e "\n${BOLD}${BLUE}📄 PDF Information${RESET}"
@@ -206,10 +145,7 @@ print_kv "Image Orientation" "$IMG_ORIENTATION"
 fi
 
 if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; then
-    print_kv "Lines" "$TEXT_FILE_LINES"
-    print_kv "Words" "$TEXT_FILE_WORDS"
-    print_kv "Characters" "$TEXT_FILE_CHARS"
-    print_kv "Encoding" "$TEXT_FILE_ENCODING"
+    text_file_stats
 fi
 
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then

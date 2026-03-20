@@ -10,3 +10,68 @@ section_header() {
 print_kv() {
     echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
 }
+
+text_file_stats() {
+    WC_OUTPUT=$(wc -l -w -c "$FILENAME")
+    TEXT_FILE_LINES=$(echo "$WC_OUTPUT" | awk '{print $1}')
+    TEXT_FILE_WORDS=$(echo "$WC_OUTPUT" | awk '{print $2}')
+    TEXT_FILE_CHARS=$(echo "$WC_OUTPUT" | awk '{print $3}')
+    TEXT_FILE_ENCODING=$(file -b --mime-encoding "$FILENAME" 2>/dev/null)
+    print_kv "Lines" "$TEXT_FILE_LINES"
+    print_kv "Words" "$TEXT_FILE_WORDS"
+    print_kv "Characters" "$TEXT_FILE_CHARS"
+    print_kv "Encoding" "$TEXT_FILE_ENCODING"
+}
+
+PERMS=$(ls -ld "$FILENAME" | awk '{print $1}')
+# Get the numeric version (OS-agnostic check)
+if [[ $(uname -s) == "Darwin" ]]; then
+    NUMERIC_PERMS=$(stat -f "%Lp" "$FILENAME")
+else
+    NUMERIC_PERMS=$(stat -c "%a" "$FILENAME")
+fi
+
+# Helper function to format the 'rwx' triplets
+parse_bit() {
+    [[ $1 == "$2" ]] && echo "  ●  " || echo "  ○  "
+}
+
+permissions_calc() {
+    PERMS=$(ls -ld "$1" | awk '{print $1}')
+    # Get the numeric version (OS-agnostic check)
+    if [[ $(uname -s) == "Darwin" ]]; then
+        NUMERIC_PERMS=$(stat -f "%Lp" "$1")
+    else
+        NUMERIC_PERMS=$(stat -c "%a" "$1")
+    fi
+
+    # Extract triplets
+    U_R=$(parse_bit "${PERMS:1:1}" "r")
+    U_W=$(parse_bit "${PERMS:2:1}" "w")
+    U_X=$(parse_bit "${PERMS:3:1}" "x")
+
+    G_R=$(parse_bit "${PERMS:4:1}" "r")
+    G_W=$(parse_bit "${PERMS:5:1}" "w")
+    G_X=$(parse_bit "${PERMS:6:1}" "x")
+
+    O_R=$(parse_bit "${PERMS:7:1}" "r")
+    O_W=$(parse_bit "${PERMS:8:1}" "w")
+    O_X=$(parse_bit "${PERMS:9:1}" "x")
+
+    print_kv "Permissions ($NUMERIC_PERMS)" "" "-n"
+    # Get the numeric version (OS-agnostic check)
+    if [[ $(uname -s) == "Darwin" ]]; then
+        EXTRA_SPACE=""
+    else
+        EXTRA_SPACE="  "
+    fi
+    echo -e "${EXTRA_SPACE}┏━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━┓"
+    echo -e "\t\t  ${EXTRA_SPACE}   ┃ Entity ┃ Read  ┃ Write ┃ Execute ┃"
+    echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+    printf "\t\t   %s  ┃ Owner  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$U_R" "$U_W" "$U_X"
+    echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+    printf "\t\t   %s  ┃ Group  ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$G_R" "$G_W" "$G_X"
+    echo -e "\t\t  ${EXTRA_SPACE}   ┣━━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━━━┫"
+    printf "\t\t   %s  ┃ Others ┃%s  ┃%s  ┃%s    ┃\n" "$EXTRA_SPACE" "$O_R" "$O_W" "$O_X"
+    echo -e "\t\t  ${EXTRA_SPACE}   ┗━━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━━━┛"
+}
