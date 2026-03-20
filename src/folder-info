@@ -27,11 +27,12 @@ SHOW_LARGEST_FILES=true
 SHOW_SIZE=true
 SHOW_COUNTS=true
 SHOW_GIT=true
+SHOW_PERMS=true
 
 FOLDER="$PWD"
 FOLDER_ARG_SET=false
 
-source string-tools
+
 
 print_usage() {
     echo "Usage:  folder-info [OPTIONS] FOLDER (FOLDER defaults to PWD)"
@@ -41,8 +42,11 @@ print_usage() {
     echo -e "    --no-size \t\t\t Skip showing total size "
     echo -e "    --no-counts \t\t Skip showing file, folder, and symlink counts."
     echo -e "    --no-git \t\t\t Skip showing git information."
+    echo -e "    --no-permissions \t\t\t Skip showing folder permission matrix."
     echo ""
 }
+
+source string-tools
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -69,6 +73,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-git)
             SHOW_GIT=false
+            shift
+            ;;
+        --no-permissions)
+            SHOW_PERMS=false
             shift
             ;;
         --help)
@@ -192,8 +200,10 @@ if [[ "$SHOW_LARGEST_FILES" == true ]]; then
         done
     fi
 fi
-echo ""
-permissions_calc $FOLDER
+if [[ "$SHOW_PERMS" == true ]]; then
+    echo ""
+    permissions_calc $FOLDER
+fi
 
 # File breakdown
 if [[ "$SHOW_FILE_BREAKDOWN" == true ]]; then
@@ -221,7 +231,6 @@ fi
 if [[ "$SHOW_DETAILS" == true ]]; then
     section_header "Details"
     print_kv "Modified" "$LAST_MODIFIED"
-    print_kv "Permissions" "$(echo $PERMISSION_BREAKDOWN | awk '{print $1}')"
     print_kv "Owner" "$(echo $PERMISSION_BREAKDOWN | awk '{print $2}')"
 fi
 

@@ -23,14 +23,6 @@ text_file_stats() {
     print_kv "Encoding" "$TEXT_FILE_ENCODING"
 }
 
-PERMS=$(ls -ld "$FILENAME" | awk '{print $1}')
-# Get the numeric version (OS-agnostic check)
-if [[ $(uname -s) == "Darwin" ]]; then
-    NUMERIC_PERMS=$(stat -f "%Lp" "$FILENAME")
-else
-    NUMERIC_PERMS=$(stat -c "%a" "$FILENAME")
-fi
-
 # Helper function to format the 'rwx' triplets
 parse_bit() {
     [[ $1 == "$2" ]] && echo "  ●  " || echo "  ○  "
