@@ -1,54 +1,43 @@
 #!/usr/bin/env bash
 
-# 1. Initialize Color Escape Sequences
-declare -gA C
-for i in {0..255}; do
-    C[$i]="\033[38;5;${i}m"
-    BG[$i]="\033[48;5;${i}m"
-done
-
-# 2. Define Names and Mapping
-declare -gA NAMES
-export RED="${C[1]}";           NAMES[1]="RED"
-export GREEN="${C[2]}";         NAMES[2]="GREEN"
-export YELLOW="${C[3]}";        NAMES[3]="YELLOW"
-export BLUE="${C[4]}";          NAMES[4]="BLUE"
-export BLACK="${C[16]}";        NAMES[16]="BLACK"
-export MAGENTA="${C[200]}";     NAMES[200]="MAGENTA"
-export CYAN="${C[6]}";          NAMES[6]="CYAN"
-export WHITE="${C[15]}";        NAMES[15]="WHITE"
-export GRAY="${C[8]}";          NAMES[8]="GRAY"
-export ORANGE="${C[208]}";      NAMES[208]="ORANGE"
-export DARK_ORANGE="${C[166]}"; NAMES[166]="DARK_ORANGE"
-export PINK="${C[211]}";        NAMES[211]="PINK"
-export VIOLET="${C[129]}";      NAMES[129]="VIOLET"
-export TEAL="${C[30]}";         NAMES[30]="TEAL"
-export PURPLE="${C[93]}";       NAMES[93]="PURPLE"
-export LAVENDER="${C[183]}";    NAMES[183]="LAVENDER"
-export LIME="${C[118]}";        NAMES[118]="LIME"
-export GOLD="${C[220]}" ;       NAMES[220]="GOLD"
-export BROWN="${C[130]}";       NAMES[130]="BROWN"
-export MAROON="${C[88]}";       NAMES[88]="MAROON"
-export LIGHT_GRAY="${C[248]}";  NAMES[248]="LIGHT_GRAY"
-export SILVER="${C[252]}";      NAMES[252]="SILVER"
+# Export formatting reset and modifiers
 export RESET="\033[0m"
 export BOLD="\033[1m"
 export DIM="\033[2m"
 export REVERSE="\033[7m"
 
-# Background colors
-for i in "${!NAMES[@]}"; do
-    # Get the name (e.g., "RED")
-    name="${NAMES[$i]}"
-    # Create the BG escape sequence (48;5 instead of 38;5)
-    bg_val="\033[48;5;${i}m"
-    # Export it as BG_NAME (e.g., export BG_RED="\033[48;5;1m")
-    export "BG_${name}=${bg_val}"
-done
+# Export FG and BG colors
+while read -r code name; do
+    [ -z "$name" ] && continue
+    export "${name}=\033[38;5;${code}m"
+    export "BG_${name}=\033[48;5;${code}m"
+done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
 
-# 3. Enhanced Test Function
+# Enhanced Test Function
 show_colors() {
-    # If TEST_BG is not set, this remains empty, which is fine
     local active_bg="${TEST_BG}"
     local bg_label="${TEST_BG_NAME:-DEFAULT}"
 
@@ -56,49 +45,87 @@ show_colors() {
     printf "%-21s %-21s %-21s %-21s\n" "NORMAL" "BOLD" "DIM" "REVERSE"
     echo "================================================================================"
 
-    # Sort the indices numerically so the list is predictable
-    for i in $(echo "${!NAMES[@]}" | tr ' ' '\n' | sort -n); do
-        label="${NAMES[$i]}($i)"
+    while read -r code name; do
+        [ -z "$name" ] && continue
+        label="${name}(${code})"
+        fg_color="\033[38;5;${code}m"
 
-        # We inject ${active_bg} right before the foreground color ${C[$i]}
-        # Note: We must put ${active_bg} inside the quotes so it renders
-        printf "${active_bg}${C[$i]}%-20s${RESET} " "$label"
-        printf "${active_bg}${BOLD}${C[$i]}%-20s${RESET} " "$label"
-        printf "${active_bg}${DIM}${C[$i]}%-20s${RESET} " "$label"
-        printf "${active_bg}${REVERSE}${C[$i]}%-16s${RESET}\n" "$label"
-    done
+        printf "${active_bg}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${BOLD}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${DIM}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${REVERSE}${fg_color}%-16s${RESET}\n" "$label"
+    done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
+
     echo -e "\n${BOLD}Sample Code:${RESET}"
     echo -e "\n   Use normal color names to set foreground and add \"BG_\" to set background color."
     echo -e "\n   Remember to use \${RESET} to switch the colors back to the terminal default."
     echo -e "\n   echo -e \"\${ORANGE}\${BG_${bg_label}}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.\${RESET}\""
-    echo -e "\n   ${ORANGE}${active_bg}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.${RESET}"
+
+    # We explicitly evaluate the active background code for the sample text
+    echo -e "\n   \033[38;5;208m${active_bg}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.${RESET}"
 }
 
-# 4. Argument Parsing
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --bg)
-    # Check the next argument for the color name
-    shift
-    requested_bg=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+# Argument Parsing
+if [[ "$1" == "--show-test" ]]; then
+    show_colors
+    return 0 2>/dev/null || exit 0
+elif [[ "$1" == "--bg" ]]; then
+    requested_bg=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 
-    # Search the NAMES array for the index of that color
-    for index in "${!NAMES[@]}"; do
-        if [[ "${NAMES[$index]}" == "$requested_bg" ]]; then
-            TEST_BG="${BG[$index]}"
+    # Search the list for the code of that color
+    while read -r code name; do
+        if [ "$name" = "$requested_bg" ]; then
+            TEST_BG="\033[48;5;${code}m"
             TEST_BG_NAME="$requested_bg"
             break
         fi
-    done
+    done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
     show_colors
-    exit 0
-    ;;
-    --show-test)
-      show_colors
-      exit 0
-      ;;
-    *)
-      shift
-      ;;
-  esac
-done
+    return 0 2>/dev/null || exit 0
+fi
