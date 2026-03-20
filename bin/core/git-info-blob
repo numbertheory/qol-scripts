@@ -2,6 +2,20 @@
 
 source string-tools
 
+git_lines_changed() {
+    echo -e $(git --no-pager show --shortstat --format="" $1 | awk -v g="$GREEN" -v r="$RED" -v rs="$RESET" -F',' \
+    'BEGIN { f[1]=0; i[1]=0; d[1]=0 }
+    NF > 0 {
+        split($1, f, " ");
+        split($2, i, " ");
+        split($3, d, " ");
+    }
+    END {
+        label = (f[1] == 1) ? "file" : "files";
+        printf "(%d %s, %s+%d%s, %s-%d%s)\n", f[1], label, g, i[1], rs, r, d[1], rs
+    }')
+}
+
 FOLDER_OR_FILE="${1-"folder"}"
 
 if [[ "$FOLDER_OR_FILE" == "file" ]]; then
@@ -12,6 +26,7 @@ if [[ "$FOLDER_OR_FILE" == "file" ]]; then
     GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
     GIT_STATUS=$(git status --porcelain "$ABS_PATH" | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
     GIT_LAST_COMMIT_TS=$(git --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S" "$ABS_PATH")
+    GIT_LINES_CHANGED=$(git_lines_changed $GIT_SHORT_COMMIT)
 else
     GIT_COMMIT_COUNT=$(git -C "$FOLDER" rev-list --count HEAD)
     GIT_CURRENT_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD)
@@ -21,6 +36,7 @@ else
     GIT_STATUS=$(git -C "$FOLDER" status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
     GIT_LAST_COMMIT_TS=$(git -C "$FOLDER" --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
     GIT_LATEST_TAG=$(git -C "$FOLDER" --no-pager describe --tags HEAD 2>/dev/null || echo "${GRAY}no tags set${RESET}")
+    GIT_LINES_CHANGED=$(git_lines_changed HEAD)
 fi
 
 section_header "Git"
@@ -35,7 +51,7 @@ else
 fi
 
 print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
-print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
+print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET} $GIT_LINES_CHANGED"
 print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
 print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
