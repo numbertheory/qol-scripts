@@ -68,35 +68,35 @@ fi
 # PDF info
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 
-# Title
-if [[ $(uname -s) == "Darwin" ]]; then
-    PDF_TITLE=$(mdls -name kMDItemTitle "$ABS_PATH" | awk -F'"' '{print $2}')
-else
-    PDF_TITLE=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Title/ {print $2}')
-fi
-
-# Authors
-if [[ $(uname -s) == "Darwin" ]]; then
-    PDF_AUTHORS=$(mdls -name kMDItemAuthors "$ABS_PATH" | awk -F'"' '$2 != "" { v=$2; print (length(v)>65 ? substr(v,1,65)"..." : v) }')
-else
-    PDF_AUTHORS=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Creator/ {val=$2; print (length(val) > 65) ? substr(val,1,65) "..." : val}')
-    if [[ $PDF_AUTHORS == "" ]]; then
-        PDF_AUTHORS=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Author/ {val=$2; print (length(val) > 65) ? substr(val,1,65) "..." : val}')
+    # Title
+    if [[ $(uname -s) == "Darwin" ]]; then
+        PDF_TITLE=$(mdls -name kMDItemTitle "$ABS_PATH" | awk -F'"' '{print $2}')
+    else
+        PDF_TITLE=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Title/ {print $2}')
     fi
-fi
 
-# Pages
-PDF_PAGES=$(pdfinfo "$ABS_PATH" | grep "Pages:" | awk '{print $2}')
-# Creation Date
-PDF_CREATION_DATE=$(pdfinfo "$ABS_PATH" | grep "CreationDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
-# Modified Date
-PDF_MODIFIED_DATE=$(pdfinfo "$ABS_PATH" | grep "ModDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
-# Resolution
-PDF_RESOLUTION=$(pdfinfo "$ABS_PATH" | grep "Page size:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
-# Orientation (use resolution numbers)
-PDF_ORIENTATION=$(echo $PDF_RESOLUTION | awk '{if ($1 > $3) print "Landscape"; else print "Portrait"}')
-# Version
-PDF_VERSION=$(pdfinfo "$ABS_PATH" | grep "PDF version:" | awk '{print $3}')
+    # Authors
+    if [[ $(uname -s) == "Darwin" ]]; then
+        PDF_AUTHORS=$(mdls -name kMDItemAuthors "$ABS_PATH" | awk -F'"' '$2 != "" { v=$2; print (length(v)>65 ? substr(v,1,65)"..." : v) }')
+    else
+        PDF_AUTHORS=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Creator/ {val=$2; print (length(val) > 65) ? substr(val,1,65) "..." : val}')
+        if [[ $PDF_AUTHORS == "" ]]; then
+            PDF_AUTHORS=$(pdfinfo "$ABS_PATH" | awk -F': +' '/Author/ {val=$2; print (length(val) > 65) ? substr(val,1,65) "..." : val}')
+        fi
+    fi
+
+    # Pages
+    PDF_PAGES=$(pdfinfo "$ABS_PATH" | grep "Pages:" | awk '{print $2}')
+    # Creation Date
+    PDF_CREATION_DATE=$(pdfinfo "$ABS_PATH" | grep "CreationDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
+    # Modified Date
+    PDF_MODIFIED_DATE=$(pdfinfo "$ABS_PATH" | grep "ModDate:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
+    # Resolution
+    PDF_RESOLUTION=$(pdfinfo "$ABS_PATH" | grep "Page size:" | awk '{sub(/^[^[:space:]]+[[:space:]]+/, ""); print}')
+    # Orientation (use resolution numbers)
+    PDF_ORIENTATION=$(echo $PDF_RESOLUTION | awk '{if ($1 > $3) print "Landscape"; else print "Portrait"}')
+    # Version
+    PDF_VERSION=$(pdfinfo "$ABS_PATH" | grep "PDF version:" | awk '{print $3}')
 fi
 
 
@@ -104,7 +104,7 @@ fi
 # Image file info
 if [[ ${FILE_KIND,,} == *"image"* ]]; then
 
-# Resolution and Orientation
+    # Resolution and Orientation
     if [[ $(uname -s) == "Darwin" ]]; then
         IMG_RESOLUTION=$(mdls --name kMDItemPixelWidth --name kMDItemPixelHeight "$ABS_PATH" | awk -F'=' '{
             gsub(/ /,"",$2);
