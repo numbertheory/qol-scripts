@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source set-colors
+
+section_header() {
+    echo -e "\n${BOLD}${CYAN}→${RESET} ${BOLD}$1${RESET}"
+}
+
+# Helper function for key-value pairs
+print_kv() {
+    echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${WHITE}${2}${RESET}"
+}

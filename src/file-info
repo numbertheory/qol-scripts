@@ -224,22 +224,5 @@ if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; the
 fi
 
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
-    section_header "Git"
-
-    # Status indicator with color
-    if [[ "$GIT_STATUS" == "clean" ]]; then
-        STATUS_COLOR=$GREEN
-        STATUS_SYMBOL="✓"
-    else
-        STATUS_COLOR=$RED
-        STATUS_SYMBOL="✘"
-    fi
-
-    print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
-    print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
-    print_kv "Commit Message" "${YELLOW}${GIT_COMMIT_MSG}${RESET}"
-    print_kv "Total Commits" "$GIT_COMMIT_COUNT"
-    print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
-    print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
-    print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
+    source git-info-blob file
 fi
