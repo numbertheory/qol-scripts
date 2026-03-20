@@ -164,17 +164,6 @@ if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; the
     TEXT_FILE_ENCODING=$(file -b --mime-encoding "$FILENAME" 2>/dev/null)
 fi
 
-# Git info (if applicable)
-if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
-    GIT_COMMIT_COUNT=$(git rev-list --count HEAD "$ABS_PATH")
-    GIT_CURRENT_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD)
-    GIT_COMMIT_MSG=$(git log -n 1 --pretty=format:%s -- "$ABS_PATH")
-    GIT_SHORT_COMMIT=$(git log -n 1 --pretty=format:%h -- "$ABS_PATH")
-    GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
-    GIT_STATUS=$(git status --porcelain "$ABS_PATH" | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
-    GIT_LAST_COMMIT_TS=$(git --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S" "$ABS_PATH")
-fi
-
 # Output header
 echo -e "\n${BOLD}${BLUE}📄 File Information${RESET}"
 print_kv "Location" "$ABS_PATH"

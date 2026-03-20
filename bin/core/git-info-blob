@@ -34,10 +34,13 @@ else
     STATUS_SYMBOL="✘"
 fi
 
-print_kv "Branch" "${MAGENTA}${GIT_CURRENT_BRANCH}${RESET}"
+print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
 print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET}"
-print_kv "Commit Message" "${YELLOW}${GIT_COMMIT_MSG}${RESET}"
+print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
 print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
 print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
+if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
+    print_kv "Latest Tag" "$GIT_LATEST_TAG"
+fi
 print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
