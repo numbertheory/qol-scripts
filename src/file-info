@@ -40,7 +40,7 @@ fi
 if [[ $(uname -s) == "Darwin" ]]; then
     FILE_SIZE=$(ls -lh "$ABS_PATH" | awk '{print $5}')
 else
-    FILE_SIZE=$(du -shA "$ABS_PATH" | awk '{print $1}')
+    FILE_SIZE=$(du -sh --apparent-size "$ABS_PATH" | awk '{print $1}')
 fi
 
 # Created Date

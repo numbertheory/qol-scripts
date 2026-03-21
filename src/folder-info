@@ -117,7 +117,12 @@ if [[ "$SHOW_COUNTS" == true ]]; then
 fi
 
 if [[ "$SHOW_SIZE" == true ]]; then
-    FOLDER_SIZE=$(du -sh -A "$FOLDER" | awk '{print $1}')
+
+    if [[ $(uname -s) == "Darwin" ]]; then
+        FOLDER_SIZE=$(du -sh -A "$FOLDER" | awk '{print $1}')
+    else
+        FOLDER_SIZE=$(du -sh --apparent-size "$FOLDER" | awk '{print $1}')
+    fi
 fi
 
 if [[ "$SHOW_LARGEST_FILES" == true ]]; then
@@ -141,7 +146,7 @@ if [[ "$SHOW_LARGEST_FILES" == true ]]; then
             printf "%-10s %s\n", size_str, file;
         }')
     else
-        LARGEST_FILES=$( find $FOLDER -type d -name .git -prune -o -type f -exec du -h -A {} + | sort -rh | head -n 5 | awk '{printf "%-12s %s\n", $1, $2}')
+        LARGEST_FILES=$( find $FOLDER -type d -name .git -prune -o -type f -exec du -h --apparent-size {} + | sort -rh | head -n 5 | awk '{printf "%-12s %s\n", $1, $2}')
     fi
 
 fi
