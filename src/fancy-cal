@@ -11,9 +11,20 @@ while true; do
     clear
 
     # Calculate target month/year based on offset
-    target_month=$(date -d "$offset month" +"%m")
-    target_year=$(date -d "$offset month" +"%Y")
-    display_name=$(date -d "$offset month" +"%B %Y")
+    if date --version >/dev/null 2>&1; then
+        target_month=$(date -d "$offset month" +"%m")
+        target_year=$(date -d "$offset month" +"%Y")
+        display_name=$(date -d "$offset month" +"%B %Y")
+    else
+        if [ "$offset" -ge 0 ]; then
+            mod="+${offset}"
+        else
+            mod="${offset}"
+        fi
+        target_month=$(date -v${mod}m +"%m")
+        target_year=$(date -v${mod}m +"%Y")
+        display_name=$(date -v${mod}m +"%B %Y")
+    fi
 
     echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
     echo -e "  Viewing 12 Months starting: ${YELLOW}$display_name${RESET}"
@@ -21,7 +32,11 @@ while true; do
     echo -e "${BOLD}Controls: [n] Next, [p] Prev, [s] Search Year, [t] Today, [q] Quit${RESET}\n"
 
     # Display the 12-month block
-    cal --twelve "$target_month" "$target_year" | col -b
+    if cal --twelve >/dev/null 2>&1; then
+        cal --twelve "$target_month" "$target_year" | col -b
+    else
+        cal -A 11 -m "$target_month" "$target_year" | col -b
+    fi
 
     # Wait for user input
     read -n 1 -s -r char
