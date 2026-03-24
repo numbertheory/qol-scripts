@@ -103,7 +103,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🖐	hand with fingers splayed
 ✋	raised hand
 🤚	raised back of hand
-🖖	 Vulcan salute
+🖖	 Vulcan/Spock salute
 👋	waving hand
 💍	ring
 💎	diamond
