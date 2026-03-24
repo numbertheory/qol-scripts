@@ -4,10 +4,10 @@
 source string-tools
 
 ahead_behind_text() {
-    local branch upstream ahead behind
-
-    branch=${1:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null)}
-    upstream=${2:-origin/$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')}
+    local branch upstream ahead behind folder
+    folder=${3}
+    branch=${1}
+    upstream=${2}
 
     # If we cannot determine the current branch, abort early
     if [[ -z $branch ]]; then
@@ -19,7 +19,7 @@ ahead_behind_text() {
     # Any error (e.g., upstream does not exist) is caught by redirecting
     # stderr to /dev/null and checking the exit status.
     if ! read behind ahead < <(
-            git rev-list --left-right --count "$upstream...$branch" 2>/dev/null
+            git -C $folder rev-list --left-right --count "$upstream...$branch" 2>/dev/null
         ); then
         echo "unavailable"
         return
@@ -54,7 +54,7 @@ ahead_behind_text() {
 
 
 git_lines_changed() {
-    echo -e $(git --no-pager show --shortstat --format="" $1 | awk -v g="$GREEN" -v r="$RED" -v rs="$RESET" -F',' \
+    echo -e $(git -C "$FOLDER" --no-pager show --shortstat --format="" $1 | awk -v g="$GREEN" -v r="$RED" -v rs="$RESET" -F',' \
     'BEGIN { f[1]=0; i[1]=0; d[1]=0 }
     NF > 0 {
         split($1, f, " ");
@@ -68,6 +68,7 @@ git_lines_changed() {
 }
 
 FOLDER_OR_FILE="${1-"folder"}"
+FOLDER=${FOLDER:-$2}
 
 if [[ "$FOLDER_OR_FILE" == "file" ]]; then
     GIT_COMMIT_COUNT=$(git -C "$FOLDER" rev-list --count HEAD "$ABS_PATH" )
@@ -81,7 +82,7 @@ if [[ "$FOLDER_OR_FILE" == "file" ]]; then
 else
     GIT_COMMIT_COUNT=$(git -C "$FOLDER" rev-list --count HEAD)
     GIT_CURRENT_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD)
-    GIT_COMMIT_MSG=$(git log -n 1 --pretty=format:%s HEAD)
+    GIT_COMMIT_MSG=$(git -C "$FOLDER" log -n 1 --pretty=format:%s HEAD)
     GIT_SHORT_COMMIT=$(git -C "$FOLDER" rev-parse --short HEAD)
     GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
     GIT_STATUS=$(git -C "$FOLDER" status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
@@ -105,7 +106,9 @@ print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
 print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET} $GIT_LINES_CHANGED"
 print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
-print_kv "Ahead/Behind" "$(ahead_behind_text)"
+AB_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD 2>/dev/null)
+AB_UPSTREAM="origin/$(git -C "$FOLDER" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+print_kv "Ahead/Behind" "$(ahead_behind_text $AB_BRANCH $AB_UPSTREAM $FOLDER)"
 print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
 print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
 if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
