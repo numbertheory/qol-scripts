@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Show all branches of a git folder/view all commits of a branch.
+
 # --- Configuration ---
 FOLDER=$PWD
 

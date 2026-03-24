@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Description: Create a standard git information blob for QOL scripts
 
 source string-tools
 

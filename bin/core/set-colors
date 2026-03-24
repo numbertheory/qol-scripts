@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# Description: Colorization tools for bash scripts
 # Export formatting reset and modifiers
 export RESET="\033[0m"
 export BOLD="\033[1m"

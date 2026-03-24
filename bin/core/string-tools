@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Description: Common string tools for Quality of Life scripts.
+
 source set-colors
 
 section_header() {

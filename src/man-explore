@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Description: Search through man pages for all commands
+
 # 1. Get a unique list of all executables in your PATH
 # We use 'compgen -c' which is a bash builtin to list all commands
 # On macOS/Linux, this is much faster than searching directories manually.
