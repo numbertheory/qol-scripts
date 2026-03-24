@@ -1,0 +1,370 @@
+#!/usr/bin/env bash
+# Emoji picker using fzf
+# Description: Search for emojis and copy them to your clipboard
+
+# ----------------------------------------------------------------------
+# 1. Emoji list
+# ----------------------------------------------------------------------
+# Each line: <emoji><tab><description>
+read -r -d '' EMOJI_DATA <<'EOF'
+😀	grinning face
+😃	grinning face with big eyes
+😄	grinning face with smiling eyes
+😁	beaming face with smiling eyes
+😆	grinning squinting face
+😅	grinning face with sweat
+🤣	rolling on the floor laughing
+😂	face with tears of joy
+🙂	slightly smiling face
+🙃	upside‑down face
+😉	winking face
+😊	smiling face with smiling eyes
+🥰	smiling face with hearts
+😍	heart‑eyes
+🤩	star‑struck
+😘	face blowing a kiss
+😗	kissing face
+😚	kissing face with closed eyes
+😙	kissing face with smiling eyes
+🤗	hugging face
+🤔	thinking face
+🤨	face with raised eyebrow
+🧐	face with monocle
+🤓	nerd face
+😎	sunglasses
+🥳	party face
+😏	sly smile
+😒	unamused
+😞	disappointed
+😔	pensive
+😟	worried
+😕	confused
+🙁	frowning
+☹️	frowning face
+😣	persevering
+😖	confounded
+😫	tired face
+😩	weary
+🥺	pleading face
+😢	crying face
+😭	loudly crying
+😤	face with steam from nose
+😠	angry
+🤬	cursing face
+🤯	exploding head
+😱	screaming in fear
+😨	fearful
+😰	anxious with sweat
+😥	downcast face with sweat
+🤗	hugging
+🤔	thinking
+🤭	face with hand over mouth
+🤫	shushing face
+🤥	lying face
+🤢	nauseated
+🤮	vomiting
+🤧	sneezing
+🥵	hot face
+🥶	cold face
+🥴	woozy face
+😵	dizzy face
+🤐	zipper‑mouth face
+🤑	money‑mouth
+🤠	cowboy hat face
+🤡	clown face
+👻	ghost
+💀	skull
+☠️	skull and crossbones
+👽	extraterrestrial
+🤖	robot
+🎃	jack‑o‑lantern
+😺	grinning cat
+😸	grinning cat with smiling eyes
+😹	cat with tears of joy
+😻	heart‑eyes cat
+😼	cat with wry smile
+😽	kissing cat
+🙈	see‑no‑evil monkey
+🙉	hear‑no‑evil monkey
+🙊	speak‑no‑evil monkey
+👍	thumbs up
+👎	thumbs down
+✊	fist
+🤞	crossed fingers
+🤟	love‑you gesture
+🤘	sign of the horns
+🤙	call me hand
+👏	clapping hands
+🙌	raising hands
+🤲	hands pressed together
+👐	open hands
+🤝	handshake
+💪	flexed biceps
+🖐	hand with fingers splayed
+✋	raised hand
+🤚	raised back of hand
+🖖	 Vulcan salute
+👋	waving hand
+💍	ring
+💎	diamond
+📱	smartphone
+💻	laptop
+🖥	desktop computer
+⌚	watch
+📚	books
+🗂	file folder
+🧭	compass
+🧰	toolbox
+🧲	magnet
+🧪	test tube
+🧬	DNA
+🧭	compass
+🧱	brick
+🧑‍💻	technologist
+🧑‍🚀	astronaut
+🧑‍⚕️	health worker
+🧑‍🍳	chef
+🧑‍🎓	student
+🧑‍🎤	singer
+🧑‍🏫	teacher
+🧑‍🔧	mechanic
+🧑‍🔬	scientist
+🧑‍💼	office worker
+🇦🇫	flag: Afghanistan
+🇦🇱	flag: Albania
+🇩🇿	flag: Algeria
+🇦🇩	flag: Andorra
+🇦🇴	flag: Angola
+🇦🇬	flag: Antigua & Barbuda
+🇦🇷	flag: Argentina
+🇦🇲	flag: Armenia
+🇦🇺	flag: Australia
+🇦🇹	flag: Austria
+🇦🇿	flag: Azerbaijan
+🇧🇸	flag: Bahamas
+🇧🇭	flag: Bahrain
+🇧🇩	flag: Bangladesh
+🇧🇧	flag: Barbados
+🇧🇾	flag: Belarus
+🇧🇪	flag: Belgium
+🇧🇿	flag: Belize
+🇧🇯	flag: Benin
+🇧🇹	flag: Bhutan
+🇧🇴	flag: Bolivia
+🇧🇦	flag: Bosnia & Herzegovina
+🇧🇼	flag: Botswana
+🇧🇷	flag: Brazil
+🇧🇳	flag: Brunei
+🇧🇬	flag: Bulgaria
+🇧🇫	flag: Burkina Faso
+🇧🇮	flag: Burundi
+🇨🇻	flag: Cabo Verde
+🇰🇭	flag: Cambodia
+🇨🇲	flag: Cameroon
+🇨🇦	flag: Canada
+🇨🇫	flag: Central African Republic
+🇹🇩	flag: Chad
+🇨🇱	flag: Chile
+🇨🇳	flag: China
+🇨🇴	flag: Colombia
+🇰🇲	flag: Comoros
+🇨🇬	flag: Congo (Brazzaville)
+🇨🇩	flag: Congo (Kinshasa)
+🇨🇷	flag: Costa Rica
+🇭🇷	flag: Croatia
+🇨🇺	flag: Cuba
+🇨🇾	flag: Cyprus
+🇨🇿	flag: Czech Republic
+🇩🇰	flag: Denmark
+🇩🇯	flag: Djibouti
+🇩🇲	flag: Dominica
+🇩🇴	flag: Dominican Republic
+🇪🇨	flag: Ecuador
+🇪🇬	flag: Egypt
+🇸🇻	flag: El Salvador
+🇬🇶	flag: Equatorial Guinea
+🇪🇷	flag: Eritrea
+🇪🇪	flag: Estonia
+🇸🇿	flag: Eswatini
+🇪🇹	flag: Ethiopia
+🇫🇯	flag: Fiji
+🇫🇮	flag: Finland
+🇫🇷	flag: France
+🇬🇦	flag: Gabon
+🇬🇲	flag: Gambia
+🇬🇪	flag: Georgia
+🇩🇪	flag: Germany
+🇬🇭	flag: Ghana
+🇬🇷	flag: Greece
+🇬🇹	flag: Guatemala
+🇬🇳	flag: Guinea
+🇬🇼	flag: Guinea‑Bissau
+🇬🇾	flag: Guyana
+🇭🇹	flag: Haiti
+🇭🇳	flag: Honduras
+🇭🇺	flag: Hungary
+🇮🇸	flag: Iceland
+🇮🇳	flag: India
+🇮🇩	flag: Indonesia
+🇮🇷	flag: Iran
+🇮🇶	flag: Iraq
+🇮🇪	flag: Ireland
+🇮🇱	flag: Israel
+🇮🇹	flag: Italy
+🇯🇲	flag: Jamaica
+🇯🇵	flag: Japan
+🇯🇴	flag: Jordan
+🇰🇿	flag: Kazakhstan
+🇰🇪	flag: Kenya
+🇰🇮	flag: Kiribati
+🇽🇰	flag: Kosovo
+🇰🇼	flag: Kuwait
+🇰🇬	flag: Kyrgyzstan
+🇱🇦	flag: Laos
+🇱🇻	flag: Latvia
+🇱🇧	flag: Lebanon
+🇱🇸	flag: Lesotho
+🇱🇷	flag: Liberia
+🇱🇾	flag: Libya
+🇱🇮	flag: Liechtenstein
+🇱🇹	flag: Lithuania
+🇱🇺	flag: Luxembourg
+🇲🇴	flag: Macau
+🇲🇰	flag: North Macedonia
+🇲🇬	flag: Madagascar
+🇲🇼	flag: Malawi
+🇲🇾	flag: Malaysia
+🇲🇻	flag: Maldives
+🇲🇱	flag: Mali
+🇲🇹	flag: Malta
+🇲🇭	flag: Marshall Islands
+🇲🇶	flag: Martinique
+🇲🇷	flag: Mauritania
+🇲🇺	flag: Mauritius
+🇾🇹	flag: Mayotte
+🇲🇽	flag: Mexico
+🇫🇲	flag: Micronesia
+🇲🇩	flag: Moldova
+🇲🇨	flag: Monaco
+🇲🇳	flag: Mongolia
+🇲🇪	flag: Montenegro
+🇲🇸	flag: Montserrat
+🇲🇦	flag: Morocco
+🇲🇿	flag: Mozambique
+🇳🇦	flag: Namibia
+🇳🇷	flag: Nauru
+🇳🇵	flag: Nepal
+🇳🇱	flag: Netherlands
+🇳🇨	flag: New Caledonia
+🇳🇿	flag: New Zealand
+🇳🇮	flag: Nicaragua
+🇳🇪	flag: Niger
+🇳🇬	flag: Nigeria
+🇳🇺	flag: Niue
+🇳🇫	flag: Norfolk Island
+🇲🇵	flag: Northern Mariana Islands
+🇰🇵	flag: North Korea
+🇳🇴	flag: Norway
+🇴🇲	flag: Oman
+🇵🇰	flag: Pakistan
+🇵🇼	flag: Palau
+🇵🇸	flag: Palestine
+🇵🇦	flag: Panama
+🇵🇬	flag: Papua New Guinea
+🇵🇾	flag: Paraguay
+🇵🇪	flag: Peru
+🇵🇭	flag: Philippines
+🇵🇱	flag: Poland
+🇵🇹	flag: Portugal
+🇵🇷	flag: Puerto Rico
+🇶🇦	flag: Qatar
+🇷🇴	flag: Romania
+🇷🇺	flag: Russia
+🇷🇼	flag: Rwanda
+🇼🇸	flag: Samoa
+🇸🇲	flag: San Marino
+🇸🇹	flag: São Tomé & Príncipe
+🇸🇦	flag: Saudi Arabia
+🇸🇳	flag: Senegal
+🇷🇸	flag: Serbia
+🇸🇨	flag: Seychelles
+🇸🇱	flag: Sierra Leone
+🇸🇬	flag: Singapore
+🇸🇽	flag: Sint Maarten
+🇸🇰	flag: Slovakia
+🇸🇮	flag: Slovenia
+🇸🇧	flag: Solomon Islands
+🇸🇴	flag: Somalia
+🇿🇦	flag: South Africa
+🇰🇷	flag: South Korea
+🇸🇸	flag: South Sudan
+🇪🇸	flag: Spain
+🇱🇰	flag: Sri Lanka
+🇸🇩	flag: Sudan
+🇸🇷	flag: Suriname
+🇸🇿	flag: Eswatini
+🇸🇪	flag: Sweden
+🇨🇭	flag: Switzerland
+🇸🇾	flag: Syria
+🇹🇼	flag: Taiwan
+🇹🇯	flag: Tajikistan
+🇹🇿	flag: Tanzania
+🇹🇭	flag: Thailand
+🇹🇱	flag: Timor‑Leste
+🇹🇬	flag: Togo
+🇹🇰	flag: Tokelau
+🇹🇴	flag: Tonga
+🇹🇹	flag: Trinidad & Tobago
+🇹🇳	flag: Tunisia
+🇹🇷	flag: Turkey
+🇹🇲	flag: Turkmenistan
+🇹🇨	flag: Turks & Caicos Islands
+🇹🇻	flag: Tuvalu
+🇺🇬	flag: Uganda
+🇺🇦	flag: Ukraine
+🇦🇪	flag: United Arab Emirates
+🇬🇧	flag: United Kingdom
+🇺🇸	flag: United States
+🇺🇾	flag: Uruguay
+🇺🇿	flag: Uzbekistan
+🇻🇺	flag: Vanuatu
+🇻🇦	flag: Vatican City
+🇻🇪	flag: Venezuela
+🇻🇳	flag: Vietnam
+🇼🇫	flag: Wallis & Futuna
+🇾🇪	flag: Yemen
+🇿🇲	flag: Zambia
+🇿🇼	flag: Zimbabwe
+EOF
+
+# ----------------------------------------------------------------------
+# 2. Run fzf
+# ----------------------------------------------------------------------
+# The preview window shows the emoji in a larger font.
+SELECTED=$(printf "%s\n" "$EMOJI_DATA" |
+    fzf --ansi \
+        --prompt="Pick an emoji> " \
+        --height=40% \
+        --layout=reverse \
+        --delimiter=$'\t' \
+        --nth=2 \
+        --ignore-case \
+        --exact)
+
+# ----------------------------------------------------------------------
+# 3. Output the chosen emoji
+# ----------------------------------------------------------------------
+if [[ -n $SELECTED ]]; then
+    EMOJI=$(cut -f1 <<<"$SELECTED")
+
+    # Clipboard handling (Linux/macOS)
+    if command -v xclip >/dev/null 2>&1; then
+        printf "%s" "$EMOJI" | xclip -selection clipboard
+    elif command -v xsel >/dev/null 2>&1; then
+        printf "%s" "$EMOJI" | xsel --clipboard --input
+    elif command -v pbcopy >/dev/null 2>&1; then
+        printf "%s" "$EMOJI" | pbcopy
+    fi
+
+    printf "%s\n" "$EMOJI"
+fi
