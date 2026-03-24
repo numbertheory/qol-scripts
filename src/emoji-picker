@@ -139,7 +139,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🐻	Bear
 🐼	Panda
 🐨	Koala
-🐯	Tiger
+🐯	Tiger (face)
 🦁	Lion
 🐮	Cow
 🐷	Pig
@@ -186,7 +186,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🐋	Spouting whale
 🦈	Shark
 🐊	Crocodile
-🐅	Tiger (face)
+🐅	Tiger
 🐆	Leopard
 🦓	Zebra
 🦍	Gorilla
