@@ -106,9 +106,11 @@ print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
 print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET} $GIT_LINES_CHANGED"
 print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
-AB_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD 2>/dev/null)
-AB_UPSTREAM="origin/$(git -C "$FOLDER" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
-print_kv "Ahead/Behind" "$(ahead_behind_text $AB_BRANCH $AB_UPSTREAM $FOLDER)"
+if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
+    AB_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    AB_UPSTREAM="origin/$(git -C "$FOLDER" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+    print_kv "Ahead/Behind" "$(ahead_behind_text $AB_BRANCH $AB_UPSTREAM $FOLDER)"
+fi
 print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
 print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
 if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
