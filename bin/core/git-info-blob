@@ -8,7 +8,7 @@ ahead_behind_text() {
     upstream=${2:-origin/main}
 
     # Get ahead/behind numbers
-    read ahead behind < <(git rev-list --left-right --count "$upstream...$branch")
+    read behind ahead < <(git rev-list --left-right --count "$upstream...$branch")
 
     if (( ahead == 0 && behind == 0 )); then
         echo "$branch is even with $upstream"
@@ -19,15 +19,20 @@ ahead_behind_text() {
         if (( ahead != 0 )); then
             ahead_word="commit"
             (( ahead != 1 )) && ahead_word+="s"
-            ahead_phrase="$ahead $ahead_word ahead,"
+            ahead_phrase="$ahead $ahead_word ahead"
         fi
         if (( behind != 0 )); then
             behind_word="commit"
             (( behind != 1 )) && behind_word+="s"
             behind_phrase="$behind $behind_word behind"
         fi
-
-        echo "$branch is $ahead_phrase $behind_phrase $upstream"
+        if (( ahead == 0 && behind != 0 )); then
+            echo "$branch is $behind_phrase $upstream"
+        elif (( ahead != 0 && behind == 0 )); then
+            echo "$branch is $ahead_phrase of $upstream"
+        else
+            echo "$branch is $behind_phrase $upstream"
+        fi
     fi
 }
 
