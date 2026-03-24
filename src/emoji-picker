@@ -210,15 +210,93 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🐲	Dragon (face)
 🦕	Sauropod
 🦖	T‑rex
-🐳‍⬛	Whale (dark)
+🫍	Orca
 🐚	Spiral shell
 🪸	Coral
+🗺️	World map
+🗾	Map of Japan
+🧭	Compass
+🏔️	Snow‑capped mountain
+⛰️	Mountain
+🏕️	Camping
+🏖️	Beach with umbrella
+🏜️	Desert
+🏝️	Desert island
+🏞️	National park
+🏟️	Stadium
+🏠	House
+🏡	House with garden
+🏢	Office building
+🏣	Japanese post office
+🏤	European post office
+🏥	Hospital
+🏦	Bank
+🏨	Hotel
+🏩	Love hotel
+🏪	Convenience store
+🏫	School
+🏬	Department store
+🏯	Japanese castle
+🏰	European castle
+🗽	Statue of Liberty
+🗼	Tokyo tower
+🗿	Moai statue
+🛤️	Railway track
+🛣️	Motorway
+🛢️	Oil drum
+🛳️	Passenger ship
+⛴️	Ferry
+🛥️	Motor boat
+🚤	Speedboat
+⛵	Sailboat
+🚢	Ship
+🛶	Canoe
+🚁	Helicopter
+✈️	Airplane
+🛩️	Small airplane
+🪂	Parachute
+🚀	Rocket
+🛰️	Satellite
+🚂	Steam locomotive
+🚆	Train
+🚇	Metro
+🚊	Tram
+🚉	Station
+🚞	Mountain railway
+🚝	Monorail
+🚟	Suspension railway
+🚠	Mountain cableway
+🚡	Aerial tramway
+🛴	Kick scooter
+🛹	Skateboard
+🚲	Bicycle
+🛵	Motor scooter
+🏍️	Motorcycle
+🚗	Car
+🚙	SUV
+🚕	Taxi
+🚚	Delivery truck
+🚛	Articulated lorry
+🚜	Tractor
+🛺	Auto rickshaw
+🚦	Vertical traffic light
+🚥	Horizontal traffic light
+🛑	Stop sign
+🏙️	Cityscape
+🌆	Sunset over buildings
+🌇	Sunrise over buildings
+🌉	Bridge at night
+🌁	Foggy bridge
+🏛️	Classical building
+🏗️	Building construction
+🏚️	Derelict house
+🏭	Factory
 🇦🇫	flag: Afghanistan
 🇦🇱	flag: Albania
 🇩🇿	flag: Algeria
 🇦🇩	flag: Andorra
 🇦🇴	flag: Angola
-🇦🇬	flag: Antigua & Barbuda
+🇦🇬	flag: Antigua & Barbuda
 🇦🇷	flag: Argentina
 🇦🇲	flag: Armenia
 🇦🇺	flag: Australia
@@ -234,38 +312,38 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇧🇯	flag: Benin
 🇧🇹	flag: Bhutan
 🇧🇴	flag: Bolivia
-🇧🇦	flag: Bosnia & Herzegovina
+🇧🇦	flag: Bosnia & Herzegovina
 🇧🇼	flag: Botswana
 🇧🇷	flag: Brazil
 🇧🇳	flag: Brunei
 🇧🇬	flag: Bulgaria
-🇧🇫	flag: Burkina Faso
+🇧🇫	flag: Burkina Faso
 🇧🇮	flag: Burundi
-🇨🇻	flag: Cabo Verde
+🇨🇻	flag: Cabo Verde
 🇰🇭	flag: Cambodia
 🇨🇲	flag: Cameroon
 🇨🇦	flag: Canada
-🇨🇫	flag: Central African Republic
+🇨🇫	flag: Central African Republic
 🇹🇩	flag: Chad
 🇨🇱	flag: Chile
 🇨🇳	flag: China
 🇨🇴	flag: Colombia
 🇰🇲	flag: Comoros
-🇨🇬	flag: Congo (Brazzaville)
-🇨🇩	flag: Congo (Kinshasa)
-🇨🇷	flag: Costa Rica
+🇨🇬	flag: Congo (Brazzaville)
+🇨🇩	flag: Congo (Kinshasa)
+🇨🇷	flag: Costa Rica
 🇭🇷	flag: Croatia
 🇨🇺	flag: Cuba
 🇨🇾	flag: Cyprus
-🇨🇿	flag: Czech Republic
+🇨🇿	flag: Czech Republic
 🇩🇰	flag: Denmark
 🇩🇯	flag: Djibouti
 🇩🇲	flag: Dominica
-🇩🇴	flag: Dominican Republic
+🇩🇴	flag: Dominican Republic
 🇪🇨	flag: Ecuador
 🇪🇬	flag: Egypt
-🇸🇻	flag: El Salvador
-🇬🇶	flag: Equatorial Guinea
+🇸🇻	flag: El Salvador
+🇬🇶	flag: Equatorial Guinea
 🇪🇷	flag: Eritrea
 🇪🇪	flag: Estonia
 🇸🇿	flag: Eswatini
@@ -313,14 +391,14 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇱🇹	flag: Lithuania
 🇱🇺	flag: Luxembourg
 🇲🇴	flag: Macau
-🇲🇰	flag: North Macedonia
+🇲🇰	flag: North Macedonia
 🇲🇬	flag: Madagascar
 🇲🇼	flag: Malawi
 🇲🇾	flag: Malaysia
 🇲🇻	flag: Maldives
 🇲🇱	flag: Mali
 🇲🇹	flag: Malta
-🇲🇭	flag: Marshall Islands
+🇲🇭	flag: Marshall Islands
 🇲🇶	flag: Martinique
 🇲🇷	flag: Mauritania
 🇲🇺	flag: Mauritius
@@ -338,51 +416,51 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇳🇷	flag: Nauru
 🇳🇵	flag: Nepal
 🇳🇱	flag: Netherlands
-🇳🇨	flag: New Caledonia
-🇳🇿	flag: New Zealand
+🇳🇨	flag: New Caledonia
+🇳🇿	flag: New Zealand
 🇳🇮	flag: Nicaragua
 🇳🇪	flag: Niger
 🇳🇬	flag: Nigeria
 🇳🇺	flag: Niue
-🇳🇫	flag: Norfolk Island
-🇲🇵	flag: Northern Mariana Islands
-🇰🇵	flag: North Korea
+🇳🇫	flag: Norfolk Island
+🇲🇵	flag: Northern Mariana Islands
+🇰🇵	flag: North Korea
 🇳🇴	flag: Norway
 🇴🇲	flag: Oman
 🇵🇰	flag: Pakistan
 🇵🇼	flag: Palau
 🇵🇸	flag: Palestine
 🇵🇦	flag: Panama
-🇵🇬	flag: Papua New Guinea
+🇵🇬	flag: Papua New Guinea
 🇵🇾	flag: Paraguay
 🇵🇪	flag: Peru
 🇵🇭	flag: Philippines
 🇵🇱	flag: Poland
 🇵🇹	flag: Portugal
-🇵🇷	flag: Puerto Rico
+🇵🇷	flag: Puerto Rico
 🇶🇦	flag: Qatar
 🇷🇴	flag: Romania
 🇷🇺	flag: Russia
 🇷🇼	flag: Rwanda
 🇼🇸	flag: Samoa
-🇸🇲	flag: San Marino
-🇸🇹	flag: São Tomé & Príncipe
-🇸🇦	flag: Saudi Arabia
+🇸🇲	flag: San Marino
+🇸🇹	flag: São Tomé & Príncipe
+🇸🇦	flag: Saudi Arabia
 🇸🇳	flag: Senegal
 🇷🇸	flag: Serbia
 🇸🇨	flag: Seychelles
-🇸🇱	flag: Sierra Leone
+🇸🇱	flag: Sierra Leone
 🇸🇬	flag: Singapore
-🇸🇽	flag: Sint Maarten
+🇸🇽	flag: Sint Maarten
 🇸🇰	flag: Slovakia
 🇸🇮	flag: Slovenia
-🇸🇧	flag: Solomon Islands
+🇸🇧	flag: Solomon Islands
 🇸🇴	flag: Somalia
-🇿🇦	flag: South Africa
-🇰🇷	flag: South Korea
-🇸🇸	flag: South Sudan
+🇿🇦	flag: South Africa
+🇰🇷	flag: South Korea
+🇸🇸	flag: South Sudan
 🇪🇸	flag: Spain
-🇱🇰	flag: Sri Lanka
+🇱🇰	flag: Sri Lanka
 🇸🇩	flag: Sudan
 🇸🇷	flag: Suriname
 🇸🇿	flag: Eswatini
@@ -397,24 +475,24 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇹🇬	flag: Togo
 🇹🇰	flag: Tokelau
 🇹🇴	flag: Tonga
-🇹🇹	flag: Trinidad & Tobago
+🇹🇹	flag: Trinidad & Tobago
 🇹🇳	flag: Tunisia
 🇹🇷	flag: Turkey
 🇹🇲	flag: Turkmenistan
-🇹🇨	flag: Turks & Caicos Islands
+🇹🇨	flag: Turks & Caicos Islands
 🇹🇻	flag: Tuvalu
 🇺🇬	flag: Uganda
 🇺🇦	flag: Ukraine
-🇦🇪	flag: United Arab Emirates
-🇬🇧	flag: United Kingdom
-🇺🇸	flag: United States
+🇦🇪	flag: United Arab Emirates
+🇬🇧	flag: United Kingdom
+🇺🇸	flag: United States
 🇺🇾	flag: Uruguay
 🇺🇿	flag: Uzbekistan
 🇻🇺	flag: Vanuatu
-🇻🇦	flag: Vatican City
+🇻🇦	flag: Vatican City
 🇻🇪	flag: Venezuela
 🇻🇳	flag: Vietnam
-🇼🇫	flag: Wallis & Futuna
+🇼🇫	flag: Wallis & Futuna
 🇾🇪	flag: Yemen
 🇿🇲	flag: Zambia
 🇿🇼	flag: Zimbabwe
