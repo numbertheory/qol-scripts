@@ -14,12 +14,20 @@ ahead_behind_text() {
         echo "$branch is even with $upstream"
     else
         # plural‑aware wording
-        ahead_word="commit"
-        behind_word="commit"
-        (( ahead != 1 )) && ahead_word+="s"
-        (( behind != 1 )) && behind_word+="s"
+        ahead_phrase=""
+        behind_phrase=""
+        if (( ahead != 0 )); then
+            ahead_word="commit"
+            (( ahead != 1 )) && ahead_word+="s"
+            ahead_phrase="$ahead $ahead_word ahead,"
+        fi
+        if (( behind != 0 )); then
+            behind_word="commit"
+            (( behind != 1 )) && behind_word+="s"
+            behind_phrase="$behind $behind_word behind"
+        fi
 
-        echo "$branch is $ahead $ahead_word ahead, $behind $behind_word behind $upstream"
+        echo "$branch is $ahead_phrase $behind_phrase $upstream"
     fi
 }
 
