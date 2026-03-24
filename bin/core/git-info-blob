@@ -4,11 +4,26 @@
 source string-tools
 
 ahead_behind_text() {
-    branch=${1:-$(git rev-parse --abbrev-ref HEAD)}
-    upstream=${2:-origin/main}
+    local branch upstream ahead behind
 
-    # Get ahead/behind numbers
-    read behind ahead < <(git rev-list --left-right --count "$upstream...$branch")
+    branch=${1:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null)}
+    upstream=${2:-origin/$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')}
+
+    # If we cannot determine the current branch, abort early
+    if [[ -z $branch ]]; then
+        echo "unavailable"
+        return
+    fi
+
+    # Try to get the ahead/behind numbers.
+    # Any error (e.g., upstream does not exist) is caught by redirecting
+    # stderr to /dev/null and checking the exit status.
+    if ! read behind ahead < <(
+            git rev-list --left-right --count "$upstream...$branch" 2>/dev/null
+        ); then
+        echo "unavailable"
+        return
+    fi
 
     if (( ahead == 0 && behind == 0 )); then
         echo "$branch is even with $upstream"
