@@ -130,6 +130,89 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🔧	mechanic
 🧑‍🔬	scientist
 🧑‍💼	office worker
+🐶	Dog
+🐱	Cat
+🐭	Mouse
+🐹	Hamster
+🐰	Rabbit
+🦊	Fox
+🐻	Bear
+🐼	Panda
+🐨	Koala
+🐯	Tiger
+🦁	Lion
+🐮	Cow
+🐷	Pig
+🐽	Pig nose
+🐸	Frog
+🐵	Monkey
+🐔	Chicken
+🐧	Penguin
+🐦	Bird
+🐤	Baby chick
+🐣	Hatching chick
+🐥	Front‑facing chick
+🦆	Duck
+🦅	Eagle
+🦉	Owl
+🦇	Bat
+🐺	Wolf
+🐗	Boar
+🐴	Horse
+🦄	Unicorn
+🐝	Bee
+🐛	Bug
+🦋	Butterfly
+🐌	Snail
+🐞	Lady beetle
+🐜	Ant
+🪰	Fly
+🪱	Worm
+🦟	Mosquito
+🦗	Cricket
+🐢	Turtle
+🐍	Snake
+🦎	Lizard
+🐙	Octopus
+🦑	Squid
+🦐	Shrimp
+🦞	Lobster
+🦀	Crab
+🐡	Blowfish
+🐠	Tropical fish
+🐟	Fish
+🐬	Dolphin
+🐳	Whale
+🐋	Spouting whale
+🦈	Shark
+🐊	Crocodile
+🐅	Tiger (face)
+🐆	Leopard
+🦓	Zebra
+🦍	Gorilla
+🦧	Orangutan
+🐘	Elephant
+🦣	Mammoth
+🦏	Rhinoceros
+🦛	Hippopotamus
+🐪	Camel
+🐫	Two‑hump camel
+🦒	Giraffe
+🦘	Kangaroo
+🦥	Sloth
+🦦	Otter
+🦨	Skunk
+🦡	Badger
+🐿️	Chipmunk
+🦔	Hedgehog
+🐾	Paw prints
+🐉	Dragon
+🐲	Dragon (face)
+🦕	Sauropod
+🦖	T‑rex
+🐳‍⬛	Whale (dark)
+🐚	Spiral shell
+🪸	Coral
 🇦🇫	flag: Afghanistan
 🇦🇱	flag: Albania
 🇩🇿	flag: Algeria
