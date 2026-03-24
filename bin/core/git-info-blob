@@ -3,6 +3,28 @@
 
 source string-tools
 
+ahead_behind_text() {
+    branch=${1:-$(git rev-parse --abbrev-ref HEAD)}
+    upstream=${2:-origin/main}
+
+    # Get ahead/behind numbers
+    read ahead behind < <(git rev-list --left-right --count "$upstream...$branch")
+
+    if (( ahead == 0 && behind == 0 )); then
+        echo "$branch is even with $upstream"
+    else
+        # plural‑aware wording
+        ahead_word="commit"
+        behind_word="commit"
+        (( ahead != 1 )) && ahead_word+="s"
+        (( behind != 1 )) && behind_word+="s"
+
+        echo "$branch is $ahead $ahead_word ahead, $behind $behind_word behind $upstream"
+    fi
+}
+
+
+
 git_lines_changed() {
     echo -e $(git --no-pager show --shortstat --format="" $1 | awk -v g="$GREEN" -v r="$RED" -v rs="$RESET" -F',' \
     'BEGIN { f[1]=0; i[1]=0; d[1]=0 }
@@ -55,6 +77,7 @@ print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
 print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET} $GIT_LINES_CHANGED"
 print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
+print_kv "Ahead/Behind" "$(ahead_behind_text)"
 print_kv "Status" "${STATUS_COLOR}${STATUS_SYMBOL} ${GIT_STATUS}${RESET}"
 print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
 if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
