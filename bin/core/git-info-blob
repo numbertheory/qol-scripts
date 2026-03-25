@@ -102,9 +102,9 @@ else
     STATUS_SYMBOL="✘"
 fi
 
-print_kv "Branch" "${LAVENDER}${GIT_CURRENT_BRANCH}${RESET}"
+print_kv "Branch" "${BOLD}${CYAN}${GIT_CURRENT_BRANCH}${RESET}"
 print_kv "Commit" "${YELLOW}${GIT_SHORT_COMMIT}${RESET} $GIT_LINES_CHANGED"
-print_kv "Commit Message" "${LIME}${GIT_COMMIT_MSG}${RESET}"
+print_kv "Commit Message" "${GREEN}${GIT_COMMIT_MSG}${RESET}"
 print_kv "Total Commits" "$GIT_COMMIT_COUNT"
 if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
     AB_BRANCH=$(git -C "$FOLDER" rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -116,4 +116,4 @@ print_kv "Last Commit" "$GIT_LAST_COMMIT_TS"
 if [[ "$FOLDER_OR_FILE" == "folder" ]]; then
     print_kv "Latest Tag" "$GIT_LATEST_TAG"
 fi
-print_kv "Remote" "${BLUE}${GIT_REMOTE_URL}${RESET}"
+print_kv "Remote" "${GIT_REMOTE_URL}"
