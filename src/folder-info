@@ -223,10 +223,10 @@ if [[ "$SHOW_FILE_BREAKDOWN" == true ]]; then
                 echo -e "  ${BLUE}${display_name}${RESET}"
             else
                 display_name="$rel_path"
-                echo -e "  ▶${BLUE}${display_name}${RESET}"
+                echo -e "  ↳ ${BLUE}${display_name}${RESET}"
             fi
             echo "$breakdown" | while read -r line; do
-                echo -e "    ${GREEN}${line}${RESET}"
+                echo -e "     ${GREEN}${line}${RESET}"
             done
         fi
     done
