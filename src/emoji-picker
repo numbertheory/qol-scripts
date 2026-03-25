@@ -581,7 +581,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🏴󠁧󠁢󠁥󠁮󠁧󠁿	 flag: England
 🏴󠁧󠁢󠁳󠁣󠁴󠁿	 flag: Scotland
 🏴󠁧󠁢󠁷󠁬󠁳󠁿	 flag: Wales
-🏳️‍🌈	flag: Rainbow Flag
+🏳️‍🌈	flag: Rainbow Pride LGBTQ+ Flag
 🏳️‍⚧️	flag: Transgender Flag
 🇺🇳	flag: United Nations
 🇪🇺	flag: European Union
