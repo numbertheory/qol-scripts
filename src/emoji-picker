@@ -115,6 +115,54 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🙈	see‑no‑evil monkey
 🙉	hear‑no‑evil monkey
 🙊	speak‑no‑evil monkey
+👶	people: baby
+🧒	people: child
+👦	people: boy
+👧	people: girl
+🧑	people: person
+👱	people: person with blond hair
+👨	people: man
+🧔	people: person with beard
+🧔‍♂️	people: man with beard
+🧔‍♀️	people: woman with beard
+👨‍🦰	people: man with red hair redhead
+👨‍🦱	people: man with curly hair
+👨‍🦳	people: man with white hair
+👨‍🦲	people: bald man
+👩	people: woman
+👩‍🦰	people: woman with red hair redhead
+🧑‍🦰	people: person with red hair redhead
+👩‍🦱	people: woman with curly hair
+🧑‍🦱	people: person with curly hair
+👩‍🦳	people: woman with white hair
+🧑‍🦳	people: person with white hair
+👩‍🦲	people: bald woman
+🧑‍🦲	people: bald person
+👱‍♀️	people: woman blond hair
+👱‍♂️	people: man blond hair
+🧓	people: older person elder
+👴	people: old man elder
+👵	people: old woman elder
+🧏	people: deaf person
+🧏‍♂️	people: deaf man
+🧏‍♀️	people: deaf woman
+👳	people: person wearing turban
+👳‍♂️	people: man wearing turban
+👳‍♀️	people: woman wearing turban
+👲	people: person with skullcap
+🧕	people: woman with headscarf
+🤰	people: pregnant woman
+🫃	people: pregnant man
+🫄	people: pregnant person
+👼	people: baby angel
+🗣️	speaking head
+👤	bust in silhouette
+👥	busts in silhouette
+🫂	people hugging
+🦰	red hair
+🦱	curly hair
+🦳	white hair
+🦲	bald
 👍	hand: thumbs up
 👎	hand: thumbs down
 ✊	hand: fist
@@ -205,9 +253,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🔧	mechanic
 🧑‍🔬	scientist
 🧑‍💼	office worker
-👨	Man
-👩	Woman
-🧑	Person
 🏃‍♂️	Male Runner
 🏃‍♀️	Female Runner
 🏃	Non-binary Runner
@@ -808,7 +853,12 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "✌️"|"🤏"|"🤌"|"👌"|"🫸"|"🫷"|"🫴"|"🫳"| \
         "🫲"|"🫱"|"🫵"|"👊"|"🤛"|"🤜"|"🫶"|"🫰"| \
         "👈"|"👉"|"👆"|"☝️"|"👇"|"🖕"|"🙏"|"✍️"| \
-        "💅"|"🦵"|"🦶"|"🦻")
+        "💅"|"🦵"|"🦶"|"🦻"|"👶"|"🧒"|"👦"|"👧"| \
+        "🧑"|"👱"|"👨"|"🧔"|"🧔‍♂️"|"🧔‍♀️"|"👨‍🦰"|"👨‍🦱"| \
+        "👨‍🦳"|"👨‍🦲"|"👩"|"👩‍🦰"|"🧑‍🦰"|"👩‍🦱"|"🧑‍🦱"|"👩‍🦳"| \
+        "🧑‍🦳"|"👩‍🦲"|"🧑‍🦲"|"👱‍♀️"|"👱‍♂️"|"🧓"|"👴"|"👵"| \
+        "🧏"|"🧏‍♂️"|"🧏‍♀️"|"👳"|"👳‍♂️"|"👳‍♀️"|"👲"|"🧕"| \
+        "🤰"|"🫃"|"🫄"|"👼")
             printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
             ;;
         # DEFAULT: All non-human/non-tonable emojis
