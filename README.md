@@ -23,6 +23,12 @@ export QOL_LOCATION=38.8950,77.0363 # only four significant digits are allowed
 
 # Cookbook
 export QOL_RECIPES_FOLDER=<absolute path where your recipes are>
+
+# Emoji picker skin tone
+# Options are light, medium-light, medium, medium-dark, and dark
+# can be overridden with skin tone passed as a flag, emoji-picker --medium-light
+export QOL_EMOJI_SKIN_TONE="medium"
+
 ```
 
 To install an optional script, a symlink is created from the `src/` directory to `qol-scripts/bin`, which should be empty. Use the `qol install` command to install and uninstall scripts.
@@ -34,5 +40,3 @@ etc.
 ```
 
 This way, you have more control over what is being added, and don't have to add everything in `src` to your PATH.
-
-

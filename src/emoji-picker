@@ -4,30 +4,31 @@
 
 BASE=$'\U25EF' # Large Circle
 
-case "$1" in
-    --light)
+# Determine the tone to use. Command line argument takes precedence over environment variable.
+if [[ -n "$1" && "$1" == --* ]]; then
+    INPUT_TONE="${1#--}"
+else
+    INPUT_TONE="${QOL_EMOJI_SKIN_TONE}"
+fi
+
+case "$INPUT_TONE" in
+    light)
         TONE=$'\U1F3FB'
-        INDICATOR=" (${BASE}${TONE}) "
         ;;
-    --medium-light)
+    medium-light)
         TONE=$'\U1F3FC'
-        INDICATOR=" (${BASE}${TONE}) "
         ;;
-    --medium)
+    medium)
         TONE=$'\U1F3FD'
-        INDICATOR=" (${BASE}${TONE}) "
         ;;
-    --medium-dark)
+    medium-dark)
         TONE=$'\U1F3FE'
-        INDICATOR=" (${BASE}${TONE}) "
         ;;
-    --dark)
+    dark)
         TONE=$'\U1F3FF'
-        INDICATOR=" (${BASE}${TONE}) "
         ;;
     *)
         TONE=""
-        INDICATOR=""
         ;;
 esac
 
@@ -755,7 +756,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
             ;;
         # STANDARD HUMAN: Simple suffixing
-        "✊"|"👏"|"🤚"|"✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃")
+        "✋"|"✊"|"👏"|"🤚"|"✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃")
              # Note: athletes also match the "Professional" logic if they start with 👨/👩
              # but simple athletes like 🏃 start here.
             printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
