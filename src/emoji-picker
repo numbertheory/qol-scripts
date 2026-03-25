@@ -163,6 +163,33 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🦱	curly hair
 🦳	white hair
 🦲	bald
+🙍	people: person frowning
+🙍‍♂️	people: man frowning
+🙍‍♀️	people: woman frowning
+🙎	people: person pouting
+🙎‍♂️	people: man pouting
+🙎‍♀️	people: woman pouting
+🙅	people: person gesturing no
+🙅‍♂️	people: man gesturing no
+🙅‍♀️	people: woman gesturing no
+🙆	people: person gesturing ok
+🙆‍♂️	people: man gesturing ok
+🙆‍♀️	people: woman gesturing ok
+💁	people: person tipping hand
+💁‍♀️	people: woman tipping hand
+💁‍♂️	people: man tipping hand
+🙋	people: person raising hand
+🙋‍♂️	people: man raising hand
+🙋‍♀️	people: woman raising hand
+🙇	people: person bowing
+🙇‍♂️	people: man bowing
+🙇‍♀️	people: woman bowing
+🤦	people: person facepalming
+🤦‍♂️	people: man facepalming
+🤦‍♀️	people: woman facepalming
+🤷	people: person shrugging
+🤷‍♂️	people: man shrugging
+🤷‍♀️	people: woman shrugging
 👍	hand: thumbs up
 👎	hand: thumbs down
 ✊	hand: fist
@@ -841,7 +868,8 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*| \
         "🏋"*|"🧗"*|"🧖"*|"🚴"*|"🚵"*|"🧘"*|"⛹️"*| \
         "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
-        "👯"*|"⛷️"*| "💃"*|"🕺"*)
+        "👯"*|"⛷️"*|"💃"*|"🕺"*|"🧏"*|"👳"*|"🙎"*| \
+        "🙍"*|"🙅"*|"🙆"*|"💁"*|"🙋"*|"🙇"*|"🤦"*|"🤷"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
@@ -849,7 +877,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         # STANDARD HUMAN: Simple suffixing
         "🖖"|"🤘"|"🤟"|"🤞"|"✋"|"✊"|"👏"|"🤚"| \
         "✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"| \
-        "👌"|"👋"|"💪"|"🤳"|"👂"|"👃"| "🤲"| "🖐"| \
+        "👌"|"👋"|"💪"|"🤳"|"👂"|"👃"|"🤲"|"🖐"| \
         "✌️"|"🤏"|"🤌"|"👌"|"🫸"|"🫷"|"🫴"|"🫳"| \
         "🫲"|"🫱"|"🫵"|"👊"|"🤛"|"🤜"|"🫶"|"🫰"| \
         "👈"|"👉"|"👆"|"☝️"|"👇"|"🖕"|"🙏"|"✍️"| \
@@ -857,8 +885,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🧑"|"👱"|"👨"|"🧔"|"🧔‍♂️"|"🧔‍♀️"|"👨‍🦰"|"👨‍🦱"| \
         "👨‍🦳"|"👨‍🦲"|"👩"|"👩‍🦰"|"🧑‍🦰"|"👩‍🦱"|"🧑‍🦱"|"👩‍🦳"| \
         "🧑‍🦳"|"👩‍🦲"|"🧑‍🦲"|"👱‍♀️"|"👱‍♂️"|"🧓"|"👴"|"👵"| \
-        "🧏"|"🧏‍♂️"|"🧏‍♀️"|"👳"|"👳‍♂️"|"👳‍♀️"|"👲"|"🧕"| \
-        "🤰"|"🫃"|"🫄"|"👼")
+        "👲"|"🧕"|"🤰"|"🫃"|"🫄"|"👼")
             printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
             ;;
         # DEFAULT: All non-human/non-tonable emojis
