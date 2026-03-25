@@ -124,7 +124,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🤙	hand: call me hand
 👏	hand: clapping hands
 🙌	hand: raising hands
-🤲	hand: hands pressed together
+🤲	hand: palms up together
 👐	hand: open hands
 🤝	hand: handshake
 💪	hand: flexed biceps
@@ -133,9 +133,53 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🤚	hand: raised back of hand
 🖖	 hand: Vulcan/Spock salute
 👋	hand: waving hand
+✌️	hand: victory sign
+🤏	hand: pinching hand
+🤌	hand: pinched fingers
+👌	hand: ok sign
+🫸	hand: rightward pushing hand
+🫷	hand: leftward pushing hand
+🫴	hand: palm up hand
+🫳	hand: palm down hand
+🫲	hand: leftward facing hand
+🫱	hand: rightward facing hand
+🫵	hand: pointing at viewer
+👊	hand: oncoming fist fistbump
+🤛	hand: left-facing fist
+🤜	hand: right-facing fist
+🫶	hand: heart hands
+🫰	hand: index finger and thumb crossed
+👈	hand: index finger pointing left
+👉	hand: index finger pointing right
+👆	hand: index finger pointing up back
+☝️	hand: index finger pointing up front
+👇	hand: index finger pointing down
+🖕	hand: middle finger extended the bird
+🙏	hand: folded hands praying prayer
+✍️	hand: writing hand
+💅	hand: nail polish
+🦵	leg
+🦶	foot
+👂	ear
+🦻	ear with hearing aid
 👃	nose
 🤳	selfie
-👂	ear
+🦾	hand: hand on mechanical arm
+🦿	mechanical leg
+🧠	brain
+🫀	anatomical heart
+🫁	lungs
+🦷	tooth
+🦴	bone
+👀	eyes
+👁️	eye
+👅	tongue
+👄	mouth
+🫦	biting lip
+👣	footprints
+🫆	fingerprint
+🧬	DNA molecule
+🩸	drop of blood
 💍	ring
 💎	diamond
 📱	smartphone
@@ -758,9 +802,13 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
             ;;
         # STANDARD HUMAN: Simple suffixing
-        "✋"|"✊"|"👏"|"🤚"|"✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃")
-             # Note: athletes also match the "Professional" logic if they start with 👨/👩
-             # but simple athletes like 🏃 start here.
+        "🖖"|"🤘"|"🤟"|"🤞"|"✋"|"✊"|"👏"|"🤚"| \
+        "✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"| \
+        "👌"|"👋"|"💪"|"🤳"|"👂"|"👃"| "🤲"| "🖐"| \
+        "✌️"|"🤏"|"🤌"|"👌"|"🫸"|"🫷"|"🫴"|"🫳"| \
+        "🫲"|"🫱"|"🫵"|"👊"|"🤛"|"🤜"|"🫶"|"🫰"| \
+        "👈"|"👉"|"👆"|"☝️"|"👇"|"🖕"|"🙏"|"✍️"| \
+        "💅"|"🦵"|"🦶"|"🦻")
             printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
             ;;
         # DEFAULT: All non-human/non-tonable emojis
