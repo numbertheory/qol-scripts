@@ -115,24 +115,24 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🙈	see‑no‑evil monkey
 🙉	hear‑no‑evil monkey
 🙊	speak‑no‑evil monkey
-👍	thumbs up
-👎	thumbs down
-✊	fist
-🤞	crossed fingers
-🤟	love‑you gesture
-🤘	sign of the horns
-🤙	call me hand
-👏	clapping hands
-🙌	raising hands
-🤲	hands pressed together
-👐	open hands
-🤝	handshake
-💪	flexed biceps
-🖐	hand with fingers splayed
-✋	raised hand
-🤚	raised back of hand
-🖖	 Vulcan/Spock salute
-👋	waving hand
+👍	hand: thumbs up
+👎	hand: thumbs down
+✊	hand: fist
+🤞	hand: crossed fingers
+🤟	hand: love‑you gesture
+🤘	hand: sign of the horns
+🤙	hand: call me hand
+👏	hand: clapping hands
+🙌	hand: raising hands
+🤲	hand: hands pressed together
+👐	hand: open hands
+🤝	hand: handshake
+💪	hand: flexed biceps
+🖐	hand: hand with fingers splayed
+✋	hand: raised hand
+🤚	hand: raised back of hand
+🖖	 hand: Vulcan/Spock salute
+👋	hand: waving hand
 👃	nose
 🤳	selfie
 👂	ear
