@@ -2,8 +2,6 @@
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
 
-BASE=$'\U25EF' # Large Circle
-
 # Determine the tone to use. Command line argument takes precedence over environment variable.
 if [[ -n "$1" && "$1" == --* ]]; then
     INPUT_TONE="${1#--}"
@@ -754,7 +752,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*| \
         "🏋"*|"🧗"*|"🧖"*|"🚴"*|"🚵"*|"🧘"*|"⛹️"*| \
         "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
-        "👯"*|"⛷️"*)
+        "👯"*|"⛷️"*| "💃"*|"🕺"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
