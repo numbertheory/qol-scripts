@@ -496,6 +496,58 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇾🇪	flag: Yemen
 🇿🇲	flag: Zambia
 🇿🇼	flag: Zimbabwe
+🏴󠁧󠁢󠁥󠁮󠁧󠁿	 flag: England
+🏴󠁧󠁢󠁳󠁣󠁴󠁿	 flag: Scotland
+🏴󠁧󠁢󠁷󠁬󠁳󠁿	 flag: Wales
+🏳️‍🌈	flag: Rainbow Flag
+🏳️‍⚧️	flag: Transgender Flag
+🇺🇳	flag: United Nations
+🇪🇺	flag: European Union
+🏴‍☠️	flag: Pirate Flag
+🏁	flag: Chequered Flag
+🚩	flag: Triangular Flag
+🎌	flag: Crossed Flags
+🏴	flag: Black Flag
+🏳️	flag: White Flag
+🇭🇰	flag: Hong Kong
+🇲🇴	flag: Macau
+🇵🇷	flag: Puerto Rico
+🇬🇺	flag: Guam
+🇦🇸	flag: American Samoa
+🇻🇬	flag: British Virgin Islands
+🇮🇴	flag: British Indian Ocean Territory
+🇫🇮	flag: Aland Islands
+🇬🇫	flag: French Guiana
+🇬🇵	flag: Guadeloupe
+🇲🇶	flag: Martinique
+🇷🇪	flag: Reunion
+🇾🇹	flag: Mayotte
+🇳🇫	flag: Norfolk Island
+🇨🇽	flag: Christmas Island
+🇨🇨	flag: Cocos (Keeling) Islands
+🇫🇴	flag: Faroe Islands
+🇬🇱	flag: Greenland
+🇦🇽	flag: Åland Islands
+🇧🇻	flag: Bouvet Island
+🇸🇯	flag: Svalbard & Jan Mayen
+🇹🇫	flag: French Southern Territories
+🇼🇫	flag: Wallis & Futuna
+🇵🇲	flag: Saint Pierre & Miquelon
+🇸🇭	flag: Saint Helena
+🇬🇸	flag: South Georgia & South Sandwich Islands
+🇫🇰	flag: Falkland Islands
+🇦🇮	flag: Anguilla
+🇲🇸	flag: Montserrat
+🇹🇨	flag: Turks & Caicos Islands
+🇰🇾	flag: Cayman Islands
+🇧🇲	flag: Bermuda
+🇻🇮	flag: U.S. Virgin Islands
+🇺🇲	flag: U.S. Outlying Islands
+🇲🇵	flag: Northern Mariana Islands
+🇵🇼	flag: Palau (Compact of Free Association)
+🇲🇭	flag: Marshall Islands (Compact of Free Association)
+🇫🇲	flag: Micronesia (Compact of Free Association)
+🇦🇶	flag: Antarctica
 EOF
 
 # ----------------------------------------------------------------------
