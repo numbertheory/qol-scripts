@@ -2,25 +2,32 @@
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
 
+BASE=$'\U25EF' # Large Circle
+
 case "$1" in
     --light)
-        TONE="\U0001F3FB"
+        TONE=$'\U1F3FB'
+        INDICATOR=" (${BASE}${TONE}) "
         ;;
     --medium-light)
-        TONE="\U0001F3FC"
+        TONE=$'\U1F3FC'
+        INDICATOR=" (${BASE}${TONE}) "
         ;;
     --medium)
-        TONE="\U0001F3FD"
+        TONE=$'\U1F3FD'
+        INDICATOR=" (${BASE}${TONE}) "
         ;;
     --medium-dark)
-        TONE="\U0001F3FE"
+        TONE=$'\U1F3FE'
+        INDICATOR=" (${BASE}${TONE}) "
         ;;
     --dark)
-        TONE="\U0001F3FF"
+        TONE=$'\U1F3FF'
+        INDICATOR=" (${BASE}${TONE}) "
         ;;
     *)
-        # Default to yellow if no flag or unknown flag is passed
         TONE=""
+        INDICATOR=""
         ;;
 esac
 
@@ -734,46 +741,58 @@ read -r -d '' EMOJI_DATA <<'EOF'
 EOF
 
 # ----------------------------------------------------------------------
-# 3. Process emojis skin tone
+# 3. Process Emojis (Inject Tones)
 # ----------------------------------------------------------------------
-
 PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
     case "$emoji" in
-        # SPECIAL CASE: Emojis that need a Variation Selector (✋ and ✊)
-        "✋"|"✊")
-            # We add \UFE0F to force Emoji-style, then append the TONE
-            printf "%b%b%b\t%s\n" "$emoji" "\UFE0F" "$TONE" "$desc"
+        # PROFESSIONAL: Inject Tone before the Joiner (e.g., 👨 + TONE + ZWJ + 🎨)
+        "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*|"🏋"*|"🚴"*)
+            BASE_CHAR="${emoji:0:1}"
+            REST_CHAR="${emoji:1}"
+            printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
             ;;
-
-        # PROFESSIONAL CASE: Complex sequences (👨‍🎨, 👩‍⚕️, 🧑‍💻)
-        # We inject the tone after the first character but before the Joiner
-        "👨"*|"👩"*|"🧑"*)
-            BASE_PERSON="${emoji:0:1}"
-            REST_OF_EMOJI="${emoji:1}"
-            printf "%s%b%s\t%s\n" "$BASE_PERSON" "$TONE" "$REST_OF_EMOJI" "$desc"
-            ;;
-
-        # STANDARD CASE: Simple human emojis (👍, 👎, 👋, etc.)
-        "👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃")
+        # STANDARD HUMAN: Simple suffixing
+        "👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃"|"✋"|"✊")
+             # Note: athletes also match the "Professional" logic if they start with 👨/👩
+             # but simple athletes like 🏃 start here.
             printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
             ;;
-
-        # DEFAULT: All other emojis (animals, flags, boxes) stay the same
+        # DEFAULT: All non-human/non-tonable emojis
         *)
             printf "%s\t%s\n" "$emoji" "$desc"
             ;;
     esac
 done)
 
+# ----------------------------------------------------------------------
+# 4. Run fzf with Swatch Indicator
+# ----------------------------------------------------------------------
+PROMPT_STR=$(printf "Pick an emoji%b> ")
+
 SELECTED=$(echo "$PROCESSED_DATA" |
     fzf --ansi \
-        --prompt="Pick an emoji (Tone Applied)> " \
+        --prompt="$PROMPT_STR" \
         --height=40% \
         --layout=reverse \
         --delimiter=$'\t' \
         --nth=2 \
         --ignore-case \
         --exact)
+
+# ----------------------------------------------------------------------
+# 5. Output and Clipboard
+# ----------------------------------------------------------------------
+if [[ -n $SELECTED ]]; then
+    EMOJI=$(cut -f1 <<<"$SELECTED")
+
+    if command -v pbcopy >/dev/null 2>&1; then
+        printf "%s" "$EMOJI" | pbcopy
+    elif command -v xclip >/dev/null 2>&1; then
+        printf "%s" "$EMOJI" | xclip -selection clipboard
+    fi
+
+    printf "%s\n" "$EMOJI"
+fi
 
 # ----------------------------------------------------------------------
 # 3. Output the chosen emoji
