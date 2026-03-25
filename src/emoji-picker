@@ -291,6 +291,88 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🏗️	Building construction
 🏚️	Derelict house
 🏭	Factory
+©️	Copyright
+®️	Registered
+™️	Trademark
+℗️	Sound Recording Copyright
+➕	Plus
+➖	Minus
+✖️	Multiply
+➗	Divide
+❓	Question Mark
+❔	White Question Mark
+❕	White Exclamation Mark
+❗	Exclamation Mark
+〰️	Wavy Dash
+⚕️	Medical Symbol
+♻️	Recycling Symbol
+⚜️	Fleur-de-lis
+🔱	Trident Emblem
+📛	Name Badge
+🔰	Japanese Symbol for Beginner
+⭕	Hollow Red Circle
+✅	Check Mark Button
+☑️	Check Box with Check
+❌	Cross Mark
+❎	Cross Mark Button
+〽️	Part Alternation Mark
+⚠️	Warning
+🚸	Children Crossing
+⛔	No Entry
+🚫	Prohibited
+🔞	No One Under Eighteen
+☢️	Radioactive
+☣️	Biohazard
+⬆️	Up Arrow
+↗️	Up-Right Arrow
+➡️	Right Arrow
+↘️	Down-Right Arrow
+⬇️	Down Arrow
+↙️	Down-Left Arrow
+⬅️	Left Arrow
+↖️	Up-Left Arrow
+↕️	Up-Down Arrow
+↔️	Left-Right Arrow
+↩️	Right Arrow Curving Left
+↪️	Left Arrow Curving Right
+⤴️	Right Arrow Curving Up
+⤵️	Right Arrow Curving Down
+🟥	Red Square
+🟧	Orange Square
+🟨	Yellow Square
+🟩	Green Square
+🟦	Blue Square
+🟪	Purple Square
+🟫	Brown Square
+⬛	Black Large Square
+⬜	White Large Square
+◼️	Black Medium Square
+◻️	White Medium Square
+◾	Black Medium-Small Square
+◽	White Medium-Small Square
+▪️	Black Small Square
+▫️	White Small Square
+🔴	Red Circle
+🟠	Orange Circle
+🟡	Yellow Circle
+🟢	Green Circle
+🔵	Blue Circle
+🟣	Purple Circle
+🟤	Brown Circle
+⚫	Black Circle
+⚪	White Circle
+🔘	Radio Button
+🆔	ID Button
+🆕	NEW Button
+🆗	OK Button
+🆘	SOS Button
+🆙	UP! Button
+🆒	COOL Button
+🆓	FREE Button
+🆖	NG (No Good) Button
+🅿️	P Button (Parking)
+🎦	Cinema
+📶	Antenna Bars
 🇦🇫	flag: Afghanistan
 🇦🇱	flag: Albania
 🇩🇿	flag: Algeria
