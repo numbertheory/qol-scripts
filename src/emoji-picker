@@ -181,9 +181,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🏋️‍♂️	Male Weightlifter
 🏋️‍♀️	Female Weightlifter
 🏋️	Non-binary Weightlifter
-🚴‍♂️	Male Cyclist
-🚴‍♀️	Female Cyclist
-🚴	Non-binary Cyclist
+🚴‍♂️	Male Cyclist on bike or bicycle
+🚴‍♀️	Female Cyclist on bike or bicycle
+🚴	Non-binary Cyclist on bike or bicycle
 🚵‍♂️	Male Mountain Biker
 🚵‍♀️	Female Mountain Biker
 🚵	Non-binary Mountain Biker
@@ -750,7 +750,11 @@ EOF
 PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
     case "$emoji" in
         # PROFESSIONAL: Inject Tone before the Joiner (e.g., 👨 + TONE + ZWJ + 🎨)
-        "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*|"🏋"*|"🚴"*)
+        # When adding to this list, use the non-binary form to cover all three forms.
+        "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*| \
+        "🏋"*|"🧗"*|"🧖"*|"🚴"*|"🚵"*|"🧘"*|"⛹️"*| \
+        "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
+        "👯"*|"⛷️"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE" "$REST_CHAR" "$desc"
