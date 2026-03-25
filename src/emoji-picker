@@ -2,6 +2,28 @@
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
 
+case "$1" in
+    --light)
+        TONE="\U0001F3FB"
+        ;;
+    --medium-light)
+        TONE="\U0001F3FC"
+        ;;
+    --medium)
+        TONE="\U0001F3FD"
+        ;;
+    --medium-dark)
+        TONE="\U0001F3FE"
+        ;;
+    --dark)
+        TONE="\U0001F3FF"
+        ;;
+    *)
+        # Default to yellow if no flag or unknown flag is passed
+        TONE=""
+        ;;
+esac
+
 # ----------------------------------------------------------------------
 # 1. Emoji list
 # ----------------------------------------------------------------------
@@ -130,6 +152,85 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🔧	mechanic
 🧑‍🔬	scientist
 🧑‍💼	office worker
+👨	Man
+👩	Woman
+🧑	Person
+🏃‍♂️	Male Runner
+🏃‍♀️	Female Runner
+🏃	Non-binary Runner
+🚶‍♂️	Male Pedestrian
+🚶‍♀️	Female Pedestrian
+🚶	Non-binary Pedestrian
+🚣‍♂️	Male Rower
+🚣‍♀️	Female Rower
+🚣	Non-binary Rower
+🏊‍♂️	Male Swimmer
+🏊‍♀️	Female Swimmer
+🏊	Non-binary Swimmer
+🏋️‍♂️	Male Weightlifter
+🏋️‍♀️	Female Weightlifter
+🏋️	Non-binary Weightlifter
+🚴‍♂️	Male Cyclist
+🚴‍♀️	Female Cyclist
+🚴	Non-binary Cyclist
+🚵‍♂️	Male Mountain Biker
+🚵‍♀️	Female Mountain Biker
+🚵	Non-binary Mountain Biker
+🏇	Male Horse Racer
+🏇	Female Horse Racer
+🏇	Non-binary Horse Racer
+🏌️‍♂️	Male Golfer
+🏌️‍♀️	Female Golfer
+🏌️	Non-binary Golfer
+🏄‍♂️	Male Surfer
+🏄‍♀️	Female Surfer
+🏄	Non-binary Surfer
+🤽‍♂️	Male Water Polo Player
+🤽‍♀️	Female Water Polo Player
+🤽	Non-binary Water Polo Player
+🤾‍♂️	Male Handball Player
+🤾‍♀️	Female Handball Player
+🤾	Non-binary Handball Player
+⛹️‍♂️	Male Basketball Player
+⛹️‍♀️	Female Basketball Player
+⛹️	Non-binary Basketball Player
+🤺	Male Fencer
+🤺	Female Fencer
+🤺	Non-binary Fencer
+🏂	Male Snowboarder
+🏂	Female Snowboarder
+🏂	Non-binary Snowboarder
+⛷️	Male Skier
+⛷️	Female Skier
+⛷️	Non-binary Skier
+🧗‍♂️	Male Climber
+🧗‍♀️	Female Climber
+🧗	Non-binary Climber
+🧘‍♂️	Male Person in Lotus Position
+🧘‍♀️	Female Person in Lotus Position
+🧘	Non-binary Person in Lotus Position
+🧖‍♂️	Male Person in Steamy Room
+🧖‍♀️	Female Person in Steamy Room
+🧖	Non-binary Person in Steamy Room
+🕴️‍♂️	Male Businessperson Levitating
+🕴️‍♀️	Female Businessperson Levitating
+🕴️	Non-binary Businessperson Levitating
+💃	Female Dancer
+🕺	Male Dancer
+🧑‍🎨	Non-binary Artist
+👨‍🎨	Male Artist
+👩‍🎨	Female Artist
+🧑‍🎤	Non-binary Singer
+👨‍🎤	Male Singer
+👩‍🎤	Female Singer
+👯‍♂️	Male People with Bunny Ears
+👯‍♀️	Female People with Bunny Ears
+👯	Non-binary People with Bunny Ears
+🤹‍♂️	Male Juggler
+🤹‍♀️ 	Female Juggler
+🤹	Non-binary Juggler
+🎭	Performing Arts
+🩰	Ballet Shoes
 🐶	Dog
 🐱	Cat
 🐭	Mouse
@@ -633,12 +734,40 @@ read -r -d '' EMOJI_DATA <<'EOF'
 EOF
 
 # ----------------------------------------------------------------------
-# 2. Run fzf
+# 3. Process emojis skin tone
 # ----------------------------------------------------------------------
-# The preview window shows the emoji in a larger font.
-SELECTED=$(printf "%s\n" "$EMOJI_DATA" |
+
+PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
+    case "$emoji" in
+        # SPECIAL CASE: Emojis that need a Variation Selector (✋ and ✊)
+        "✋"|"✊")
+            # We add \UFE0F to force Emoji-style, then append the TONE
+            printf "%b%b%b\t%s\n" "$emoji" "\UFE0F" "$TONE" "$desc"
+            ;;
+
+        # PROFESSIONAL CASE: Complex sequences (👨‍🎨, 👩‍⚕️, 🧑‍💻)
+        # We inject the tone after the first character but before the Joiner
+        "👨"*|"👩"*|"🧑"*)
+            BASE_PERSON="${emoji:0:1}"
+            REST_OF_EMOJI="${emoji:1}"
+            printf "%s%b%s\t%s\n" "$BASE_PERSON" "$TONE" "$REST_OF_EMOJI" "$desc"
+            ;;
+
+        # STANDARD CASE: Simple human emojis (👍, 👎, 👋, etc.)
+        "👍"|"👎"|"👊"|"👌"|"👋"|"💪"|"🤳"|"👂"|"👃")
+            printf "%s%b\t%s\n" "$emoji" "$TONE" "$desc"
+            ;;
+
+        # DEFAULT: All other emojis (animals, flags, boxes) stay the same
+        *)
+            printf "%s\t%s\n" "$emoji" "$desc"
+            ;;
+    esac
+done)
+
+SELECTED=$(echo "$PROCESSED_DATA" |
     fzf --ansi \
-        --prompt="Pick an emoji> " \
+        --prompt="Pick an emoji (Tone Applied)> " \
         --height=40% \
         --layout=reverse \
         --delimiter=$'\t' \
