@@ -86,7 +86,7 @@ else
     GIT_SHORT_COMMIT=$(git -C "$FOLDER" rev-parse --short HEAD)
     GIT_REMOTE_URL=$(git -C "$FOLDER" remote get-url origin)
     GIT_STATUS=$(git -C "$FOLDER" status --porcelain | wc -l | awk '{if ($1==0) print "clean"; else print "dirty"}')
-    GIT_LAST_COMMIT_TS=$(git -C "$FOLDER" --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %H:%M:%S")
+    GIT_LAST_COMMIT_TS=$(git -C "$FOLDER" --no-pager log -1 --format="%cd" --date=format:"%Y-%m-%d %I:%M:%S %p")
     GIT_LATEST_TAG=$(git -C "$FOLDER" --no-pager describe --tags HEAD 2>/dev/null || echo "${GRAY}no tags set${RESET}")
     GIT_LINES_CHANGED=$(git_lines_changed HEAD)
 fi
