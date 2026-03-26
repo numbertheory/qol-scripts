@@ -923,13 +923,13 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🧑‍🦳"|"👩‍🦲"|"🧑‍🦲"|"👱‍♀️"|"👱‍♂️"|"🧓"|"👴"|"👵"| \
         "👲"|"🧕"|"🤰"|"🫃"|"🫄"|"👼")
             if [ "$MULTI_TONE" = true ]; then
-            printf "%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s\t%s\n" \
+            printf "%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n" \
                 "$emoji" "$TONE1" "$desc" \
                 "$emoji" "$TONE2" "$desc" \
                 "$emoji" "$TONE3" "$desc" \
                 "$emoji" "$TONE4" "$desc" \
                 "$emoji" "$TONE5" "$desc" \
-                "$emoji" "$desc"
+                "$emoji" " " "$desc" \
 
             else
             printf "%s%b\t%s\n" "$emoji" "$TONE1" "$desc"
