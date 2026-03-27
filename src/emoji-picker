@@ -127,10 +127,10 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🤑	money‑mouth
 🤠	cowboy hat face
 🤡	clown face
-👻	ghost
+👻	Ghost
 💀	skull
 ☠️	skull and crossbones
-👽	extraterrestrial
+👽	alien, extraterrestrial
 🤖	robot
 🎃	jack‑o‑lantern
 😺	grinning cat
@@ -297,16 +297,62 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧬	DNA
 🧭	compass
 🧱	brick
-🧑‍💻	technologist
-🧑‍🚀	astronaut
-🧑‍⚕️	health worker
-🧑‍🍳	chef
-🧑‍🎓	student
-🧑‍🎤	singer
-🧑‍🏫	teacher
-🧑‍🔧	mechanic
-🧑‍🔬	scientist
-🧑‍💼	office worker
+🧑‍💻	Technologist
+🧑‍🚀	Astronaut
+🧑‍🍳	Chef, Cook
+🧑‍🎓	Student
+🧑‍🎤	Singer
+🧑‍🏫	Teacher
+🧑‍🔧	Mechanic
+🧑‍🔬	Scientist
+🧑‍💼	Office worker
+🧚	Fairy
+🧜	Mermaid
+🧜‍♂️	Merman
+🧝	Elf
+🧝‍♀️	Woman Elf
+🧝‍♂️	Man Elf
+🧙	Mage
+🧙‍♀️	Woman Mage
+🧙‍♂️	Man Mage
+🧛	Vampire
+🧛‍♀️	Woman Vampire
+🧛‍♂️	Man Vampire
+🧟	Zombie
+🧟‍♀️	Woman Zombie
+🧟‍♂️	Man Zombie
+🧞	Genie
+🧞‍♀️	Woman Genie
+🧞‍♂️	Man Genie
+🦄	Unicorn
+👻	Gho
+👾	Alien Monster
+👹	Ogre
+👺	Goblin
+🧑‍⚕️	Healthcare Worker
+🧑‍🏫	Teacher
+🧑‍⚖️	Judge
+🧑‍🌾	Farmer
+🧑‍🔧	Mechanic
+🧑‍🏭	Factory Worker
+🧑‍🔬	Scientist
+🧑‍💻	Technologist
+🧑‍🎤	Singer
+🧑‍🎨	Artist
+🧑‍✈️	Pilot
+🧑‍🚀	Astronaut
+🧑‍🚒	Firefighter
+👮	Police Officer
+🕵️	Detective
+💂	Guard
+👷	Construction Worker
+🤴	Prince
+👸	Princess
+👳	Person Wearing Turban
+🤵	Person in Tuxedo
+👰	Person in Veil
+🦸	Superhero
+🦹	Supervillain
 🏃‍♂️	Male Runner
 🏃‍♀️	Female Runner
 🏃	Non-binary Runner
@@ -811,8 +857,8 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇨🇳	flag: China
 🇨🇴	flag: Colombia
 🇰🇲	flag: Comoros
-🇨🇬	flag: Congo (Brazzaville)
-🇨🇩	flag: Congo (Kinshasa)
+🇨🇬	flag: Republic of the Congo (Brazzaville)
+🇨🇩	flag: Democratic Republic of the Congo (Kinshasa)
 🇨🇷	flag: Costa Rica
 🇭🇷	flag: Croatia
 🇨🇺	flag: Cuba
@@ -1044,7 +1090,8 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
         "👯"*|"⛷️"*|"💃"*|"🕺"*|"🧏"*|"👳"*|"🙎"*| \
         "🙍"*|"🙅"*|"🙆"*|"💁"*|"🙋"*|"🙇"*|"🤦"*| \
-        "🤷"*|"🧑‍🩰"*|"🤸"*|"💆"*|"🛀"*)
+        "🤷"*|"🧑‍🩰"*|"🤸"*|"💆"*|"🛀"*|"🧜"*|"🧝"*| \
+        "🧙"*|"🧛"*|"🦸"*|"🦹"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             if [ "$MULTI_TONE" = true ] && [ "$SHOW_ALL_TONES" = true ]; then
