@@ -631,6 +631,125 @@ read -r -d '' EMOJI_DATA <<'EOF'
 💳	money: Credit Card
 🧾	money: Receipt
 💹	money: Chart Increasing with Yen
+🔇	Muted Speaker
+🔈	Speaker Low Volume
+🔉	Speaker Medium Volume
+🔊	Speaker High Volume
+📢	Loudspeaker
+📣	Megaphone
+📯	Postal Horn
+🔔	Bell
+🔕	Bell with Slash
+🎼	Musical Score
+🎵	Musical Note
+🎶	Musical Notes
+🎙️	Studio Microphone
+🎚️	Level Slider
+🎛️	Control Knobs
+🎤	Microphone
+🎧	Headphone
+📻	Radio
+🎷	Saxophone
+🎺	Trumpet
+🪗	Accordion
+🎸	Guitar
+🎹	Musical Keyboard
+🎻	Violin
+🪕	Banjo
+🥁	Drum
+🪘	Long Drum
+🪇	Maracas
+🪈	Flute
+🪉	Harp
+📱	Mobile Phone
+📲	Mobile Phone with Arrow
+☎️	Telephone
+📞	Telephone Receiver
+📟	Pager
+📠	Fax Machine
+🔋	Battery
+🪫	Low Battery
+🔌	Electric Plug
+💻	Laptop
+🖥️	Desktop Computer
+🖨️	Printer
+⌨️	Keyboard
+🖱️	Computer Mouse
+🖲️	Trackball
+💽	Computer Disk
+💾	Floppy Disk
+💿	Optical Disk, CD
+📀	DVD
+🎥	Movie Camera
+🎞️	Film Frames
+📽️	Film Projector
+🎬	Clapper Board
+📺	Television
+📷	Camera
+📸	Camera with Flash
+📹	Video Camera
+📼	Videocassette
+📔	Notebook with Decorative Cover
+📕	Closed Book
+📖	Open Book
+📗	Green Book
+📘	Blue Book
+📙	Orange Book
+📚	Books
+📓	Notebook
+📒	Ledger
+📃	Page with Curl
+📜	Scroll
+📄	Page Facing Up
+📰	Newspaper
+🗞️	Rolled-Up Newspaper
+📑	Bookmark Tabs
+🔖	Bookmark
+🏷️	Label
+✉️	Envelope
+📧	E-Mail
+📨	Incoming Envelope
+📩	Envelope with Arrow
+📤	Outbox Tray
+📥	Inbox Tray
+📦	Package
+📫	Closed Mailbox with Raised Flag
+📪	Closed Mailbox with Lowered Flag
+📬	Open Mailbox with Raised Flag
+📭	Open Mailbox with Lowered Flag
+📮	Postbox
+🗳️	Ballot Box with Ballot
+✏️	Pencil
+✒️	Black Nib
+🖋️	Fountain Pen
+🖊️	Pen
+🖌️	Paintbrush
+🖍️	Crayon
+📝	Memo
+💼	Briefcase
+📁	File Folder
+📂	Open File Folder
+🗂️	Card Index Dividers
+📅	Calendar
+📆	Tear-Off Calendar
+🗒️	Spiral Notepad
+🗓️	Spiral Calendar
+📇	Card Index
+📈	Chart Increasing
+📉	Chart Decreasing
+📊	Bar Chart
+📋	Clipboard
+📌	Pushpin
+📍	Round Pushpin
+📎	Paperclip
+🖇️	Linked Paperclips
+📏	Straight Ruler
+📐	Triangular Ruler
+✂️	Scissors
+🗃️	Card File Box
+🗄️	File Cabinet
+🗑️	Wastebasket
+🪪	ID Card
 🍀	Four Leaf Clover
 🎖️	Military Medal
 🕯️	Candle
