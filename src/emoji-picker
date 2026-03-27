@@ -525,6 +525,21 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🥑	Avocado
 🌶️	Hot Pepper
 🌹	Rose
+🌍	Globe Showing Europe-Africa
+🌎	Globe Showing Americas
+🌏	Globe Showing Asia-Australia
+🌸	Cherry Blossom
+🌺	Hibiscus
+🌻	Sunflower
+🤸	Person Cartwheeling gymnastics
+🤸‍♂️	Man Cartwheeling gymnastics
+🤸‍♀️	Woman Cartwheeling gymnastics
+🌼	Blossom
+🧚	Fairy
+🌱	Seedling
+🌲	Evergreen Tree
+🌳	Deciduous Tree
+🌴	Palm Tree
 ✡️	Star of David
 🕎	Menorah candelabra
 ☪️	Star and Crescent
