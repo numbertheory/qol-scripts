@@ -298,6 +298,8 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧱	brick
 🧑‍💻	Technologist
 🧑‍🚀	Astronaut
+👨‍🚀	Man Astronaut
+👩‍🚀	Woman Astronaut
 🧑‍🍳	Chef, Cook
 🧑‍🎓	Student
 🧑‍🎤	Singer
@@ -339,7 +341,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🎤	Singer
 🧑‍🎨	Artist
 🧑‍✈️	Pilot
-🧑‍🚀	Astronaut
 🧑‍🚒	Firefighter
 👮	Police Officer
 🕵️	Detective
@@ -1318,7 +1319,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🧙"*|"🧛"*|"🦸"*|"🦹"*|"🧑‍⚕️"*|"🧑‍🏫"*|"🧑‍⚖️"*| \
         "🧑‍🌾"*|"🧑‍🔧"*|"🧑‍🏭"*|"🧑‍🔬"*|"🧑‍💻"*|"🧑‍🎤"*|"🧑‍🎨"*| \
         "🧑‍✈️"*|"🧑‍🚀"*|"🧑‍🚒"*|"👮"*|"🕵️"*|"💂"*|"👷"*| \
-        "🤴"*|"👸"*|"👳"*|"🤵"*|"👰"*)
+        "🤴"*|"👸"*|"👳"*|"🤵"*|"👰"*|"🧑‍🚀"*)
 
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
@@ -1329,7 +1330,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
                 "$BASE_CHAR" "$TONE3" "$REST_CHAR" "$desc" \
                 "$BASE_CHAR" "$TONE4" "$REST_CHAR" "$desc" \
                 "$BASE_CHAR" "$TONE5" "$REST_CHAR" "$desc" \
-                "$BASE_CHAR" " " "$REST_CHAR" "$desc"
+                "$BASE_CHAR" "" "$REST_CHAR" "$desc"
             else
             printf "%s%b%s\t%s\n" "$BASE_CHAR" "$TONE1" "$REST_CHAR" "$desc"
             fi
@@ -1353,7 +1354,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
                 "$emoji" "$TONE3" "$desc" \
                 "$emoji" "$TONE4" "$desc" \
                 "$emoji" "$TONE5" "$desc" \
-                "$emoji" " " "$desc" \
+                "$emoji" "" "$desc" \
 
             else
             printf "%s%b\t%s\n" "$emoji" "$TONE1" "$desc"
