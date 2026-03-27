@@ -588,6 +588,49 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🎆	Fireworks
 🎇	Sparkler
 🧧	Red Envelope lucky money
+⌛	time: Hourglass Done
+⏳	time: Hourglass Not Done
+⌚	time: Watch
+⏰	time: Alarm Clock
+⏱️	time: Stopwatch
+⏲️	time: Timer Clock
+🕰️	time: Mantelpiece Clock
+🕛	time: Twelve O’Clock (0:00) (12:00)
+🕧	time: Twelve-Thirty (0:30) (12:30)
+🕐	time: One O’Clock (1:00) (13:00)
+🕜	time: One-Thirty (1:30) (13:30)
+🕑	time: Two O’Clock (2:00) (14:00)
+🕝	time: Two-Thirty (2:30) (14:30)
+🕒	time: Three O’Clock (3:00) (15:00)
+🕞	time: Three-Thirty (3:30) (15:30)
+🕓	time: Four O’Clock (4:00) (16:00)
+🕟	time: Four-Thirty (4:30) (16:30)
+🕔	time: Five O’Clock (5:00) (17:00)
+🕠	time: Five-Thirty (5:30) (17:30)
+🕕	time: Six O’Clock (6:00) (18:00)
+🕡	time: Six-Thirty (6:30) (18:30)
+🕖	time: Seven O’Clock (7:00) (19:00)
+🕢	time: Seven-Thirty (7:30) (19:30)
+🕗	time: Eight O’Clock (8:00) (20:30)
+🕣	time: Eight-Thirty (8:30) (20:00)
+🕘	time: Nine O’Clock (9:00) (21:00)
+🕤	time: Nine-Thirty (9:30) (21:30)
+🕙	time: Ten O’Clock (10:00) (22:00)
+🕥	time: Ten-Thirty (10:30) (22:30)
+🕚	time: Eleven O’Clock (11:00) (23:00)
+🕦	time: Eleven-Thirty (11:30) (23:30)
+🧮	Abacus
+🪙	money: Coin
+💰	money: Money Bag
+🪎	money: Treasure Chest
+💴	money: Yen Banknote
+💵	money: Dollar Banknote
+💶	money: Euro Banknote
+💷	money: Pound Banknote
+💸	money: Money with Wings
+💳	money: Credit Card
+🧾	money: Receipt
+💹	money: Chart Increasing with Yen
 🍀	Four Leaf Clover
 🎖️	Military Medal
 🕯️	Candle
