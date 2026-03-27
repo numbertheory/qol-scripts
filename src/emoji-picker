@@ -399,6 +399,35 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🤹‍♂️	Male Juggler
 🤹‍♀️ 	Female Juggler
 🤹	Non-binary Juggler
+🚽	Toilet, Water Closet
+🧻	Roll of Toilet Paper TP
+🚿	Bathroom Shower head
+🛀	Person Taking Bath
+🛁	Bathtub
+🧽	Sponge
+🧴	Lotion Bottle
+🪥	Toothbrush
+🪒	Razor
+🪞	Mirror
+🧴	Lotion, sunscreen, shampoo, conditioner, skin care
+💆	Person Getting Massage
+💆‍♀️	Woman Getting Massage
+💆‍♂️	Man Getting Massage
+💇	Person Getting Haircut
+💇‍♀️	Woman Getting Haircut
+💇‍♂️	Man Getting Haircut
+🛀	Person in Bath
+🧷	Safety Pin
+🧹	Broom
+🧺	Basket
+🧼	Bar of Soap with suds
+🚰	Potable Water
+🚻	Restroom, bathroom, toilet
+🚾	Water Closet Symbol, WC
+🚮	Litter in Bin Sign
+🪥	Dental Care
+🦷	Tooth
+🫧	Bubbles
 🎭	Performing Arts
 🩰	Ballet Shoes
 🐶	Dog
@@ -1015,7 +1044,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
         "👯"*|"⛷️"*|"💃"*|"🕺"*|"🧏"*|"👳"*|"🙎"*| \
         "🙍"*|"🙅"*|"🙆"*|"💁"*|"🙋"*|"🙇"*|"🤦"*| \
-        "🤷"*| "🧑‍🩰"*| "🤸"*)
+        "🤷"*|"🧑‍🩰"*|"🤸"*|"💆"*|"🛀"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             if [ "$MULTI_TONE" = true ] && [ "$SHOW_ALL_TONES" = true ]; then
