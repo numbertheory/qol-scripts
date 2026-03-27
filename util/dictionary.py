@@ -20,21 +20,23 @@ if ds_bundle:
         ],
     )
 
-# Your strict whitelist
-WHITELIST = [
+# Distinct Whitelists
+DICT_WHITELIST = [
     "New Oxford American Dictionary",
     "Oxford Dictionary of English",
     "Apple Dictionary",
 ]
 
+THES_WHITELIST = ["Oxford American Writer’s Thesaurus", "Oxford Thesaurus of English"]
 
-def get_dictionaries():
+
+def get_dictionaries(whitelist):
     try:
         dicts = DCSCopyAvailableDictionaries()
         if not dicts:
             return {}
         full_map = {DCSDictionaryGetName(d): d for d in dicts}
-        return {name: ref for name, ref in full_map.items() if name in WHITELIST}
+        return {name: ref for name, ref in full_map.items() if name in whitelist}
     except Exception:
         return {}
 
@@ -42,7 +44,7 @@ def get_dictionaries():
 def format_definition(word, dict_ref=None):
     raw = DCSCopyTextDefinition(dict_ref, word, (0, len(word)))
     if not raw:
-        return f"\033[31mNo definition found for '{word}'.\033[0m"
+        return f"\033[31mNo entry found for '{word}'.\033[0m"
 
     BOLD, CYAN, YELLOW, GREEN, MAGENTA, ITALIC, BLUE, RESET = (
         "\033[1m",
@@ -56,7 +58,6 @@ def format_definition(word, dict_ref=None):
     )
 
     text = raw.strip()
-    # Formatting
     text = re.sub(
         f"^({re.escape(word)})", f"{BOLD}{CYAN}\\1{RESET}", text, flags=re.IGNORECASE
     )
@@ -81,57 +82,60 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("word", nargs="*", help="Word to define")
     parser.add_argument(
-        "-l", "--list", action="store_true", help="List whitelisted dictionaries"
+        "-l", "--list", action="store_true", help="List whitelisted items"
     )
     parser.add_argument(
-        "-s", "--select-dict", help="Fuzzy search for a dictionary name and return it"
+        "-t", "--thesaurus", action="store_true", help="Use Thesaurus whitelist"
     )
-    parser.add_argument("-d", "--dict", help="Specify the EXACT dictionary name to use")
+    parser.add_argument(
+        "-s", "--select-dict", help="Fuzzy search for a name in the active whitelist"
+    )
+    parser.add_argument("-d", "--dict", help="Specify EXACT dictionary/thesaurus name")
     args = parser.parse_args()
 
-    dict_map = get_dictionaries()
+    # Determine which whitelist to use
+    active_whitelist = THES_WHITELIST if args.thesaurus else DICT_WHITELIST
+    default_fallback = (
+        "Oxford American Writer’s Thesaurus" if args.thesaurus else "Apple Dictionary"
+    )
+
+    dict_map = get_dictionaries(active_whitelist)
     available_names = list(dict_map.keys())
 
+    # --- Mode: List ---
     if args.list:
+        label = "Thesaurus" if args.thesaurus else "Dictionary"
+        print(f"\033[1mWhitelisted {label}s:\033[0m")
         for name in sorted(available_names):
-            print(name)
+            print(f" - {name}")
         sys.exit()
 
-    # --- Resolution Logic ---
-
-    # Mode A: Resolve a fuzzy name and exit (for shell script setup)
+    # --- Mode: Selection Resolution ---
     if args.select_dict and not args.word:
         matches = difflib.get_close_matches(
             args.select_dict, available_names, n=1, cutoff=0.3
         )
-        # Fallback to Apple Dictionary if no fuzzy match found
-        print(matches[0] if matches else "Apple Dictionary")
+        print(matches[0] if matches else default_fallback)
         sys.exit()
 
-    # Mode B: Define a word
+    # --- Mode: Definition/Synonyms ---
     if not args.word:
         parser.print_help()
         sys.exit()
 
     search_word = " ".join(args.word)
-
-    # 1. Check -d (Literal match)
-    # 2. Check -s (Fuzzy match)
-    # 3. Default (Apple Dictionary)
-    final_dict_name = "Apple Dictionary"
+    final_name = default_fallback
 
     if args.dict:
         if args.dict in dict_map:
-            final_dict_name = args.dict
+            final_name = args.dict
     elif args.select_dict:
         matches = difflib.get_close_matches(
             args.select_dict, available_names, n=1, cutoff=0.3
         )
         if matches:
-            final_dict_name = matches[0]
+            final_name = matches[0]
 
-    dict_ref = dict_map.get(final_dict_name)
-
-    # Print Source in faint grey (ANSI 2)
-    print(f"\033[2mSource: {final_dict_name}\033[0m")
+    dict_ref = dict_map.get(final_name)
+    print(f"\033[2mSource: {final_name}\033[0m")
     print(format_definition(search_word, dict_ref))

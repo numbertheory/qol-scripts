@@ -24,9 +24,31 @@ if ! python3 -c "import CoreServices" &> /dev/null; then
     exit 1
 fi
 
+# Initialize our mode variable as empty
+THES_FLAG=""
+
+# 1. Parse flags
+# This loop looks for -t and shifts the arguments list so $1 remains the word
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -t|--thesaurus)
+            THES_FLAG="-t"
+            shift # Remove -t from the argument list
+            ;;
+        *)
+            break # Stop parsing at the first non-flag argument (the word)
+            ;;
+    esac
+done
+
+# 2. Assign positional arguments
+# Now that flags are shifted out, $1 is the word and $2 is the dictionary query
 TARGET_WORD=$1
-DICTIONARY=${2-"Oxford"}
-DICTIONARY_IN_USE="$(python3 $QOL_SCRIPTS_PATH/util/dictionary.py -s "$DICTIONARY")"
+DICTIONARY_QUERY=${2:-"Oxford"}
+
+# 3. Resolve the dictionary name
+# We pass $THES_FLAG here. If -t was used, it's "-t"; otherwise, it's empty.
+DICTIONARY_IN_USE="$(python3 "$QOL_SCRIPTS_PATH/util/dictionary.py" $THES_FLAG -s "$DICTIONARY_QUERY")"
 
 if [[ -z "$TARGET_WORD" ]]; then
     echo -e "${RED}Error${RESET}: No search word provided."
@@ -61,8 +83,8 @@ echo "$candidates" | fzf \
     --ansi \
     --prompt="macOS Dictionary: " \
     --preview-window=right:70%:wrap \
-    --preview="python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d \"$DICTIONARY_IN_USE\"  {}" \
+    --preview="python3 $QOL_SCRIPTS_PATH/util/dictionary.py $THES_FLAG -d \"$DICTIONARY_IN_USE\"  {}" \
     --style=full \
     --layout=reverse \
     --bind "start:pos($LINE_NUM)" \
-    --bind "enter:become(python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d \"$DICTIONARY_IN_USE\" {})"
+    --bind "enter:become(python3 $QOL_SCRIPTS_PATH/util/dictionary.py $THES_FLAG -d \"$DICTIONARY_IN_USE\" {})"
