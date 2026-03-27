@@ -312,9 +312,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧝	Elf
 🧝‍♀️	Woman Elf
 🧝‍♂️	Man Elf
-🧙	Mage
-🧙‍♀️	Woman Mage
-🧙‍♂️	Man Mage
+🧙	Mage, wizard, witch, warlock
+🧙‍♀️	Woman Mage, wizard, witch
+🧙‍♂️	Man Mage, wizard, warlock
 🧛	Vampire
 🧛‍♀️	Woman Vampire
 🧛‍♂️	Man Vampire
@@ -346,11 +346,15 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🕵️	Detective
 💂	Guard
 👷	Construction Worker
-🤴	Prince
-👸	Princess
+🤴	Prince, king
+👸	Princess, queen
 👳	Person Wearing Turban
-🤵	Person in Tuxedo
-👰	Person in Veil
+🤵	Person in Tuxedo, groom
+🤵‍♂️	Man in Tuxedo, groom
+🤵‍♀️	Woman in Tuxedo, groom
+👰	Person in Veil, bride
+👰‍♂️	Man in Veil, bride
+👰‍♀️	Woman in Veil, bride
 🦸	Superhero
 🦹	Supervillain
 🏃‍♂️	Male Runner
@@ -1091,7 +1095,11 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "👯"*|"⛷️"*|"💃"*|"🕺"*|"🧏"*|"👳"*|"🙎"*| \
         "🙍"*|"🙅"*|"🙆"*|"💁"*|"🙋"*|"🙇"*|"🤦"*| \
         "🤷"*|"🧑‍🩰"*|"🤸"*|"💆"*|"🛀"*|"🧜"*|"🧝"*| \
-        "🧙"*|"🧛"*|"🦸"*|"🦹"*)
+        "🧙"*|"🧛"*|"🦸"*|"🦹"*|"🧑‍⚕️"*|"🧑‍🏫"*|"🧑‍⚖️"*| \
+        "🧑‍🌾"*|"🧑‍🔧"*|"🧑‍🏭"*|"🧑‍🔬"*|"🧑‍💻"*|"🧑‍🎤"*|"🧑‍🎨"*| \
+        "🧑‍✈️"*|"🧑‍🚀"*|"🧑‍🚒"*|"👮"*|"🕵️"*|"💂"*|"👷"*| \
+        "🤴"*|"👸"*|"👳"*|"🤵"*|"👰"*)
+
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
             if [ "$MULTI_TONE" = true ] && [ "$SHOW_ALL_TONES" = true ]; then
