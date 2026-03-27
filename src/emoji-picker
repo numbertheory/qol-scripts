@@ -692,18 +692,55 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🚟	Suspension railway
 🚠	Mountain cableway
 🚡	Aerial tramway
+🚃	transit: Railway Car
+🚄	transit: High-Speed Train
+🚅	transit: Bullet Train
+🚆	transit: Train
+🚇	transit: Metro
+🚈	transit: Light Rail
+🚋	transit: Tram Car
+🚌	transit: Bus
+🚍	transit: Oncoming Bus
+🚎	transit: Trolleybus
+🚐	transit: Minibus
+🚑	Ambulance
+🚒	Fire Engine
+🚓	Police Car
+🚔	Oncoming Police Car
+🚕	Taxi
+🚖	Oncoming Taxi
+🚗	Automobile, car
+🚘	Oncoming Automobile, car
+🚙	Sport Utility Vehicle
+🛻	Pickup Truck
+🚚	Delivery Truck
+🚛	Articulated Lorry
+🚜	Tractor
+🏎️	Racing Car
+🦽	transit: Manual Wheelchair
+🦼	transit: Motorized Wheelchair
+🚲	Bicycle
+🛼	Roller Skate
+🚏	transit: Bus Stop
+⛽	Fuel Pump
+🛞	Wheel
+🚨	Police Car Light
+🚥	Horizontal Traffic Light
+🚦	Vertical Traffic Light
+🛑	Stop Sign
+🚧	Construction
 🛴	Kick scooter
 🛹	Skateboard
-🚲	Bicycle
-🛵	Motor scooter
-🏍️	Motorcycle
-🚗	Car
-🚙	SUV
-🚕	Taxi
-🚚	Delivery truck
-🚛	Articulated lorry
-🚜	Tractor
-🛺	Auto rickshaw
+🚲	transit: Bicycle
+🛵	transit: Motor scooter
+🏍️	transit: Motorcycle
+🚗	transit: Car
+🚙	transit: SUV
+🚕	transit: Taxi
+🚚	transit: Delivery truck
+🚛	transit: Articulated lorry
+🚜	transit: Tractor
+🛺	transit: Auto rickshaw
 🚦	Vertical traffic light
 🚥	Horizontal traffic light
 🛑	Stop sign
