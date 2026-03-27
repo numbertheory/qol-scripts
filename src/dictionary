@@ -10,7 +10,7 @@ if [[ -z "$TARGET_WORD" ]]; then
     exit 1
 fi
 
-# 1️⃣ Grab the initial context from /usr/share/dict/words
+# 1️⃣ Grab context
 raw_candidates=$(grep -i -C 60 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
 
 if [[ -z "$raw_candidates" ]]; then
@@ -18,8 +18,7 @@ if [[ -z "$raw_candidates" ]]; then
     exit 1
 fi
 
-# 2️⃣ Filter candidates to ONLY those that have a macOS Dictionary entry
-# We use a compact Python loop to check each word
+# 2️⃣ Filter candidates
 candidates=$(echo "$raw_candidates" | python3 -c "
 import sys
 from CoreServices import DCSCopyTextDefinition
@@ -29,21 +28,54 @@ for line in sys.stdin:
         print(word)
 ")
 
-# 3️⃣ Recalculate the line number based on the NEW filtered list
+# 3️⃣ Calculate Line Number
 LINE_NUM=$(echo "$candidates" | grep -ni "^${TARGET_WORD}$" | head -n 1 | cut -d: -f1)
 LINE_NUM=${LINE_NUM:-1}
 
-# 4️⃣ Launch fzf
+# 4️⃣ Launch fzf with --ansi and Enhanced Python Formatting
 echo "$candidates" | fzf \
+    --ansi \
     --prompt="macOS Dictionary: " \
     --preview-window=right:70%:wrap \
     --preview='
         python3 -c "
-import sys
+import sys, re
 from CoreServices import DCSCopyTextDefinition
+
 word = sys.argv[1].strip()
-result = DCSCopyTextDefinition(None, word, (0, len(word)))
-print(result if result else \"No definition found.\")
+raw = DCSCopyTextDefinition(None, word, (0, len(word)))
+
+if not raw:
+    print(\"No definition found.\")
+    sys.exit()
+
+# ANSI Codes
+BOLD = \"\033[1m\"
+CYAN = \"\033[36m\"
+YELLOW = \"\033[33m\"
+GREEN = \"\033[32m\"
+RESET = \"\033[0m\"
+
+text = raw.strip()
+
+# Step 1: Force newlines for readability
+# Insert newlines before numbers (1. 2.), Word Senses (•), and Sections (ORIGIN, PHRASES)
+text = re.sub(r\"([•])\", r\"\n\n\1\", text)
+text = re.sub(r\"(\d+\s)\", r\"\n\n\1\", text)
+text = re.sub(r\"(ORIGIN|PHRASES|DERIVATIVES)\", r\"\n\n\1\", text)
+
+# Step 2: Coloring
+# Make the word itself Bold Cyan
+text = re.sub(f\"^({re.escape(word)})\", f\"{BOLD}{CYAN}\\1{RESET}\", text, flags=re.IGNORECASE)
+
+# Color Pronunciation (text between | | or / /)
+text = re.sub(r\"([|/][^|/]+[|/])\", f\"{YELLOW}\\1{RESET}\", text)
+
+# Color Section Headers
+for header in [\"ORIGIN\", \"PHRASES\", \"DERIVATIVES\"]:
+    text = text.replace(header, f\"{BOLD}{GREEN}{header}{RESET}\")
+
+print(text)
         " {}' \
     --style=full \
     --layout=reverse \
