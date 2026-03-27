@@ -11,7 +11,7 @@ if [[ -z "$TARGET_WORD" ]]; then
 fi
 
 # 1️⃣ Grab the initial context from /usr/share/dict/words
-raw_candidates=$(grep -i -C 10 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
+raw_candidates=$(grep -i -C 60 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
 
 if [[ -z "$raw_candidates" ]]; then
     echo "Word '$TARGET_WORD' not found."
