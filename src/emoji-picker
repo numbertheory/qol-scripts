@@ -338,7 +338,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🏭	Factory Worker
 🧑‍🔬	Scientist
 🧑‍💻	Technologist
-🧑‍🎨	Artist
 🧑‍✈️	Pilot
 🧑‍🚒	Firefighter
 👮	Police Officer
@@ -427,7 +426,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧘‍♀️	Woman in Lotus Position
 🧘	 Person in Lotus Position
 🧖‍♂️	Man in Steamy Room
-🧖‍♀️	Woman Person in Steamy Room
+🧖‍♀️	Woman in Steamy Room
 🧖	Person in Steamy Room
 🕴️‍♂️	Businessman Levitating
 🕴️‍♀️	Businesswoman Levitating
@@ -435,7 +434,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🩰	Ballet Dancer
 🕺	Man Dancer
 💃	Woman Dancer
-🧑‍🎨	 Artist
+🧑‍🎨	Artist
 👨‍🎨	Man Artist
 👩‍🎨	Woman Artist
 🧑‍🎤	Singer
