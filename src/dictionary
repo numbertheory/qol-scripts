@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+source set-colors
+
+# Check for input and exit with a message if missing
+TARGET_WORD=$1
+
+if [[ -z "$TARGET_WORD" ]]; then
+    echo -e "${RED}Error${RESET}: No search word provided."
+    echo -e "Usage: dictionary <word>"
+    exit 1
+fi
+
+# Get context words
+candidates=$(grep -i -C 10 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
+
+if [[ -z "$candidates" ]]; then
+    echo "Word '$TARGET_WORD' not found."
+    exit 1
+fi
+
+# Find the line number of the target word within the candidates list
+# We use grep -n to find the line number, then cut to grab just the digit
+LINE_NUM=$(echo "$candidates" | grep -ni "^${TARGET_WORD}$" | head -n 1 | cut -d: -f1)
+
+# If for some reason we can't find the exact line, default to 1
+LINE_NUM=${LINE_NUM:-1}
+
+# Launch fzf
+# --nth 1      : Only search the word itself
+# --header     : (Optional) Instructions at the top
+# --action     : We use "start" to trigger a focus on the calculated line
+echo "$candidates" | fzf \
+    --prompt="macOS Dictionary: " \
+    --preview-window=right:70%:wrap \
+    --preview='
+        python3 -c "
+import sys
+from CoreServices import DCSCopyTextDefinition
+word = sys.argv[1].strip()
+result = DCSCopyTextDefinition(None, word, (0, len(word)))
+print(result if result else \"No definition found.\")
+        " {}' \
+    --style=full \
+    --layout=reverse
