@@ -514,6 +514,16 @@ read -r -d '' EMOJI_DATA <<'EOF'
 ⛄	Snowman Without Snow
 ☃️	Snowman
 🥚	Egg
+🎵	Musical Note
+🎶	Musical Notes
+🌵	Cactus
+🌮	Taco
+🌯	Burrito
+🍸	Cocktail Glass
+🎸	Guitar
+🪅	Piñata
+🥑	Avocado
+🌶️	Hot Pepper
 🌹	Rose
 ✡️	Star of David
 🕎	Menorah candelabra
