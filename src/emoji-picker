@@ -589,6 +589,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 ↪️	Left Arrow Curving Right
 ⤴️	Right Arrow Curving Up
 ⤵️	Right Arrow Curving Down
+🔄	Counter-Clockwise Arrows
+🔁	Repeat Button
+🔝	Top Arrow
 🟥	Red Square
 🟧	Orange Square
 🟨	Yellow Square
@@ -604,6 +607,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 ◽	White Medium-Small Square
 ▪️	Black Small Square
 ▫️	White Small Square
+🔘	Radio Button
+🔳	White Square Button
+🔲	Black Square Button
 🔴	Red Circle
 🟠	Orange Circle
 🟡	Yellow Circle
@@ -613,7 +619,26 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🟤	Brown Circle
 ⚫	Black Circle
 ⚪	White Circle
-🔘	Radio Button
+❤️	Red Heart
+🧡	Orange Heart
+💛	Yellow Heart
+💚	Green Heart
+💙	Blue Heart
+💜	Purple Heart
+🖤	Black Heart
+🤍	White Heart
+🤎	Brown Heart
+💔	Broken Heart
+❣️	Heart Exclamation
+💕	Two Hearts
+💞	Revolving Hearts
+💖	Sparkling Heart
+💯	100 Hundred Points
+💢	Anger Symbol
+♻️	Recycle Symbol
+❇️	Sparkle
+✳️	Eight-Spoked Asterisk
+💠	Diamond with a Dot
 🆔	ID Button
 🆕	NEW Button
 🆗	OK Button
