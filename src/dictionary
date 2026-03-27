@@ -25,6 +25,8 @@ if ! python3 -c "import CoreServices" &> /dev/null; then
 fi
 
 TARGET_WORD=$1
+DICTIONARY=${2-"Oxford"}
+DICTIONARY_IN_USE="$(python3 $QOL_SCRIPTS_PATH/util/dictionary.py -s "$DICTIONARY")"
 
 if [[ -z "$TARGET_WORD" ]]; then
     echo -e "${RED}Error${RESET}: No search word provided."
@@ -33,7 +35,7 @@ if [[ -z "$TARGET_WORD" ]]; then
 fi
 
 # 1️⃣ Grab context
-raw_candidates=$(grep -i -C 60 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
+raw_candidates=$(grep -i -C 100 "^${TARGET_WORD}$" /usr/share/dict/words | grep -v '^--$')
 
 if [[ -z "$raw_candidates" ]]; then
     echo "Word '$TARGET_WORD' not found."
@@ -59,8 +61,8 @@ echo "$candidates" | fzf \
     --ansi \
     --prompt="macOS Dictionary: " \
     --preview-window=right:70%:wrap \
-    --preview="python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d 'oxford'  {}" \
+    --preview="python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d \"$DICTIONARY_IN_USE\"  {}" \
     --style=full \
     --layout=reverse \
     --bind "start:pos($LINE_NUM)" \
-    --bind "enter:become(python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d 'oxford' {})"
+    --bind "enter:become(python3 $QOL_SCRIPTS_PATH/util/dictionary.py -d \"$DICTIONARY_IN_USE\" {})"
