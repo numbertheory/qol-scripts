@@ -271,7 +271,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧠	brain
 🫀	anatomical heart
 🫁	lungs
-🦷	tooth
 🦴	bone
 👀	eyes
 👁️	eye
