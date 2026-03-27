@@ -2,6 +2,28 @@
 
 source set-colors
 
+# --- PRE-FLIGHT CHECKS ---
+
+# 1. Check if running on macOS
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    echo -e "${RED}Error${RESET}: This script requires macOS Dictionary Services."
+    exit 1
+fi
+
+# 2. Check if fzf is installed
+if ! command -v fzf &> /dev/null; then
+    echo -e "${RED}Error${RESET}: 'fzf' is not installed. Install it with: brew install fzf"
+    exit 1
+fi
+
+# 3. Check for the required Python library
+# We check if 'CoreServices' can be imported in python3
+if ! python3 -c "import CoreServices" &> /dev/null; then
+    echo -e "${RED}Error${RESET}: Missing 'pyobjc-framework-CoreServices'."
+    echo -e "Fix: pip3 install pyobjc-framework-CoreServices"
+    exit 1
+fi
+
 TARGET_WORD=$1
 
 if [[ -z "$TARGET_WORD" ]]; then
@@ -37,46 +59,8 @@ echo "$candidates" | fzf \
     --ansi \
     --prompt="macOS Dictionary: " \
     --preview-window=right:70%:wrap \
-    --preview='
-        python3 -c "
-import sys, re
-from CoreServices import DCSCopyTextDefinition
-
-word = sys.argv[1].strip()
-raw = DCSCopyTextDefinition(None, word, (0, len(word)))
-
-if not raw:
-    print(\"No definition found.\")
-    sys.exit()
-
-# ANSI Codes
-BOLD = \"\033[1m\"
-CYAN = \"\033[36m\"
-YELLOW = \"\033[33m\"
-GREEN = \"\033[32m\"
-RESET = \"\033[0m\"
-
-text = raw.strip()
-
-# Step 1: Force newlines for readability
-# Insert newlines before numbers (1. 2.), Word Senses (•), and Sections (ORIGIN, PHRASES)
-text = re.sub(r\"([•])\", r\"\n\n\1\", text)
-text = re.sub(r\"(\d+\s)\", r\"\n\n\1\", text)
-text = re.sub(r\"(ORIGIN|PHRASES|DERIVATIVES)\", r\"\n\n\1\", text)
-
-# Step 2: Coloring
-# Make the word itself Bold Cyan
-text = re.sub(f\"^({re.escape(word)})\", f\"{BOLD}{CYAN}\\1{RESET}\", text, flags=re.IGNORECASE)
-
-# Color Pronunciation (text between | | or / /)
-text = re.sub(r\"([|/][^|/]+[|/])\", f\"{YELLOW}\\1{RESET}\", text)
-
-# Color Section Headers
-for header in [\"ORIGIN\", \"PHRASES\", \"DERIVATIVES\"]:
-    text = text.replace(header, f\"{BOLD}{GREEN}{header}{RESET}\")
-
-print(text)
-        " {}' \
+    --preview='python3 $QOL_SCRIPTS_PATH/util/dictionary.py  {}' \
     --style=full \
     --layout=reverse \
-    --bind "start:pos($LINE_NUM)"
+    --bind "start:pos($LINE_NUM)" \
+    --bind "enter:become(python3 $QOL_SCRIPTS_PATH/util/dictionary.py {})"
