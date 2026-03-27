@@ -561,6 +561,28 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🦕	Sauropod
 🦖	T‑rex
 🫍	Orca killer whale blackfish
+⛪	Church
+🕌	Mosque
+🛕	Hindu Temple
+🕍	Synagogue
+⛩️	Shinto Shrine
+🕋	Kaaba
+⛲	Fountain
+⛺	Tent
+🌃	Night with Stars
+🏙️	Cityscape
+🌄	Sunrise Over Mountains
+🌅	Sunrise
+🌆	Cityscape at Dusk
+🌇	Sunset
+♨️	Hot Springs
+🎠	Carousel Horse
+🛝	Playground Slide
+🎡	Ferris Wheel
+🎢	Roller Coaster
+💈	Barber Pole
+🎪	Circus Tent
+🛎️	Bellhop Bell
 🎃	Jack-O-Lantern
 🎄	Christmas Tree
 🎆	Fireworks
@@ -682,6 +704,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🪂	Parachute
 🚀	Rocket
 🛰️	Satellite
+🛸	UFO, Flying Saucer
 🚂	Steam locomotive
 🚆	Train
 🚇	Metro
@@ -724,7 +747,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🚏	transit: Bus Stop
 ⛽	Fuel Pump
 🛞	Wheel
-🚨	Police Car Light
+🚨	Police Car Light, siren, alarm
 🚥	Horizontal Traffic Light
 🚦	Vertical Traffic Light
 🛑	Stop Sign
