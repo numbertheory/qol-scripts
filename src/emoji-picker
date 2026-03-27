@@ -481,6 +481,48 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🦕	Sauropod
 🦖	T‑rex
 🫍	Orca killer whale blackfish
+🎃	Jack-O-Lantern
+🎄	Christmas Tree
+🎆	Fireworks
+🎇	Sparkler
+🧧	Red Envelope lucky money
+🍀	Four Leaf Clover
+🎖️	Military Medal
+🕯️	Candle
+🎐	Wind Chime
+🎑	Rice Ceremony
+🏮	Red Paper Lantern
+🎏	Carp Streamer
+🎎	Japanese Dolls
+🎍	Pine Decoration
+🎋	Tanabata Tree
+🎓	Graduation Cap
+🎂	Birthday Cake
+🍰	Short cake piece
+🎈	Balloon
+🎉	Party Popper
+🎊	Confetti Ball
+🥂	Clinking Glasses toast
+🍷	Wine Glass
+🍻	Clinking Beer Mugs cheers
+🦃	Turkey
+🍗	Poultry Leg
+🥧	Pie
+🍁	Maple Leaf
+🍂	Fallen Leaf
+❄️	Snowflake
+⛄	Snowman Without Snow
+☃️	Snowman
+🥚	Egg
+🌹	Rose
+✡️	Star of David
+🕎	Menorah candelabra
+☪️	Star and Crescent
+🕉️	Om
+✝️	Latin Cross
+☸️	Wheel of Dharma
+☯️	Yin Yang
+🔯	Six Pointed Star
 🫪	Distorted Face
 🫯	Fight Cloud
 🧑‍🩰	Ballet Dancer
@@ -527,6 +569,7 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🚤	Speedboat
 ⛵	Sailboat
 🚢	Ship
+🛟	Ring Buoy life preserver
 🛶	Canoe
 🚁	Helicopter
 ✈️	Airplane
