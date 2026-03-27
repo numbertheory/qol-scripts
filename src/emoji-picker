@@ -301,8 +301,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 👨‍🚀	Man Astronaut
 👩‍🚀	Woman Astronaut
 🧑‍🍳	Chef, Cook
+👨‍🍳	Man Cook, Chef
+👩‍🍳	Woman Cook, Chef
 🧑‍🎓	Student
-🧑‍🎤	Singer
 🧑‍🏫	Teacher
 🧑‍🔧	Mechanic
 🧑‍🔬	Scientist
@@ -338,7 +339,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧑‍🏭	Factory Worker
 🧑‍🔬	Scientist
 🧑‍💻	Technologist
-🧑‍🎤	Singer
 🧑‍🎨	Artist
 🧑‍✈️	Pilot
 🧑‍🚒	Firefighter
@@ -359,55 +359,55 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🦹	Supervillain
 🏃‍♂️	Male Runner
 🏃‍♀️	Female Runner
-🏃	Non-binary Runner
+🏃	 Runner
 🚶‍♂️	Male Pedestrian
 🚶‍♀️	Female Pedestrian
-🚶	Non-binary Pedestrian
+🚶	 Pedestrian
 🚣‍♂️	Male Rower
 🚣‍♀️	Female Rower
-🚣	Non-binary Rower
+🚣	 Rower
 🏊‍♂️	Male Swimmer
 🏊‍♀️	Female Swimmer
-🏊	Non-binary Swimmer
+🏊	 Swimmer
 🏋️‍♂️	Male Weightlifter
 🏋️‍♀️	Female Weightlifter
-🏋️	Non-binary Weightlifter
+🏋️	 Weightlifter
 🚴‍♂️	Male Cyclist on bike or bicycle
 🚴‍♀️	Female Cyclist on bike or bicycle
-🚴	Non-binary Cyclist on bike or bicycle
+🚴	 Cyclist on bike or bicycle
 🚵‍♂️	Male Mountain Biker
 🚵‍♀️	Female Mountain Biker
-🚵	Non-binary Mountain Biker
+🚵	 Mountain Biker
 🏇	Male Horse Racer
 🏇	Female Horse Racer
-🏇	Non-binary Horse Racer
+🏇	 Horse Racer
 🏌️‍♂️	Male Golfer
 🏌️‍♀️	Female Golfer
-🏌️	Non-binary Golfer
+🏌️	 Golfer
 🏄‍♂️	Male Surfer
 🏄‍♀️	Female Surfer
-🏄	Non-binary Surfer
+🏄	 Surfer
 🤽‍♂️	Male Water Polo Player
 🤽‍♀️	Female Water Polo Player
-🤽	Non-binary Water Polo Player
+🤽	 Water Polo Player
 🤾‍♂️	Male Handball Player
 🤾‍♀️	Female Handball Player
-🤾	Non-binary Handball Player
+🤾	 Handball Player
 ⛹️‍♂️	Male Basketball Player
 ⛹️‍♀️	Female Basketball Player
-⛹️	Non-binary Basketball Player
+⛹️	 Basketball Player
 🤺	Male Fencer
 🤺	Female Fencer
-🤺	Non-binary Fencer
+🤺	 Fencer
 🏂	Male Snowboarder
 🏂	Female Snowboarder
-🏂	Non-binary Snowboarder
+🏂	 Snowboarder
 ⛷️	Male Skier
 ⛷️	Female Skier
-⛷️	Non-binary Skier
+⛷️	 Skier
 🧗‍♂️	Male Climber
 🧗‍♀️	Female Climber
-🧗	Non-binary Climber
+🧗	 Climber
 ⛸️	Ice Skate
 🪄	Magic Wand
 ⚽	Soccer Ball
@@ -428,27 +428,27 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🪁	Kite
 🧘‍♂️	Male Person in Lotus Position
 🧘‍♀️	Female Person in Lotus Position
-🧘	Non-binary Person in Lotus Position
+🧘	 Person in Lotus Position
 🧖‍♂️	Male Person in Steamy Room
 🧖‍♀️	Female Person in Steamy Room
-🧖	Non-binary Person in Steamy Room
+🧖	 Person in Steamy Room
 🕴️‍♂️	Male Businessperson Levitating
 🕴️‍♀️	Female Businessperson Levitating
-🕴️	Non-binary Businessperson Levitating
+🕴️	 Businessperson Levitating
 💃	Female Dancer
 🕺	Male Dancer
-🧑‍🎨	Non-binary Artist
+🧑‍🎨	 Artist
 👨‍🎨	Male Artist
 👩‍🎨	Female Artist
-🧑‍🎤	Non-binary Singer
+🧑‍🎤	Singer
 👨‍🎤	Male Singer
 👩‍🎤	Female Singer
 👯‍♂️	Male People with Bunny Ears
 👯‍♀️	Female People with Bunny Ears
-👯	Non-binary People with Bunny Ears
+👯	 People with Bunny Ears
 🤹‍♂️	Male Juggler
 🤹‍♀️ 	Female Juggler
-🤹	Non-binary Juggler
+🤹	 Juggler
 🚽	Toilet, Water Closet
 🧻	Roll of Toilet Paper TP
 🚿	Bathroom Shower head
@@ -1309,7 +1309,7 @@ EOF
 PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
     case "$emoji" in
         # PROFESSIONAL: Inject Tone before the Joiner (e.g., 👨 + TONE + ZWJ + 🎨)
-        # When adding to this list, use the non-binary form to cover all three forms.
+        # When adding to this list, use the  form to cover all three forms.
         "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*| \
         "🏋"*|"🧗"*|"🧖"*|"🚴"*|"🚵"*|"🧘"*|"⛹️"*| \
         "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
