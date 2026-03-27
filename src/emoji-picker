@@ -435,8 +435,9 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🕴️‍♂️	Male Businessperson Levitating
 🕴️‍♀️	Female Businessperson Levitating
 🕴️	 Businessperson Levitating
-💃	Female Dancer
+🧑‍🩰	Ballet Dancer
 🕺	Male Dancer
+💃	Female Dancer
 🧑‍🎨	 Artist
 👨‍🎨	Male Artist
 👩‍🎨	Female Artist
@@ -814,7 +815,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🔯	Six Pointed Star
 🫪	Distorted Face
 🫯	Fight Cloud
-🧑‍🩰	Ballet Dancer
 🫈	Hairy Creature sasquatch yeti bigfoot
 🪊	Trombone
 🛘	Landslide
