@@ -327,7 +327,6 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧞‍♀️	Woman Genie
 🧞‍♂️	Man Genie
 🦄	Unicorn
-👻	Gho
 👾	Alien Monster
 👹	Ogre
 👺	Goblin
