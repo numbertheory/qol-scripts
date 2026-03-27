@@ -357,6 +357,24 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🧗‍♂️	Male Climber
 🧗‍♀️	Female Climber
 🧗	Non-binary Climber
+⛸️	Ice Skate
+🪄	Magic Wand
+⚽	Soccer Ball
+🏀	Basketball
+🏈	American Football
+⚾	Baseball
+🥎	Softball
+🏐	Volleyball
+🏉	Rugby Football
+🎾	Tennis Racket
+🥏	Flying Disc
+🏓	Table Tennis ping-pong
+🏸	Badminton Racket
+🥅	Goal Net
+🏒	Ice Hockey Stick
+🏑	Field Hockey Stick
+🪃	Boomerang
+🪁	Kite
 🧘‍♂️	Male Person in Lotus Position
 🧘‍♀️	Female Person in Lotus Position
 🧘	Non-binary Person in Lotus Position
