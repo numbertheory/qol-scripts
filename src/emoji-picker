@@ -357,57 +357,55 @@ read -r -d '' EMOJI_DATA <<'EOF'
 👰‍♀️	Woman in Veil, bride
 🦸	Superhero
 🦹	Supervillain
-🏃‍♂️	Male Runner
-🏃‍♀️	Female Runner
+🏃‍♂️	Man Runner
+🏃‍♀️	Woman Runner
 🏃	 Runner
-🚶‍♂️	Male Pedestrian
-🚶‍♀️	Female Pedestrian
+🚶‍♂️	Man Pedestrian
+🚶‍♀️	Woman Pedestrian
 🚶	 Pedestrian
-🚣‍♂️	Male Rower
-🚣‍♀️	Female Rower
+🚣‍♂️	Man Rower
+🚣‍♀️	Woman Rower
 🚣	 Rower
-🏊‍♂️	Male Swimmer
-🏊‍♀️	Female Swimmer
+🏊‍♂️	Man Swimmer
+🏊‍♀️	Woman Swimmer
 🏊	 Swimmer
-🏋️‍♂️	Male Weightlifter
-🏋️‍♀️	Female Weightlifter
+🏋️‍♂️	Man Weightlifter
+🏋️‍♀️	Woman Weightlifter
 🏋️	 Weightlifter
-🚴‍♂️	Male Cyclist on bike or bicycle
-🚴‍♀️	Female Cyclist on bike or bicycle
+🚴‍♂️	Man Cyclist on bike or bicycle
+🚴‍♀️	Woman Cyclist on bike or bicycle
 🚴	 Cyclist on bike or bicycle
-🚵‍♂️	Male Mountain Biker
-🚵‍♀️	Female Mountain Biker
+🚵‍♂️	Man Mountain Biker
+🚵‍♀️	Woman Mountain Biker
 🚵	 Mountain Biker
-🏇	Male Horse Racer
-🏇	Female Horse Racer
+🏇	Man Horse Racer
+🏇	Woman Horse Racer
 🏇	 Horse Racer
-🏌️‍♂️	Male Golfer
-🏌️‍♀️	Female Golfer
+🏌️‍♂️	Man Golfer
+🏌️‍♀️	Woman Golfer
 🏌️	 Golfer
-🏄‍♂️	Male Surfer
-🏄‍♀️	Female Surfer
+🏄‍♂️	Man Surfer
+🏄‍♀️	Woman Surfer
 🏄	 Surfer
-🤽‍♂️	Male Water Polo Player
-🤽‍♀️	Female Water Polo Player
+🤽‍♂️	Man Water Polo Player
+🤽‍♀️	Woman Water Polo Player
 🤽	 Water Polo Player
-🤾‍♂️	Male Handball Player
-🤾‍♀️	Female Handball Player
+🤾‍♂️	Man Handball Player
+🤾‍♀️	Woman Handball Player
 🤾	 Handball Player
-⛹️‍♂️	Male Basketball Player
-⛹️‍♀️	Female Basketball Player
+⛹️‍♂️	Man Basketball Player
+⛹️‍♀️	Woman Basketball Player
 ⛹️	 Basketball Player
-🤺	Male Fencer
-🤺	Female Fencer
-🤺	 Fencer
-🏂	Male Snowboarder
-🏂	Female Snowboarder
+🤺	Fencer
+🏂	Man Snowboarder
+🏂	Woman Snowboarder
 🏂	 Snowboarder
-⛷️	Male Skier
-⛷️	Female Skier
+⛷️	Man Skier
+⛷️	Woman Skier
 ⛷️	 Skier
-🧗‍♂️	Male Climber
-🧗‍♀️	Female Climber
-🧗	 Climber
+🧗‍♂️	Man Rock Climber
+🧗‍♀️	Woman Rock Climber
+🧗	 Rock Climber
 ⛸️	Ice Skate
 🪄	Magic Wand
 ⚽	Soccer Ball
@@ -426,29 +424,29 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🏑	Field Hockey Stick
 🪃	Boomerang
 🪁	Kite
-🧘‍♂️	Male Person in Lotus Position
-🧘‍♀️	Female Person in Lotus Position
+🧘‍♂️	Man in Lotus Position
+🧘‍♀️	Woman in Lotus Position
 🧘	 Person in Lotus Position
-🧖‍♂️	Male Person in Steamy Room
-🧖‍♀️	Female Person in Steamy Room
-🧖	 Person in Steamy Room
-🕴️‍♂️	Male Businessperson Levitating
-🕴️‍♀️	Female Businessperson Levitating
+🧖‍♂️	Man in Steamy Room
+🧖‍♀️	Woman Person in Steamy Room
+🧖	Person in Steamy Room
+🕴️‍♂️	Businessman Levitating
+🕴️‍♀️	Businesswoman Levitating
 🕴️	 Businessperson Levitating
 🧑‍🩰	Ballet Dancer
-🕺	Male Dancer
-💃	Female Dancer
+🕺	Man Dancer
+💃	Woman Dancer
 🧑‍🎨	 Artist
-👨‍🎨	Male Artist
-👩‍🎨	Female Artist
+👨‍🎨	Man Artist
+👩‍🎨	Woman Artist
 🧑‍🎤	Singer
-👨‍🎤	Male Singer
-👩‍🎤	Female Singer
-👯‍♂️	Male People with Bunny Ears
-👯‍♀️	Female People with Bunny Ears
+👨‍🎤	Man Singer
+👩‍🎤	Woman Singer
+👯‍♂️	Men with Bunny Ears
+👯‍♀️	Women with Bunny Ears
 👯	 People with Bunny Ears
-🤹‍♂️	Male Juggler
-🤹‍♀️ 	Female Juggler
+🤹‍♂️	Man Juggler
+🤹‍♀️ 	Woman Juggler
 🤹	 Juggler
 🚽	Toilet, Water Closet
 🧻	Roll of Toilet Paper TP
