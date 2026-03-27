@@ -9,6 +9,7 @@ else
     INPUT_TONE="${QOL_EMOJI_SKIN_TONE}"
 fi
 MULTI_TONE=false
+SHOW_ALL_TONES=${QOL_SHOW_ALL_TONES:-false}
 case "$INPUT_TONE" in
     light)
         TONE1=$'\U1F3FB'
@@ -1017,7 +1018,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "🤷"*| "🧑‍🩰"*| "🤸"*)
             BASE_CHAR="${emoji:0:1}"
             REST_CHAR="${emoji:1}"
-            if [ "$MULTI_TONE" = true ]; then
+            if [ "$MULTI_TONE" = true ] && [ "$SHOW_ALL_TONES" = true ]; then
             printf "%s%b%s\t%s\n%s%b%s\t%s\n%s%b%s\t%s\n%s%b%s\t%s\n%s%b%s\t%s\n%s%b%s\t%s\n" \
                 "$BASE_CHAR" "$TONE1" "$REST_CHAR" "$desc" \
                 "$BASE_CHAR" "$TONE2" "$REST_CHAR" "$desc" \
@@ -1041,7 +1042,7 @@ PROCESSED_DATA=$(echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
         "👨‍🦳"|"👨‍🦲"|"👩"|"👩‍🦰"|"🧑‍🦰"|"👩‍🦱"|"🧑‍🦱"|"👩‍🦳"| \
         "🧑‍🦳"|"👩‍🦲"|"🧑‍🦲"|"👱‍♀️"|"👱‍♂️"|"🧓"|"👴"|"👵"| \
         "👲"|"🧕"|"🤰"|"🫃"|"🫄"|"👼")
-            if [ "$MULTI_TONE" = true ]; then
+            if [ "$MULTI_TONE" = true ] && [ "$SHOW_ALL_TONES" = true ]; then
             printf "%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n%s%b\t%s\n" \
                 "$emoji" "$TONE1" "$desc" \
                 "$emoji" "$TONE2" "$desc" \

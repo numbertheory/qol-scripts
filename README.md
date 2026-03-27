@@ -26,9 +26,10 @@ export QOL_RECIPES_FOLDER=<absolute path where your recipes are>
 
 # Emoji picker skin tone
 # Options are light, medium-light, medium, medium-dark, and dark
-# can be overridden with skin tone passed as a flag, emoji-picker --medium-light
+# can be overridden with skin tone passed as a flag, e.g. emoji-picker --medium-light
+# Set QOL_SHOW_ALL_TONES to true to show all skin tones as options when you search.
 export QOL_EMOJI_SKIN_TONE="medium"
-
+export QOL_SHOW_ALL_TONES=true
 ```
 
 To install an optional script, a symlink is created from the `src/` directory to `qol-scripts/bin`, which should be empty. Use the `qol install` command to install and uninstall scripts.
