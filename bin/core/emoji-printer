@@ -7,14 +7,16 @@ if [ -z "$1" ]; then
 fi
 
 EMOJI=$1
-OUTPUT_FILE="emoji_out.png"
 
-# Use ImageMagick to create the image
-# -size: Sets the canvas
-# -background: none for transparency
-# -gravity: centers the emoji
-# -font: ensures the system uses an emoji-compatible font
-# pango: a rendering engine that handles color emojis better than standard label:
+# 1. Convert the emoji to its hex representation
+# This handles skin tones (modifiers) and multi-part emojis (ZWJ sequences)
+UNICODE_HEX=$(echo -n "$EMOJI" | iconv -f UTF-8 -t UTF-32BE | hexdump -ve '1/4 "%08x" " "')
+# Trim whitespace and format for filename
+CLEAN_HEX=$(echo $UNICODE_HEX | sed 's/ /_/g')
+
+OUTPUT_FILE="emoji_${CLEAN_HEX}.png"
+
+# 2. Use ImageMagick with Pango for high-quality rendering
 magick -size 640x640 \
        -background none \
        -gravity center \
@@ -22,4 +24,4 @@ magick -size 640x640 \
        pango:"<span size='400000'>$EMOJI</span>" \
        "$OUTPUT_FILE"
 
-echo "Success! Created $OUTPUT_FILE"
+echo "Success! Created: $OUTPUT_FILE"
