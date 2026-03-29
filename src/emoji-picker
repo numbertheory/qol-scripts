@@ -758,6 +758,32 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🌲	Evergreen Tree
 🌳	Deciduous Tree
 🌴	Palm Tree
+☀️	Sun
+🌤️	Sun Behind Small Cloud
+⛅	Sun Behind Cloud
+🌥️	Sun Behind Large Cloud
+🌦️	Sun Behind Rain Cloud
+☁️	Cloud
+🌧️	Cloud with Rain
+⛈️	Cloud with Lightning and Rain
+🌩️	Cloud with Lightning
+🌨️	Cloud with Snow
+❄️	Snowflake
+☃️	Snowman
+⛄	Snowman Without Snow
+🌬️	Wind Face
+💨	Dashing Away
+🌪️	Tornado
+🌫️	Fog
+🌈	Rainbow
+☔	Umbrella with Rain Drops
+⚡	High Voltage
+🌡️	Thermometer
+🌑	New Moon
+🌕	Full Moon
+⭐	Star
+🌟	Glowing Star
+✨	Sparkles
 ✡️	Star of David
 🕎	Menorah candelabra
 ☪️	Star and Crescent
