@@ -1261,8 +1261,9 @@ case "$INPUT_TONE" in
         TONE5=$'\U1F3FF'
         TONES=("" "$TONE1" "$TONE2" "$TONE3" "$TONE4" "$TONE5")
         EMOJI_COUNTER=0
+        RENDER_FONT=${2:-"Noto-Color-Emoji"}
         echo "Caching emoji images for the system."
-        echo "Using ${2:-"Noto-Color-Emoji"} for the font."
+        echo "Using $RENDER_FONT for the font."
         echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
             case "$emoji" in
                 # PROFESSIONAL: Inject Tone before the Joiner (e.g., 👨 + TONE + ZWJ + 🎨)
@@ -1288,7 +1289,7 @@ case "$INPUT_TONE" in
                         echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
 
                         # Call your existing emoji-printer script
-                        emoji-printer "$CURRENT_EMOJI"
+                        emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
                 done;
                 ;;
                 "🖖"|"🤘"|"🤟"|"🤞"|"✋"|"✊"|"👏"|"🤚"| \
@@ -1310,13 +1311,13 @@ case "$INPUT_TONE" in
                     echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
 
                     # Call your existing emoji-printer script
-                    emoji-printer "$CURRENT_EMOJI"
+                    emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
                 done;
                 ;;
                 *)
                     ((EMOJI_COUNTER++))
                     echo -ne "\r\033[KProcessing: $emoji ($EMOJI_COUNTER) | $desc"
-                    emoji-printer "$emoji"
+                    emoji-printer "$emoji" $RENDER_FONT
                 ;;
             esac
         done
