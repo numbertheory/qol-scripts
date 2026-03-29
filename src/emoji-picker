@@ -2,6 +2,18 @@
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
 #
+
+# Define a cleanup function
+cleanup() {
+    # Clear the scroll‑back buffer (optional)
+    printf '\e[3J'   # same as Ctrl‑Shift‑K in Kitty
+    # Remove all Kitty graphics that were drawn
+    kitty +kitten icat --clear
+}
+# Register the function to run on exit (normal or error)
+trap cleanup EXIT
+
+
 # ----------------------------------------------------------------------
 # 1. Emoji list
 # ----------------------------------------------------------------------
