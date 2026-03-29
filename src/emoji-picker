@@ -1,62 +1,7 @@
 #!/usr/bin/env bash
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
-
-# Determine the tone to use. Command line argument takes precedence over environment variable.
-if [[ -n "$1" && "$1" == --* ]]; then
-    INPUT_TONE="${1#--}"
-else
-    INPUT_TONE="${QOL_EMOJI_SKIN_TONE}"
-fi
-MULTI_TONE=false
-SHOW_ALL_TONES=${QOL_SHOW_ALL_TONES:-false}
-case "$INPUT_TONE" in
-    light)
-        TONE1=$'\U1F3FB'
-        TONE2=$'\U1F3FC'
-        TONE3=$'\U1F3FD'
-        TONE4=$'\U1F3FE'
-        TONE5=$'\U1F3FF'
-        MULTI_TONE=true
-        ;;
-    medium-light)
-        TONE1=$'\U1F3FC'
-        TONE2=$'\U1F3FD'
-        TONE3=$'\U1F3FE'
-        TONE4=$'\U1F3FF'
-        TONE5=$'\U1F3FB'
-        MULTI_TONE=true
-        ;;
-    medium)
-        TONE1=$'\U1F3FD'
-        TONE2=$'\U1F3FE'
-        TONE3=$'\U1F3FF'
-        TONE4=$'\U1F3FB'
-        TONE5=$'\U1F3FC'
-        MULTI_TONE=true
-        ;;
-    medium-dark)
-        TONE1=$'\U1F3FE'
-        TONE2=$'\U1F3FF'
-        TONE3=$'\U1F3FB'
-        TONE4=$'\U1F3FC'
-        TONE5=$'\U1F3FD'
-        MULTI_TONE=true
-        ;;
-    dark)
-        TONE1=$'\U1F3FF'
-        TONE2=$'\U1F3FB'
-        TONE3=$'\U1F3FC'
-        TONE4=$'\U1F3FD'
-        TONE5=$'\U1F3FE'
-        MULTI_TONE=true
-        ;;
-    *)
-        TONE1=""
-        MULTI_TONE=false
-        ;;
-esac
-
+#
 # ----------------------------------------------------------------------
 # 1. Emoji list
 # ----------------------------------------------------------------------
@@ -1298,6 +1243,76 @@ read -r -d '' EMOJI_DATA <<'EOF'
 🇫🇲	flag: Micronesia (Compact of Free Association)
 🇦🇶	flag: Antarctica
 EOF
+
+# Determine the tone to use. Command line argument takes precedence over environment variable.
+if [[ -n "$1" && "$1" == --* ]]; then
+    INPUT_TONE="${1#--}"
+else
+    INPUT_TONE="${QOL_EMOJI_SKIN_TONE}"
+fi
+MULTI_TONE=false
+SHOW_ALL_TONES=${QOL_SHOW_ALL_TONES:-false}
+case "$INPUT_TONE" in
+    cache)
+        TOTAL_EMOJI_COUNT=$(echo "$EMOJI_DATA" | wc -l)
+        EMOJI_COUNTER=0
+        echo "Caching emoji images for the system."
+        echo "Using ${2:-"Noto-Color-Emoji"} for the font."
+        echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
+            ((EMOJI_COUNTER++))
+            echo -ne "Processing: $emoji ($EMOJI_COUNTER/$TOTAL_EMOJI_COUNT) | Current: $desc\033[K\r"
+            emoji-printer "$emoji" > /dev/null 2>&1
+        done
+        echo -e "\nProcessing complete! Images generated and cached in ${QOL_SCRIPTS_PATH}/cache/emoji/"
+        exit 0
+        ;;
+    light)
+        TONE1=$'\U1F3FB'
+        TONE2=$'\U1F3FC'
+        TONE3=$'\U1F3FD'
+        TONE4=$'\U1F3FE'
+        TONE5=$'\U1F3FF'
+        MULTI_TONE=true
+        ;;
+    medium-light)
+        TONE1=$'\U1F3FC'
+        TONE2=$'\U1F3FD'
+        TONE3=$'\U1F3FE'
+        TONE4=$'\U1F3FF'
+        TONE5=$'\U1F3FB'
+        MULTI_TONE=true
+        ;;
+    medium)
+        TONE1=$'\U1F3FD'
+        TONE2=$'\U1F3FE'
+        TONE3=$'\U1F3FF'
+        TONE4=$'\U1F3FB'
+        TONE5=$'\U1F3FC'
+        MULTI_TONE=true
+        ;;
+    medium-dark)
+        TONE1=$'\U1F3FE'
+        TONE2=$'\U1F3FF'
+        TONE3=$'\U1F3FB'
+        TONE4=$'\U1F3FC'
+        TONE5=$'\U1F3FD'
+        MULTI_TONE=true
+        ;;
+    dark)
+        TONE1=$'\U1F3FF'
+        TONE2=$'\U1F3FB'
+        TONE3=$'\U1F3FC'
+        TONE4=$'\U1F3FD'
+        TONE5=$'\U1F3FE'
+        MULTI_TONE=true
+        ;;
+    *)
+        TONE1=""
+        MULTI_TONE=false
+        ;;
+esac
+
+
 
 # ----------------------------------------------------------------------
 # 3. Process Emojis (Inject Tones)

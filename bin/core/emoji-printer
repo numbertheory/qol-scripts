@@ -13,8 +13,8 @@ EMOJI=$1
 UNICODE_HEX=$(echo -n "$EMOJI" | iconv -f UTF-8 -t UTF-32BE | hexdump -ve '1/4 "%08x" " "')
 # Trim whitespace and format for filename
 CLEAN_HEX=$(echo $UNICODE_HEX | sed 's/ /_/g')
-
-OUTPUT_FILE="emoji_${CLEAN_HEX}.png"
+mkdir -p "${QOL_SCRIPTS_PATH}/cache/emoji"
+OUTPUT_FILE="${QOL_SCRIPTS_PATH}/cache/emoji/emoji_${CLEAN_HEX}.png"
 
 # 2. Use ImageMagick with Pango for high-quality rendering
 magick -size 640x640 \
@@ -23,5 +23,3 @@ magick -size 640x640 \
        -font "Noto-Color-Emoji" \
        pango:"<span size='400000'>$EMOJI</span>" \
        "$OUTPUT_FILE"
-
-echo "Success! Created: $OUTPUT_FILE"
