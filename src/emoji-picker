@@ -1444,7 +1444,12 @@ PROMPT_STR=$(printf "Pick an emoji%b> ")
 SELECTED=$(echo "$PROCESSED_DATA" |
     fzf --ansi \
         --prompt="$PROMPT_STR" \
-        --height=40% \
+        --preview '
+            emoji=$(echo -n {1})
+            unicode_hex=$(echo -n "$emoji" | iconv -f UTF-8 -t UTF-32BE | hexdump -ve "1/4 \"%08x\" \" \" ")
+            clean_hex=$(echo $unicode_hex | sed "s/ /_/g; s/_$//")
+            printf "Emoji: %s\nHex:   %s\n\n%s\n" "$emoji" "$clean_hex" "{2..}"' \
+        --preview-window=right:70%:wrap \
         --layout=reverse \
         --delimiter=$'\t' \
         --nth=2 \
