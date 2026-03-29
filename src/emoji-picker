@@ -1254,14 +1254,71 @@ MULTI_TONE=false
 SHOW_ALL_TONES=${QOL_SHOW_ALL_TONES:-false}
 case "$INPUT_TONE" in
     cache)
-        TOTAL_EMOJI_COUNT=$(echo "$EMOJI_DATA" | wc -l)
+        TONE1=$'\U1F3FB'
+        TONE2=$'\U1F3FC'
+        TONE3=$'\U1F3FD'
+        TONE4=$'\U1F3FE'
+        TONE5=$'\U1F3FF'
+        TONES=("" "$TONE1" "$TONE2" "$TONE3" "$TONE4" "$TONE5")
         EMOJI_COUNTER=0
         echo "Caching emoji images for the system."
         echo "Using ${2:-"Noto-Color-Emoji"} for the font."
         echo "$EMOJI_DATA" | while IFS=$'\t' read -r emoji desc; do
-            ((EMOJI_COUNTER++))
-            echo -ne "Processing: $emoji ($EMOJI_COUNTER/$TOTAL_EMOJI_COUNT) | Current: $desc\033[K\r"
-            emoji-printer "$emoji" > /dev/null 2>&1
+            case "$emoji" in
+                # PROFESSIONAL: Inject Tone before the Joiner (e.g., 👨 + TONE + ZWJ + 🎨)
+                # When adding to this list, use the  form to cover all three forms.
+                "👨"*|"👩"*|"🧑"*|"🚣"*|"🏃"*|"🚶"*|"🏊"*| \
+                "🏋"*|"🧗"*|"🧖"*|"🚴"*|"🚵"*|"🧘"*|"⛹️"*| \
+                "🏌️"*|"🏄"*|"🤺"*|"🤹"*|"🕴️"*|"🤽"*|"🤾"*| \
+                "👯"*|"⛷️"*|"💃"*|"🕺"*|"🧏"*|"👳"*|"🙎"*| \
+                "🙍"*|"🙅"*|"🙆"*|"💁"*|"🙋"*|"🙇"*|"🤦"*| \
+                "🤷"*|"🧑‍🩰"*|"🤸"*|"💆"*|"🛀"*|"🧜"*|"🧝"*| \
+                "🧙"*|"🧛"*|"🦸"*|"🦹"*|"🧑‍⚕️"*|"🧑‍🏫"*|"🧑‍⚖️"*| \
+                "🧑‍🌾"*|"🧑‍🔧"*|"🧑‍🏭"*|"🧑‍🔬"*|"🧑‍💻"*|"🧑‍🎤"*|"🧑‍🎨"*| \
+                "🧑‍✈️"*|"🧑‍🚀"*|"🧑‍🚒"*|"👮"*|"🕵️"*|"💂"*|"👷"*| \
+                "🤴"*|"👸"*|"👳"*|"🤵"*|"👰"*|"🧑‍🚀"*)
+                for tone in "${TONES[@]}"; do
+                        ((EMOJI_COUNTER++))
+                        # Combine base emoji with the tone modifier
+                        BASE_CHAR="${emoji:0:1}"
+                        REST_CHAR="${emoji:1}"
+                        CURRENT_EMOJI="${BASE_CHAR}${tone}${REST_CHAR}"
+
+                        # Update UI
+                        echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
+
+                        # Call your existing emoji-printer script
+                        emoji-printer "$CURRENT_EMOJI"
+                done;
+                ;;
+                "🖖"|"🤘"|"🤟"|"🤞"|"✋"|"✊"|"👏"|"🤚"| \
+                "✋️"|"🙌"|"🤙"|"👐"|"🤝"|"👍"|"👎"|"👊"| \
+                "👌"|"👋"|"💪"|"🤳"|"👂"|"👃"|"🤲"|"🖐"| \
+                "✌️"|"🤏"|"🤌"|"👌"|"🫸"|"🫷"|"🫴"|"🫳"| \
+                "🫲"|"🫱"|"🫵"|"👊"|"🤛"|"🤜"|"🫶"|"🫰"| \
+                "👈"|"👉"|"👆"|"☝️"|"👇"|"🖕"|"🙏"|"✍️"| \
+                "💅"|"🦵"|"🦶"|"🦻"|"👶"|"🧒"|"👦"|"👧"| \
+                "🧑"|"👱"|"👨"|"🧔"|"🧔‍♂️"|"🧔‍♀️"|"👨‍🦰"|"👨‍🦱"| \
+                "👨‍🦳"|"👨‍🦲"|"👩"|"👩‍🦰"|"🧑‍🦰"|"👩‍🦱"|"🧑‍🦱"|"👩‍🦳"| \
+                "🧑‍🦳"|"👩‍🦲"|"🧑‍🦲"|"👱‍♀️"|"👱‍♂️"|"🧓"|"👴"|"👵"| \
+                "👲"|"🧕"|"🤰"|"🫃"|"🫄"|"👼")
+                for tone in "${TONES[@]}"; do
+                    ((EMOJI_COUNTER++))
+                    CURRENT_EMOJI="${emoji}${tone}"
+
+                    # Update UI
+                    echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
+
+                    # Call your existing emoji-printer script
+                    emoji-printer "$CURRENT_EMOJI"
+                done;
+                ;;
+                *)
+                    ((EMOJI_COUNTER++))
+                    echo -ne "\r\033[KProcessing: $emoji ($EMOJI_COUNTER) | $desc"
+                    emoji-printer "$emoji"
+                ;;
+            esac
         done
         echo -e "\nProcessing complete! Images generated and cached in ${QOL_SCRIPTS_PATH}/cache/emoji/"
         exit 0
