@@ -5,3 +5,9 @@
 fzf --preview 'echo {} | sed "s/\"//g" | xargs -I FILE kitty icat --clear --transfer-mode=memory --stdin=no \
                --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" FILE' \
     --bind "enter:execute($1)"
+
+# Clear kitty preview image if kitty is being used
+if command -v kitty >/dev/null 2>&1; then
+    kitty icat --clear --stdin=no >/dev/null 2>&1
+fi
+
