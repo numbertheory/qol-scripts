@@ -18,9 +18,12 @@ mkdir -p "${QOL_SCRIPTS_PATH}/cache/emoji"
 OUTPUT_FILE="${QOL_SCRIPTS_PATH}/cache/emoji/emoji_${CLEAN_HEX}.png"
 
 # 2. Use ImageMagick with Pango for high-quality rendering
-magick -size 640x640 \
+if [[ $(uname -s) == "Darwin" ]]; then
+else
+    magick -size 640x640 \
        -background none \
        -gravity center \
        -font "$FONT" \
        pango:"<span size='400000'>$EMOJI</span>" \
        "$OUTPUT_FILE"
+fi
