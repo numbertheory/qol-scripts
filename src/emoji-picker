@@ -1448,7 +1448,8 @@ SELECTED=$(echo "$PROCESSED_DATA" |
             emoji=$(echo -n {1})
             unicode_hex=$(echo -n "$emoji" | iconv -f UTF-8 -t UTF-32BE | hexdump -ve "1/4 \"%08x\" \" \" ")
             clean_hex=$(echo $unicode_hex | sed "s/ /_/g; s/_$//")
-            printf "Emoji: %s\nHex:   %s\n\n%s\n" "$emoji" "$clean_hex" "{2..}"' \
+            echo $clean_hex | sed "s/\"//g" | xargs -I FILE kitty icat --clear --transfer-mode=memory --stdin=no \
+            --place="${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0" $QOL_SCRIPTS_PATH/cache/emoji/emoji_FILE.png' \
         --preview-window=right:70%:wrap \
         --layout=reverse \
         --delimiter=$'\t' \
