@@ -18,12 +18,18 @@ mkdir -p "${QOL_SCRIPTS_PATH}/cache/emoji"
 OUTPUT_FILE="${QOL_SCRIPTS_PATH}/cache/emoji/emoji_${CLEAN_HEX}.png"
 
 # 2. Use ImageMagick with Pango for high-quality rendering
-if [[ $(uname -s) == "Darwin" ]]; then
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # Your new macOS Swift-based printer
+    apple-emoji-printer "$EMOJI" "$OUTPUT_FILE" 640
 else
+    # Linux logic
+    # Fallback to a common Linux emoji font if $FONT isn't set
+    FONT_TO_USE="${FONT:-Noto-Color-Emoji}"
+
     magick -size 640x640 \
-       -background none \
-       -gravity center \
-       -font "$FONT" \
-       pango:"<span size='400000'>$EMOJI</span>" \
-       "$OUTPUT_FILE"
+           -background none \
+           -gravity center \
+           -font "$FONT_TO_USE" \
+           pango:"<span size='400000'>$EMOJI</span>" \
+           "$OUTPUT_FILE"
 fi
