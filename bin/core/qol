@@ -92,7 +92,7 @@ elif [ "$1" == "version" ]; then
    git -C $QOL_SCRIPTS_PATH --no-pager describe --tags HEAD
 
 elif [ "$1" == "env" ]; then
-    echo ""
+    source $QOL_SCRIPTS_PATH/bin/core/qol-env $2
 else
    echo -e "Usage: qol install <script> \t Installs a script"
    echo -e "       qol uninstall <script> \t Removes a script"

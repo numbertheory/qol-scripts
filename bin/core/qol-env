@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Description: Show QOL env settings
+
+listenv=false
+setenv=false
+verbose=false
+
+echo $1
+
+print_usage() {
+  cat <<USAGE
+Usage: $0 [options]
+
+Options (all optional, can be in any order):
+  list              list all environmental values for QOL scripts
+  -v, --verbose     show verbose output
+  -h, --help        show this help
+USAGE
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    list)            listenv=true; shift ;;
+    set)             setenv=true; shift ;;
+    -v|--verbose)    verbose=true; shift ;;
+    -h|--help)       print_usage; exit 0 ;;
+    *)
+      echo "Unknown option: $1" >&2
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
+if [[ "$listenv" == "true" ]]; then
+    source $QOL_SCRIPTS_PATH/bin/core/qol-preamble --colors --string-tools
+    echo -e "${LIGHT_GRAY}QOL true environmental variables:${RESET}"
+    print_kv_comments "QOL_LOCATION" "${QOL_LOCATION:-"unset"}" "weather"
+    print_kv_comments "QOL_RECIPES_FOLDER" "${QOL_RECIPES_FOLDER:-"unset"}" "cookbook"
+    print_kv_comments "QOL_EMOJI_SKIN_TONE" "${QOL_EMOJI_SKIN_TONE:-"unset"}" "emoji-picker"
+    print_kv_comments "QOL_SHOW_ALL_TONES" "${QOL_SHOW_ALL_TONES:-"unset"}" "emoji-picker"
+fi
