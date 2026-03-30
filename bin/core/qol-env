@@ -5,8 +5,6 @@ listenv=false
 setenv=false
 verbose=false
 
-echo $1
-
 print_usage() {
   cat <<USAGE
 Usage: $0 [options]
@@ -22,7 +20,6 @@ USAGE
 while [[ $# -gt 0 ]]; do
   case "$1" in
     list)            listenv=true; shift ;;
-    set)             setenv=true; shift ;;
     -v|--verbose)    verbose=true; shift ;;
     -h|--help)       print_usage; exit 0 ;;
     *)
@@ -35,7 +32,8 @@ done
 
 if [[ "$listenv" == "true" ]]; then
     source $QOL_SCRIPTS_PATH/bin/core/qol-preamble --colors --string-tools
-    echo -e "${LIGHT_GRAY}QOL true environmental variables:${RESET}"
+    echo ""
+    echo -e "${LIGHT_GRAY}QOL environmental variables (set in  ~/.$(basename "$SHELL")rc) :${RESET}"
     print_kv_comments "QOL_LOCATION" "${QOL_LOCATION:-"unset"}" "weather"
     print_kv_comments "QOL_RECIPES_FOLDER" "${QOL_RECIPES_FOLDER:-"unset"}" "cookbook"
     print_kv_comments "QOL_EMOJI_SKIN_TONE" "${QOL_EMOJI_SKIN_TONE:-"unset"}" "emoji-picker"
