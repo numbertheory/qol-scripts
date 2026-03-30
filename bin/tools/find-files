@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# Description: Find files of a specific type and display with fzf
+
+# parse options
+QUOTE=false
+RELATIVE=false
+FILE_FOLDER=$PWD
+DEFAULT_EXTENSIONS="jpg,jpeg,png,gif,bmp,webp"
+while getopts ":qf:e:r" opt; do
+    case $opt in
+        q)
+            QUOTE=true
+            ;;
+        f)
+            FILE_FOLDER="$OPTARG"
+            ;;
+        e)
+            DEFAULT_EXTENSIONS="$OPTARG"
+            ;;
+        r)
+            RELATIVE=true
+            ;;
+
+        \?)
+            echo "Usage: $0 [-q] [-r] [extensions]" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# drop processed options
+shift $((OPTIND - 1))
+
+# Use provided extensions or default
+EXTENSIONS="$DEFAULT_EXTENSIONS"
+
+# Build the find command with the provided/default extensions
+IFS=',' read -ra EXT_ARRAY <<< "$EXTENSIONS"
+
+# Start building the find conditions
+FIND_CONDITIONS=""
+for ext in "${EXT_ARRAY[@]}"; do
+    ext=$(echo "$ext" | xargs)  # trim whitespace
+    if [ -z "$FIND_CONDITIONS" ]; then
+        FIND_CONDITIONS="-iname \"*.$ext\""
+    else
+        FIND_CONDITIONS="$FIND_CONDITIONS -o -iname \"*.$ext\""
+    fi
+done
+
+# run find and process results (quote/relative as requested)
+# using null delimiters to handle spaces/newlines
+if command -v find >/dev/null 2>&1; then
+    if [ "$QUOTE" = true ] || [ "$RELATIVE" = true ]; then
+        eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \) -print0" \
+            | while IFS= read -r -d '' file; do
+                out="$file"
+                if [ "$RELATIVE" = true ]; then
+                    # strip leading folder path and any trailing slash
+                    out="${out#$FILE_FOLDER/}"
+                fi
+                if [ "$QUOTE" = true ]; then
+                    printf '"%s"\n' "$out"
+                else
+                    printf '%s\n' "$out"
+                fi
+            done
+    else
+        eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \)"
+    fi
+else
+    # fallback should never happen, but keep original behavior
+    eval "find \"$FILE_FOLDER\" -type f \( $FIND_CONDITIONS \)"
+fi

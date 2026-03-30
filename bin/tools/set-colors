@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+# Description: Colorization tools for bash scripts
+# Export formatting reset and modifiers
+export RESET="\033[0m"
+export BOLD="\033[1m"
+export DIM="\033[2m"
+export REVERSE="\033[7m"
+
+# Export FG and BG colors
+while read -r code name; do
+    [ -z "$name" ] && continue
+    export "${name}=\033[38;5;${code}m"
+    export "BG_${name}=\033[48;5;${code}m"
+done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
+
+# Enhanced Test Function
+show_colors() {
+    local active_bg="${TEST_BG}"
+    local bg_label="${TEST_BG_NAME:-DEFAULT}"
+
+    echo -e "${BOLD}Named Color Alias Test (Background: ${bg_label})${RESET}\n"
+    printf "%-21s %-21s %-21s %-21s\n" "NORMAL" "BOLD" "DIM" "REVERSE"
+    echo "================================================================================"
+
+    while read -r code name; do
+        [ -z "$name" ] && continue
+        label="${name}(${code})"
+        fg_color="\033[38;5;${code}m"
+
+        printf "${active_bg}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${BOLD}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${DIM}${fg_color}%-20s${RESET} " "$label"
+        printf "${active_bg}${REVERSE}${fg_color}%-16s${RESET}\n" "$label"
+    done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
+
+    echo -e "\n${BOLD}Sample Code:${RESET}"
+    echo -e "\n   Use normal color names to set foreground and add \"BG_\" to set background color."
+    echo -e "\n   Remember to use \${RESET} to switch the colors back to the terminal default."
+    echo -e "\n   echo -e \"\${ORANGE}\${BG_${bg_label}}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.\${RESET}\""
+
+    # We explicitly evaluate the active background code for the sample text
+    echo -e "\n   \033[38;5;208m${active_bg}This is some text with a $(echo "${bg_label}" | tr '[:upper:]' '[:lower:]') background and orange text.${RESET}"
+}
+
+# Argument Parsing
+if [[ "$1" == "--show-test" ]]; then
+    show_colors
+    return 0 2>/dev/null || exit 0
+elif [[ "$1" == "--bg" ]]; then
+    requested_bg=$(echo "$2" | tr '[:lower:]' '[:upper:]')
+
+    # Search the list for the code of that color
+    while read -r code name; do
+        if [ "$name" = "$requested_bg" ]; then
+            TEST_BG="\033[48;5;${code}m"
+            TEST_BG_NAME="$requested_bg"
+            break
+        fi
+    done <<'LIST'
+1 RED
+2 GREEN
+3 YELLOW
+4 BLUE
+6 CYAN
+8 GRAY
+15 WHITE
+16 BLACK
+30 TEAL
+88 MAROON
+93 PURPLE
+118 LIME
+129 VIOLET
+130 BROWN
+166 DARK_ORANGE
+183 LAVENDER
+200 MAGENTA
+208 ORANGE
+211 PINK
+220 GOLD
+248 LIGHT_GRAY
+252 SILVER
+LIST
+    show_colors
+    return 0 2>/dev/null || exit 0
+fi

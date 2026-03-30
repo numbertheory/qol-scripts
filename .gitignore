@@ -1,4 +1,5 @@
 bin/*
 !bin/core/
+!bin/tools/
 .DS_Store
 cache/*
