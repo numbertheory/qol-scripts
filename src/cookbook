@@ -18,7 +18,7 @@ FORMAT_JQ="$SCRIPTDIR/../util/format_recipe.jq"
 PREVIEW_WIDTH=$(tput cols 2>/dev/null || echo 80)
 PREVIEW_WIDTH=$(( PREVIEW_WIDTH * 85 / 100 ))
 
-find-files -f "$RECIPES_FOLDER" -e json | \
+$QOL_SCRIPTS_PATH/bin/tools/find-files -f "$RECIPES_FOLDER" -e json | \
 while IFS= read -r p; do
     n=${p##*/}; n=${n%.*}
     printf '%s\t%s\n' "$n" "$p"
