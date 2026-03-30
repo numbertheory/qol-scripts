@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 
 # Check if an argument was provided
 if [ -z "$1" ]; then
@@ -21,7 +22,7 @@ OUTPUT_FILE="${QOL_SCRIPTS_PATH}/cache/emoji/emoji_${CLEAN_HEX}.png"
 if [[ "$(uname -s)" == "Darwin" ]]; then
     # Your new macOS Swift-based printer
     if [[ ! -f "$OUTPUT_FILE" ]]; then
-        apple-emoji-printer "$EMOJI" "$OUTPUT_FILE" 640
+        $QOL_SCRIPTS_PATH/bin/tools/apple-emoji-printer "$EMOJI" "$OUTPUT_FILE" 640
     fi
 else
     if [[ ! -f "$OUTPUT_FILE" ]]; then

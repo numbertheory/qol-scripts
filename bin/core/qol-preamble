@@ -2,21 +2,20 @@
 # Description: Verification script to ensure programs work as intended.
 
 command_exists() {
-    if [ "$2" == "true" ]; then
+    if [[ "$2" == "true" ]]; then
         echo "Verifying the $1 command is available."
-        echo $(which $1)
+        echo $(which "$1")
     fi
     command -v "$1" &> /dev/null
 }
 
-if [ -z "$QOL_SCRIPTS_PATH" ]; then
+if [[ -z "$QOL_SCRIPTS_PATH" ]]; then
   echo "QOL_SCRIPTS_PATH must be set in the environment to use these tools."
-  echo "Add this line to your ~/.$(basename $SHELL)rc file to continue:"
+  echo "Add this line to your ~/.$(basename "$SHELL")rc file to continue:"
   echo
   echo "   export QOL_SCRIPTS_PATH=\"${0%%/qol-scripts*}/qol-scripts\""
   exit 1
 fi
-
 
 # Default values (off)
 colors=false
@@ -44,10 +43,10 @@ Options (all optional, can be in any order):
   --docker-verify   verify that the docker tool is available
   --jq-verify       verify that the jq tool is available
   --curl-verify     verify that the curl tool is available
-  --cal-verify      verify tat the cal command is available
+  --cal-verify      verify that the cal command is available
   --rg-verify       verify that the rg tool is available
   --verbose         verbose output (identifies which tools are being activated)
-  -h, --help    show this help
+  -h, --help        show this help
 USAGE
 }
 
@@ -63,7 +62,7 @@ while [[ $# -gt 0 ]]; do
     --jq-verify)     jqverify=true; shift ;;
     --curl-verify)   curlverify=true; shift ;;
     --cal-verify)    calverify=true; shift ;;
-    --rg-verify)    rgverify=true; shift ;;
+    --rg-verify)     rgverify=true; shift ;;
     --verbose)       verbose=true; shift ;;
     -h|--help)       print_usage; exit 0 ;;
     *)
@@ -74,63 +73,70 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ "$colors" == "true" ]; then
-    if [ "$verbose" == "true" ]; then
+if [[ "$colors" == "true" ]]; then
+    if [[ "$verbose" == "true" ]]; then
         echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/set-colors"
     fi
-    source ${QOL_SCRIPTS_PATH}/bin/tools/set-colors
+    source "${QOL_SCRIPTS_PATH}/bin/tools/set-colors"
 fi
 
-if [ "$stringtools" == "true" ]; then
-    if [ "$verbose" == "true" ]; then
+if [[ "$stringtools" == "true" ]]; then
+    if [[ "$verbose" == "true" ]]; then
         echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/string-tools"
     fi
-    source ${QOL_SCRIPTS_PATH}/bin/tools/string-tools
+    source "${QOL_SCRIPTS_PATH}/bin/tools/string-tools"
 fi
 
-if [ "$gitinfo" == "true" ]; then
-    if [ "$verbose" == "true" ]; then
+if [[ "$gitinfo" == "true" ]]; then
+    if [[ "$verbose" == "true" ]]; then
         echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/git-info-blob"
     fi
-    source ${QOL_SCRIPTS_PATH}/bin/tools/git-info-blob
+    source "${QOL_SCRIPTS_PATH}/bin/tools/git-info-blob"
 fi
 
-if [ "$gitverify" == "true" ]; then
+if [[ "$gitverify" == "true" ]]; then
     if ! command_exists "git" "$verbose"; then
         echo "Error: git could not be found. Please install it."
         exit 1
     fi
 fi
 
-if [ "$dockerverify" == "true" ]; then
+if [[ "$fzfverify" == "true" ]]; then
+    if ! command_exists "fzf" "$verbose"; then
+        echo "Error: fzf could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [[ "$dockerverify" == "true" ]]; then
     if ! command_exists "docker" "$verbose"; then
         echo "Error: docker could not be found. Please install it."
         exit 1
     fi
 fi
 
-if [ "$jqverify" == "true" ]; then
+if [[ "$jqverify" == "true" ]]; then
     if ! command_exists "jq" "$verbose"; then
         echo "Error: jq could not be found. Please install it."
         exit 1
     fi
 fi
 
-if [ "$curlverify" == "true" ]; then
+if [[ "$curlverify" == "true" ]]; then
     if ! command_exists "curl" "$verbose"; then
         echo "Error: curl could not be found. Please install it."
         exit 1
     fi
 fi
 
-if [ "$calverify" == "true" ]; then
+if [[ "$calverify" == "true" ]]; then
     if ! command_exists "cal" "$verbose"; then
         echo "Error: cal could not be found. Please install it."
         exit 1
     fi
 fi
 
-if [ "$rgverify" == "true" ]; then
+if [[ "$rgverify" == "true" ]]; then
     if ! command_exists "rg" "$verbose"; then
         echo "Error: rg could not be found. Please install it."
         exit 1

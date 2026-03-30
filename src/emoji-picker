@@ -67,7 +67,7 @@ case "$INPUT_TONE" in
                         echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
 
                         # Call your existing emoji-printer script
-                        emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
+                        $QOL_SCRIPTS_PATH/bin/tools/emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
                 done;
                 ;;
                 "🖖"|"🤘"|"🤟"|"🤞"|"✋"|"✊"|"👏"|"🤚"| \
@@ -89,13 +89,13 @@ case "$INPUT_TONE" in
                     echo -ne "\r\033[KProcessing: $CURRENT_EMOJI ($EMOJI_COUNTER) | $desc"
 
                     # Call your existing emoji-printer script
-                    emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
+                    $QOL_SCRIPTS_PATH/bin/tools/emoji-printer "$CURRENT_EMOJI" $RENDER_FONT
                 done;
                 ;;
                 *)
                     ((EMOJI_COUNTER++))
                     echo -ne "\r\033[KProcessing: $emoji ($EMOJI_COUNTER) | $desc"
-                    emoji-printer "$emoji" $RENDER_FONT
+                    $QOL_SCRIPTS_PATH/bin/tools/emoji-printer "$emoji" $RENDER_FONT
                 ;;
             esac
         done
