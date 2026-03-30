@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# color_flags.sh - accept optional color flags in any order and report which were set
+
+if [ -z "$QOL_SCRIPTS_PATH" ]; then
+  exit 1
+else
+  echo "set"
+fi
+
+
+# Default values (off)
+colors=false
+black=false
+blue=false
+red=false
+green=false
+purple=false
+
+print_usage() {
+  cat <<USAGE
+Usage: $0 [options]
+
+Options (all optional, can be in any order):
+  --colors       set white
+  -h, --help    show this help
+USAGE
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --colors)  colors=true; shift ;;
+    --black)  black=true; shift ;;
+    --blue)   blue=true; shift ;;
+    --red)    red=true; shift ;;
+    --green)  green=true; shift ;;
+    --purple) purple=true; shift ;;
+    -h|--help) print_usage; exit 0 ;;
+    *)
+      echo "Unknown option: $1" >&2
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$white" == "true" ]; then
+
+fi
+
+# Output which options were set
+echo "Selected colors:"
+echo "  white:  $white"
+echo "  black:  $black"
+echo "  blue:   $blue"
+echo "  red:    $red"
+echo "  green:  $green"
+echo "  purple: $purple"

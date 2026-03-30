@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source set-colors
+$QOL_SCRIPTS_PATH/bin/core/set-colors
 
 # --- PRE-FLIGHT CHECKS ---
 
