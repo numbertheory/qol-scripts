@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
+#
+# Description: macOS only -- define words using offline dictionary
 
-$QOL_SCRIPTS_PATH/bin/core/set-colors
+source qol-preamble --colors --fzf-verify
 
 # --- PRE-FLIGHT CHECKS ---
 
 # 1. Check if running on macOS
 if [[ "$OSTYPE" != "darwin"* ]]; then
     echo -e "${RED}Error${RESET}: This script requires macOS Dictionary Services."
-    exit 1
-fi
-
-# 2. Check if fzf is installed
-if ! command -v fzf &> /dev/null; then
-    echo -e "${RED}Error${RESET}: 'fzf' is not installed. Install it with: brew install fzf"
     exit 1
 fi
 

@@ -1,27 +1,52 @@
 #!/usr/bin/env bash
-# color_flags.sh - accept optional color flags in any order and report which were set
+# Description: Verification script to ensure programs work as intended.
+
+command_exists() {
+    if [ "$2" == "true" ]; then
+        echo "Verifying the $1 command is available."
+        echo $(which $1)
+    fi
+    command -v "$1" &> /dev/null
+}
 
 if [ -z "$QOL_SCRIPTS_PATH" ]; then
+  echo "QOL_SCRIPTS_PATH must be set in the environment to use these tools."
+  echo "Add this line to your ~/.$(basename $SHELL)rc file to continue:"
+  echo
+  echo "   export QOL_SCRIPTS_PATH=\"${0%%/qol-scripts*}/qol-scripts\""
   exit 1
-else
-  echo "set"
 fi
 
 
 # Default values (off)
 colors=false
-black=false
-blue=false
-red=false
-green=false
-purple=false
+stringtools=false
+gitinfo=false
+gitverify=false
+fzfverify=false
+dockerverify=false
+jqverify=false
+curlverify=false
+calverify=false
+rgverify=false
+verbose=false
 
 print_usage() {
   cat <<USAGE
 Usage: $0 [options]
 
 Options (all optional, can be in any order):
-  --colors       set white
+  --colors          set up color helpers
+  --string-tools    set up string-tools helpers
+  --git-info        set up git information helpers
+  --git-verify      verify that git is available
+  --fzf-verify      verify that the fzf tool is available
+  --docker-verify   verify that the docker tool is available
+  --jq-verify       verify that the jq tool is available
+  --curl-verify     verify that the curl tool is available
+  --cal-verify      verify tat the cal command is available
+  --rg-verify       verify that the rg tool is available
+  --verbose         verbose output (identifies which tools are being activated)
   -h, --help    show this help
 USAGE
 }
@@ -29,13 +54,18 @@ USAGE
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --colors)  colors=true; shift ;;
-    --black)  black=true; shift ;;
-    --blue)   blue=true; shift ;;
-    --red)    red=true; shift ;;
-    --green)  green=true; shift ;;
-    --purple) purple=true; shift ;;
-    -h|--help) print_usage; exit 0 ;;
+    --colors)        colors=true; shift ;;
+    --string-tools)  stringtools=true; shift ;;
+    --git-info)      gitinfo=true; shift ;;
+    --git-verify)    gitverify=true; shift ;;
+    --fzf-verify)    fzfverify=true; shift ;;
+    --docker-verify) dockerverify=true; shift ;;
+    --jq-verify)     jqverify=true; shift ;;
+    --curl-verify)   curlverify=true; shift ;;
+    --cal-verify)    calverify=true; shift ;;
+    --rg-verify)    rgverify=true; shift ;;
+    --verbose)       verbose=true; shift ;;
+    -h|--help)       print_usage; exit 0 ;;
     *)
       echo "Unknown option: $1" >&2
       print_usage
@@ -44,15 +74,65 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ "$white" == "true" ]; then
-
+if [ "$colors" == "true" ]; then
+    if [ "$verbose" == "true" ]; then
+        echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/set-colors"
+    fi
+    source ${QOL_SCRIPTS_PATH}/bin/tools/set-colors
 fi
 
-# Output which options were set
-echo "Selected colors:"
-echo "  white:  $white"
-echo "  black:  $black"
-echo "  blue:   $blue"
-echo "  red:    $red"
-echo "  green:  $green"
-echo "  purple: $purple"
+if [ "$stringtools" == "true" ]; then
+    if [ "$verbose" == "true" ]; then
+        echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/string-tools"
+    fi
+    source ${QOL_SCRIPTS_PATH}/bin/tools/string-tools
+fi
+
+if [ "$gitinfo" == "true" ]; then
+    if [ "$verbose" == "true" ]; then
+        echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/git-info-blob"
+    fi
+    source ${QOL_SCRIPTS_PATH}/bin/tools/git-info-blob
+fi
+
+if [ "$gitverify" == "true" ]; then
+    if ! command_exists "git" "$verbose"; then
+        echo "Error: git could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [ "$dockerverify" == "true" ]; then
+    if ! command_exists "docker" "$verbose"; then
+        echo "Error: docker could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [ "$jqverify" == "true" ]; then
+    if ! command_exists "jq" "$verbose"; then
+        echo "Error: jq could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [ "$curlverify" == "true" ]; then
+    if ! command_exists "curl" "$verbose"; then
+        echo "Error: curl could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [ "$calverify" == "true" ]; then
+    if ! command_exists "cal" "$verbose"; then
+        echo "Error: cal could not be found. Please install it."
+        exit 1
+    fi
+fi
+
+if [ "$rgverify" == "true" ]; then
+    if ! command_exists "rg" "$verbose"; then
+        echo "Error: rg could not be found. Please install it."
+        exit 1
+    fi
+fi

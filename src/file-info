@@ -11,7 +11,7 @@ print_usage() {
     echo "Usage:  file-info [FILE]"
 }
 
-source string-tools
+source qol-preamble --colors --string-tools
 
 if [[ ! -f "$FILENAME" ]]; then
     echo ""
@@ -149,5 +149,5 @@ if [[ ${FILE_KIND,,} == *"text"* ]] || [[ ${FILE_KIND,,} == *"markdown"* ]]; the
 fi
 
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
-    source git-info-blob file
+    source $QOL_SCRIPTS_PATH/bin/tools/git-info-blob file
 fi

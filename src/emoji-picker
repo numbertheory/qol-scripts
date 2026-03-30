@@ -3,6 +3,8 @@
 # Description: Search for emojis and copy them to your clipboard
 #
 
+source qol-preamble --fzf-verify
+
 # Define a cleanup function
 cleanup() {
     # Clear the scroll‑back buffer (optional)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Description: The tool you are using right now. Run `qol help` for commands
-${QOL_SCRIPTS_PATH}/bin/core/set-colors
+qol-preamble --colors
 
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
@@ -45,8 +45,19 @@ elif [ "$1" == "uninstall" ]; then
     fi
 
 elif [ "$1" == "list" ]; then
+    shopt -s nullglob
+    # collect files (not directories) with no dot in basename
+    OPTIONAL_INSTALLS=()
+    for f in "$QOL_SCRIPTS_PATH/src"/*; do
+      [ -f "$f" ] || continue
+      base="${f##*/}"
+      case "$base" in
+        *.*) ;;              # has a dot -> skip
+        *) OPTIONAL_INSTALLS+=("$f") ;;  # no dot -> add
+      esac
+    done
 
-   OPTIONAL_INSTALLS=("$QOL_SCRIPTS_PATH/src"/*)
+   # OPTIONAL_INSTALLS=("$QOL_SCRIPTS_PATH/src"/*)
    CORE_INSTALLS=("$QOL_SCRIPTS_PATH/bin/core"/*)
    echo
    echo -e "* ${DIM}These scripts are optional. Install with \`qol install <script-name>\` ${RESET}"
@@ -80,9 +91,8 @@ elif [ "$1" == "version" ]; then
 
    git -C $QOL_SCRIPTS_PATH --no-pager describe --tags HEAD
 
-elif [ "" == "env"]; then
+elif [ "$1" == "env" ]; then
     echo ""
-
 else
    echo -e "Usage: qol install <script> \t Installs a script"
    echo -e "       qol uninstall <script> \t Removes a script"

@@ -2,6 +2,8 @@
 
 # Description: Docker inspect all the local images on your system
 
+source qol-preamble --docker-verify
+
 # Check for syntax highlighting tools and set the preview command accordingly
 if command -v bat >/dev/null 2>&1; then
     PREVIEW_CMD="docker inspect {1} | bat --color=always -l json"

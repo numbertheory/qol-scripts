@@ -2,8 +2,10 @@
 
 # Description: Show images in your folder, and select the image for wallpaper
 
+source qol-preamble --fzf-verify
+
 if [[ $(uname -s) == "Darwin" ]]; then
-    find-files -q | fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
+    $QOL_SCRIPTS_PATH/bin/tools/find-files -q | $QOL_SCRIPTS_PATH/bin/tools/fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"
   elif [[ $(uname -s) == "Linux" ]]; then
-    find-files | fzf-prev "${CORE_COMMAND} {}"
+    $QOL_SCRIPTS_PATH/bin/tools/find-files | $QOL_SCRIPTS_PATH/bin/tools/fzf-prev "${CORE_COMMAND} {}"
 fi

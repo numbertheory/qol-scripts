@@ -3,7 +3,7 @@
 # Description: Show a 12 month glance at the year
 
 # Assuming set-colors defines BOLD, CYAN, REVERSE, and RESET
-$QOL_SCRIPTS_PATH/bin/core/set-colors
+source qol-preamble --colors --cal-verify
 
 offset=0
 

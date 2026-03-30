@@ -2,8 +2,18 @@
 
 # Description: Show weather in the terminal, using api.weather.gov
 
+source qol-preamble --curl-verify
+
 # --- 1. CONFIGURATION ---
-QOL_LOCAL=${QOL_LOCATION:-"40.7484,-73.9857"}
+if [ -z "$QOL_LOCATION" ]; then
+  echo "QOL_LOCATION must be set in the environment to use weather."
+  echo "Add this line to your ~/.$(basename $SHELL)rc file to continue:"
+  echo "   # Sets New York City, NY as the location:"
+  echo "   export QOL_LOCATION=\"40.7484,-73.9857\""
+  exit 1
+fi
+
+QOL_LOCAL=${QOL_LOCATION}
 
 # --- 2. FETCH DATA ---
 POINTS_DATA=$(curl -Ss "https://api.weather.gov/points/$QOL_LOCAL" | jq -r '.properties | "\(.forecast)\t\(.forecastZone)"')

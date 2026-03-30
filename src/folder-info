@@ -20,6 +20,8 @@
 #   Example: folder-info ~/Downloads
 # =============================================================================
 
+source qol-preamble --colors --string-tools
+
 # Default flags
 SHOW_DETAILS=true
 SHOW_FILE_BREAKDOWN=true
@@ -46,7 +48,7 @@ print_usage() {
     echo ""
 }
 
-source string-tools
+
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -241,7 +243,7 @@ fi
 
 # Git section - only show if git repo exists
 if [[ "$SHOW_GIT" == true ]] && [[ "$HAS_GIT" == true ]]; then
-    source git-info-blob folder
+    source $QOL_SCRIPTS_PATH/bin/tools/git-info-blob folder
 fi
 
 echo ""

@@ -2,6 +2,8 @@
 
 # Description: Search code with fzf
 
+source qol-preamble --rg-verify --fzf-verify
+
 FOLDER=${PWD:-$1}
 
 rg --line-number --no-heading '' "$FOLDER" |
