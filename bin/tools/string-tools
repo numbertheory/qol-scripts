@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Description: Common string tools for Quality of Life scripts.
-qol-preamble --colors
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --colors
 
 section_header() {
     echo -e "\n${BOLD}${CYAN}→${RESET} ${BOLD}$1${RESET}"

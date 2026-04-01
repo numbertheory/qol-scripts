@@ -2,8 +2,8 @@
 # Emoji picker using fzf
 # Description: Search for emojis and copy them to your clipboard
 #
-
-source qol-preamble --fzf-verify
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --fzf-verify
 
 # Define a cleanup function
 cleanup() {

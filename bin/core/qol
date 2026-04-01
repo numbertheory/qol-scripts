@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Description: The tool you are using right now. Run `qol help` for commands
-source qol-preamble --colors
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --colors
 
 # This script installs the symlinks from the modules in src/
 # to the bin/ directory.
@@ -85,14 +87,15 @@ elif [ "$1" == "list" ]; then
 
 elif [ "$1" == "update" ]; then
 
-   $QOL_SCRIPTS_PATH/bin/core/qol-scripts-update
+   $QOL_SCRIPTS_PATH/bin/tools/qol-scripts-update
 
 elif [ "$1" == "version" ]; then
 
    git -C $QOL_SCRIPTS_PATH --no-pager describe --tags HEAD
 
 elif [ "$1" == "env" ]; then
-    source $QOL_SCRIPTS_PATH/bin/core/qol-env $2
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    source $SCRIPT_DIR/../tools/qol-env $2
 else
    echo -e "Usage: qol install <script> \t Installs a script"
    echo -e "       qol uninstall <script> \t Removes a script"

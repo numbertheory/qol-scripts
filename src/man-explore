@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Description: Search through man pages for all commands
-
-source qol-preamble --fzf-verify
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --fzf-verify
 
 # 1. Get a unique list of all executables in your PATH
 # We use 'compgen -c' which is a bash builtin to list all commands

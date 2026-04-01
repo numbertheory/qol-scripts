@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Description: Show weather in the terminal, using api.weather.gov
-
-source qol-preamble --curl-verify
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --curl-verify
 
 # --- 1. CONFIGURATION ---
 if [ -z "$QOL_LOCATION" ]; then

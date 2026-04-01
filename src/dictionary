@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Description: macOS only -- define words using offline dictionary
-
-source qol-preamble --colors --fzf-verify
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --colors --fzf-verify
 
 # --- PRE-FLIGHT CHECKS ---
 

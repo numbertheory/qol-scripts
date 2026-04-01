@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Description: Create a standard git information blob for QOL scripts
 
-source qol-preamble --colors --string-tools
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --colors --string-tools
 
 ahead_behind_text() {
     local branch upstream ahead behind folder

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Description: Show all branches of a git folder/view all commits of a branch.
-
-source qol-preamble --git-verify
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --git-verify
 
 # --- Configuration ---
 FOLDER=$PWD

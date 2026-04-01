@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Description: Show images in your folder, and select the image for wallpaper
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/../tools/qol-preamble --fzf-verify
 
-source qol-preamble --fzf-verify
 
 if [[ $(uname -s) == "Darwin" ]]; then
     $QOL_SCRIPTS_PATH/bin/tools/find-files -q | $QOL_SCRIPTS_PATH/bin/tools/fzf-prev "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{}\"'"

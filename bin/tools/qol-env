@@ -31,7 +31,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$listenv" == "true" ]]; then
-    source $QOL_SCRIPTS_PATH/bin/core/qol-preamble --colors --string-tools
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+    source $SCRIPT_DIR/../tools/qol-preamble --colors --string-tools
     echo ""
     echo -e "${LIGHT_GRAY}QOL environmental variables (set in  ~/.$(basename "$SHELL")rc) :${RESET}"
     print_kv_comments "QOL_LOCATION" "${QOL_LOCATION:-"unset"}" "weather"
