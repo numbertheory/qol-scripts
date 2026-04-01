@@ -11,7 +11,7 @@ print_usage() {
     echo "Usage:  file-info [FILE]"
 }
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/../tools/qol-preamble --colors --string-tools
+source $SCRIPT_DIR/tools/qol-preamble --colors --string-tools
 
 if [[ ! -f "$FILENAME" ]]; then
     echo ""

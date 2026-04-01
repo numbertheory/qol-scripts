@@ -3,7 +3,7 @@
 # Description: Search for emojis and copy them to your clipboard
 #
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/../tools/qol-preamble --fzf-verify
+source $SCRIPT_DIR/tools/qol-preamble --fzf-verify
 
 # Define a cleanup function
 cleanup() {

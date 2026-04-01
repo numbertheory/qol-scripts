@@ -2,7 +2,7 @@
 #
 # Description: macOS only -- define words using offline dictionary
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/../tools/qol-preamble --colors --fzf-verify
+source $SCRIPT_DIR/tools/qol-preamble --colors --fzf-verify
 
 # --- PRE-FLIGHT CHECKS ---
 

@@ -3,7 +3,7 @@
 # Description: Docker inspect all the local images on your system
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/../tools/qol-preamble --docker-verify
+source $SCRIPT_DIR/tools/qol-preamble --docker-verify
 
 # Check for syntax highlighting tools and set the preview command accordingly
 if command -v bat >/dev/null 2>&1; then

@@ -2,7 +2,7 @@
 
 # Description: Search code with fzf
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/../tools/qol-preamble --rg-verify --fzf-verify
+source $SCRIPT_DIR/tools/qol-preamble --rg-verify --fzf-verify
 
 FOLDER=${PWD:-$1}
 
