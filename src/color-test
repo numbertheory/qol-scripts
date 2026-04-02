@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Description: Show a display test of all the colors available.
+
+if [[ -z "$QOL_SCRIPTS_PATH" ]]; then
+  echo "QOL_SCRIPTS_PATH must be set in the environment to use these tools."
+  echo "Add this line to your ~/.$(basename "$SHELL")rc file to continue:"
+  echo
+  echo "   export QOL_SCRIPTS_PATH=\"${0%%/qol-scripts*}/qol-scripts\""
+  exit 1
+fi
+
+bg="default"
+fg="default"
+declare -a positional=()
+
+print_usage() {
+  cat <<EOF
+Usage: color-test [--bg COLOR|default]
+Examples:
+  color-test --bg default
+  color-test --bg=blue
+EOF
+}
+
+tolower() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
+
+# parse long options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --bg=*) bg="${1#*=}"; shift ;;
+    --bg)
+      if [[ -n "${2:-}" && ${2:0:1} != "-" ]]; then bg="$2"; shift 2; else echo "Error: --bg requires an argument" >&2; exit 1; fi ;;
+    --help|-h) print_usage; exit 0 ;;
+    --) shift; positional+=("$@"); break ;;
+    -*)
+      echo "Unknown option: $1" >&2; print_usage; exit 1 ;;
+    *)
+      positional+=("$1"); shift ;;
+  esac
+done
+
+# restore positional parameters if needed
+set -- "${positional[@]:-}"
+
+bg=$(tolower "$bg")
+fg=$(tolower "$fg")
+
+# optional validation (example allowed colors)
+allowed=(default red green yellow blue cyan gray white black teal maroon purple lime violet brown dark_orange lavender magenta orange pink gold light_gray silver)
+valid=false
+for c in "${allowed[@]}"; do [[ $c == "$bg" ]] && valid=true; done
+$valid || { echo "Invalid --bg value: $bg"; print_usage >&2; exit 1; }
+valid=false
+for c in "${allowed[@]}"; do [[ $c == "$fg" ]] && valid=true; done
+$valid || { echo "Invalid --fg value: $fg"; print_usage >&2; exit 1; }
+
+# print parsed values
+echo "Background: $bg"
+
+$QOL_SCRIPTS_PATH/bin/tools/set-colors --bg $bg
