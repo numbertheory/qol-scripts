@@ -13,6 +13,9 @@ print_kv() {
     echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${2}${RESET}"
 }
 
+tolower() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
+toupper() { printf '%s' "$1" | tr '[:lower:]' '[:upper:]'; }
+
 print_kv_comments() {
     echo -e "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${2}${RESET}\t${LIGHT_GRAY}# ${3}${RESET}"
 }
