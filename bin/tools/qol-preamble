@@ -20,6 +20,7 @@ fi
 # Default values (off)
 colors=false
 stringtools=false
+mathtools=false
 gitinfo=false
 gitverify=false
 fzfverify=false
@@ -55,6 +56,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --colors)        colors=true; shift ;;
     --string-tools)  stringtools=true; shift ;;
+    --math-tools)    mathtools=true; shift ;;
     --git-info)      gitinfo=true; shift ;;
     --git-verify)    gitverify=true; shift ;;
     --fzf-verify)    fzfverify=true; shift ;;
@@ -85,6 +87,13 @@ if [[ "$stringtools" == "true" ]]; then
         echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/string-tools"
     fi
     source "${QOL_SCRIPTS_PATH}/bin/tools/string-tools"
+fi
+
+if [[ "$mathtools" == "true" ]]; then
+    if [[ "$verbose" == "true" ]]; then
+        echo "Setting ${QOL_SCRIPTS_PATH}/bin/tools/math-tools"
+    fi
+    source "${QOL_SCRIPTS_PATH}/bin/tools/math-tools"
 fi
 
 if [[ "$gitinfo" == "true" ]]; then
