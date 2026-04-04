@@ -2,26 +2,7 @@
 # Description: Provide some functions for doing the math
 
 math_floor() {
-    local num="$1"
-
-    # Regex breakdown:
-    # ^-?                  : Optional leading minus sign
-    # ([0-9]+(\.[0-9]*)?   : 1 or more digits, optional decimal and trailing digits (e.g., 3, 3.14, 3.)
-    # |                    : OR
-    # \.[0-9]+)            : Starts with a decimal followed by digits (e.g., .8)
-    # $                    : End of string
-    if ! [[ "$num" =~ ^-?([0-9]+(\.[0-9]*)?|\.[0-9]+)$ ]]; then
-        echo "Error: '$num' is not a valid number." >&2
-        return 1
-    fi
-
-    awk -v num="$num" 'BEGIN {
-        if (num < 0 && num != int(num)) {
-            print int(num) - 1
-        } else {
-            print int(num)
-        }
-    }'
+  math "$1 < 0 && $1 != int($1) ? int($1) - 1 : int($1)"
 }
 
 calc() {
@@ -34,4 +15,12 @@ math() {
 
 hex2dec() {
   echo $((16#$1))
+}
+
+math_ceil() {
+  math "$1 > 0 && $1 != int($1) ? int($1) + 1 : int($1)"
+}
+
+math_abs() {
+  math "$1 < 0 ? -$1 : $1"
 }
