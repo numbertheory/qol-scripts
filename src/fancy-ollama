@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Ollama model picker using fzf
+# Description: Show model details and pick one to run
+#
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/tools/qol-preamble --fzf-verify
+
+ollama list | \
+    awk '{ print $1 }' | \
+    tail -n +2 | \
+    fzf --ansi \
+    --layout=reverse \
+    --border \
+    --preview-window=right:70%:wrap \
+    --preview "ollama show {}"
