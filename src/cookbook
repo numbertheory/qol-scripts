@@ -2,7 +2,7 @@
 
 # Description: Show recipes from a JSON cookbook (see util/schema.json for details)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $SCRIPT_DIR/tools/qol-preamble --jq-verify --fzf-verify
+source $SCRIPT_DIR/tools/qol-preamble --jq-verify --fzf-verify --colors
 
 RECIPES_FOLDER="$QOL_RECIPES_FOLDER"
 
@@ -18,10 +18,19 @@ FORMAT_JQ="$SCRIPTDIR/../util/format_recipe.jq"
 PREVIEW_WIDTH=$(tput cols 2>/dev/null || echo 80)
 PREVIEW_WIDTH=$(( PREVIEW_WIDTH * 85 / 100 ))
 
-$QOL_SCRIPTS_PATH/bin/tools/find-files -f "$RECIPES_FOLDER" -e json | \
-while IFS= read -r p; do
-    n=${p##*/}; n=${n%.*}
-    printf '%s\t%s\n' "$n" "$p"
-done | fzf --delimiter=$'\t' --with-nth=1 \
-    --preview 'jq -r -f '"$FORMAT_JQ"' {2} | fold -s -w '$PREVIEW_WIDTH'' \
-    --preview-window=right:60%:wrap
+selection=$(
+    $QOL_SCRIPTS_PATH/bin/tools/find-files -f "$RECIPES_FOLDER" -e json | \
+    while IFS= read -r p; do
+        n=${p##*/}; n=${n%.*}
+        printf '%s\t%s\n' "$n" "$p"
+    done | fzf --delimiter=$'\t' --with-nth=1 \
+        --preview 'jq -r -f '"$FORMAT_JQ"' {2} | fold -s -w '$PREVIEW_WIDTH'' \
+        --preview-window=right:60%:wrap
+)
+
+if [[ -n "$selection" ]]; then
+    file_path=$(echo "$selection" | cut -f2)
+    echo -e "${BOLD}${GREEN}$(jq -r '.recipe.title' "$file_path")${RESET}"
+    echo -e "${YELLOW}Ingredients:${RESET}"
+    jq -r '.recipe.ingredients[] | " - " + .' "$file_path"
+fi
