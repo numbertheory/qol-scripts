@@ -31,6 +31,29 @@ unzip_to_json () {
     '
 }
 
+tar_to_json() {
+    tar -tf "$1" | python3 -c '
+    import sys, json
+
+    def add_path(tree, path):
+        # .strip() removes whitespace, .rstrip("/") removes trailing slashes
+        parts = path.strip().rstrip("/").split("/")
+        curr = tree
+        for part in parts:
+            if not part: continue
+            if part not in curr:
+                curr[part] = {}
+            curr = curr[part]
+
+    root = {}
+    for line in sys.stdin:
+        if line.strip():
+            add_path(root, line)
+
+    print(json.dumps(root, indent=4))
+    '
+}
+
 json_to_tree () {
     jq -r '
       def draw_tree(prefix):

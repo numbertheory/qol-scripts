@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Description: Show contents for any compressed file
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPT_DIR/tools/qol-preamble --colors --string-tools
+
 # Check if a file was provided
 if [ -z "$1" ]; then
     echo "Usage: peek <filename>"
@@ -15,14 +19,14 @@ fi
 FILE_TYPE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
 case "$FILE_TYPE" in
-    *.tar.gz|*.tgz)      tar -ztvf "$1" ;;
-    *.tar.bz2|*.tbz2)    tar -jtvf "$1" ;;
-    *.tar.xz|*.txz)      tar -Jtvf "$1" ;;
-    *.tar)               tar -tvf "$1"  ;;
-    *.zip|*.jar|*.war)   unzip -l "$1"  ;;
-    *.rar)               unrar l "$1"   ;;
-    *.7z)                7z l "$1"      ;;
-    *.gz)                zcat "$1" | head -n 20 ;; # Shows first 20 lines of a raw gz
-    *.bz2)               bzcat "$1" | head -n 20 ;;
-    *)                   echo "Error: Unsupported file format." ;;
+    *.tar.gz|*.tgz|*.tar.*) tar_to_json $1 | json_to_tree;;
+    *.tar.bz2|*.tbz2)       tar -jtvf "$1" ;;
+    *.tar.xz|*.txz)         tar -Jtvf "$1" ;;
+    *.tar)                  tar -tvf "$1"  ;;
+    *.zip|*.jar|*.war)      unzip_to_json $1 | json_to_tree;;
+    *.rar)                  unrar l "$1"   ;;
+    *.7z)                   7z l "$1"      ;;
+    *.gz)                   zcat "$1" | head -n 20 ;; # Shows first 20 lines of a raw gz
+    *.bz2)                  bzcat "$1" | head -n 20 ;;
+    *)                      echo "Error: Unsupported file format." ;;
 esac
