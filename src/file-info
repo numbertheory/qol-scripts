@@ -65,6 +65,11 @@ else
     FILE_MODIFIED_DATE=$(stat -c %y "$ABS_PATH" | awk '{print $1, $2}' | xargs -I {} date -d "{}" "+%A, %B %d, %Y at %I:%M %p")
 fi
 
+# ZIP info
+if [[ "$FILE_KIND" == *"zip"* || "$FILE_KIND" == *"ZIP"* ]]; then
+     ZIP_FILE_CONTENTS=$(unzip_to_json $ABS_PATH | json_to_tree)
+fi
+
 # PDF info
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 
@@ -126,6 +131,16 @@ print_kv "Size" "$FILE_SIZE"
 print_kv "Created" "$FILE_CREATED_DATE"
 print_kv "Modified" "$FILE_MODIFIED_DATE"
 permissions_calc $ABS_PATH
+
+if [[ "$FILE_KIND" == *"zip"* || "$FILE_KIND" == *"ZIP"* ]]; then
+print_kv "ZIP Contents" "${GOLD}$(basename $ABS_PATH)${RESET}"
+if [[ $(uname -s) == "Darwin" ]]; then
+    EXTRA_SPACE=""
+else
+    EXTRA_SPACE="    "
+fi
+echo -e "$(printf "%s" "$ZIP_FILE_CONTENTS" | sed 's/^/\t\t     /')"
+fi
 
 if [[ "$FILE_KIND" == *"pdf"* || "$FILE_KIND" == *"PDF"* ]]; then
 echo -e "\n${BOLD}${BLUE}📄 PDF Information${RESET}"

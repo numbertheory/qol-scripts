@@ -13,6 +13,48 @@ print_kv() {
     echo -e $3 "${BLUE}$(printf '%-20.20s' "$1")${RESET} ${2}${RESET}"
 }
 
+unzip_to_json () {
+    unzip -Z1 $1 | python3 -c '
+    import sys, json
+
+    def add_path(tree, path):
+        parts = path.strip().split("/")
+        for part in parts:
+            if not part: continue
+            tree = tree.setdefault(part, {})
+
+    tree = {}
+    for line in sys.stdin:
+        add_path(tree, line)
+
+    print(json.dumps(tree, indent=4))
+    '
+}
+
+json_to_tree () {
+    jq -r '
+      def draw_tree(prefix):
+        to_entries | . as $entries |
+        range(length) | . as $i |
+        $entries[$i] |
+        (.key) as $name |
+        ($i == ($entries | length - 1)) as $is_last |
+
+        # Determine the branch symbol
+        (if $is_last then "└── " else "├── " end) as $branch |
+
+        # Print the current line
+        (prefix + $branch + $name),
+
+        # If the value is a non-empty object, recurse
+        ($entries[$i].value | if type == "object" and length > 0
+          then draw_tree(prefix + (if $is_last then "    " else "│   " end))
+          else empty end);
+
+      draw_tree("")
+    '
+}
+
 tolower() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
 toupper() { printf '%s' "$1" | tr '[:lower:]' '[:upper:]'; }
 

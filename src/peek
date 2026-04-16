@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check if a file was provided
+if [ -z "$1" ]; then
+    echo "Usage: peek <filename>"
+    exit 1
+fi
+
+# Check if the file exists
+if [ ! -f "$1" ]; then
+    echo "Error: File '$1' not found."
+    exit 1
+fi
+
+FILE_TYPE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+case "$FILE_TYPE" in
+    *.tar.gz|*.tgz)      tar -ztvf "$1" ;;
+    *.tar.bz2|*.tbz2)    tar -jtvf "$1" ;;
+    *.tar.xz|*.txz)      tar -Jtvf "$1" ;;
+    *.tar)               tar -tvf "$1"  ;;
+    *.zip|*.jar|*.war)   unzip -l "$1"  ;;
+    *.rar)               unrar l "$1"   ;;
+    *.7z)                7z l "$1"      ;;
+    *.gz)                zcat "$1" | head -n 20 ;; # Shows first 20 lines of a raw gz
+    *.bz2)               bzcat "$1" | head -n 20 ;;
+    *)                   echo "Error: Unsupported file format." ;;
+esac
