@@ -1,32 +1,98 @@
 #!/bin/bash
 
-# Description: Show contents for any compressed file
+# Description: Show contents for any compressed file with optional tree view
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source $SCRIPT_DIR/tools/qol-preamble --colors --string-tools
 
-# Check if a file was provided
-if [ -z "$1" ]; then
-    echo "Usage: peek <filename>"
+# 1. Parse Options
+SHOW_TREE=false
+while getopts "t" opt; do
+    case $opt in
+        t) SHOW_TREE=true ;;
+        *) echo "Usage: peek [-t] <filename>"; exit 1 ;;
+    esac
+done
+shift $((OPTIND-1)) # Remove the flag from the arguments list
+
+# 2. Validation
+FILE="$1"
+if [ -z "$FILE" ]; then
+    echo "Usage: peek [-t] <filename>"
     exit 1
 fi
 
-# Check if the file exists
-if [ ! -f "$1" ]; then
-    echo "Error: File '$1' not found."
+if [ ! -f "$FILE" ]; then
+    echo "Error: File '$FILE' not found."
     exit 1
 fi
 
-FILE_TYPE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+FILE_TYPE=$(echo "$FILE" | tr '[:upper:]' '[:lower:]')
 
+# 3. Execution Logic
 case "$FILE_TYPE" in
-    *.tar.gz|*.tgz|*.tar.*) tar_to_json $1 | json_to_tree;;
-    *.tar.bz2|*.tbz2)       tar -jtvf "$1" ;;
-    *.tar.xz|*.txz)         tar -Jtvf "$1" ;;
-    *.tar)                  tar -tvf "$1"  ;;
-    *.zip|*.jar|*.war)      unzip_to_json $1 | json_to_tree;;
-    *.rar)                  unrar l "$1"   ;;
-    *.7z)                   7z l "$1"      ;;
-    *.gz)                   zcat "$1" | head -n 20 ;; # Shows first 20 lines of a raw gz
-    *.bz2)                  bzcat "$1" | head -n 20 ;;
-    *)                      echo "Error: Unsupported file format." ;;
+    *.tar.gz|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.z|*.taz|*.tar)
+        if [ "$SHOW_TREE" = true ]; then
+            tar_to_json "$FILE" | json_to_tree
+        else
+            # Default: Let tar auto-detect compression (works on most modern systems)
+            tar -tvf "$FILE"
+        fi
+        ;;
+
+    *.zip|*.jar|*.war)
+        if [ "$SHOW_TREE" = true ]; then
+            unzip_to_json "$FILE" | json_to_tree
+        else
+            unzip -l "$FILE"
+        fi
+        ;;
+
+    *.rar)
+        if [ "$SHOW_TREE" = true ]; then
+            # Extract paths manually since rar_to_json isn't standard
+            unrar lb "$FILE" | python3 -c '
+import sys, json
+def add_path(tree, path):
+    parts = path.strip().rstrip("/").split("/")
+    curr = tree
+    for part in parts:
+        if not part: continue
+        curr = curr.setdefault(part, {})
+root = {}
+for line in sys.stdin: add_path(root, line)
+print(json.dumps(root))' | json_to_tree
+        else
+            unrar l "$FILE"
+        fi
+        ;;
+
+    *.7z)
+        if [ "$SHOW_TREE" = true ]; then
+            # Clean 7z path extraction for tree view
+            7z l -ba -slt "$FILE" | grep "^Path = " | cut -c 8- | tail -n +2 | python3 -c '
+import sys, json
+def add_path(tree, path):
+    parts = path.strip().rstrip("/").split("/")
+    curr = tree
+    for part in parts:
+        if not part: continue
+        curr = curr.setdefault(part, {})
+root = {}
+for line in sys.stdin: add_path(root, line)
+print(json.dumps(root))' | json_to_tree
+        else
+            7z l "$FILE"
+        fi
+        ;;
+
+    *.gz)
+        zcat "$FILE" | head -n 20 ;;
+
+    *.bz2)
+        bzcat "$FILE" | head -n 20 ;;
+
+    *)
+        echo "Error: Unsupported file format."
+        exit 1
+        ;;
 esac
