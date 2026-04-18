@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Description: Show recipes from a JSON cookbook (see util/schema.json for details)
+# Description: Show recipes from a JSON cookbook grouped by category
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source $SCRIPT_DIR/tools/qol-preamble --jq-verify --fzf-verify --colors
 
@@ -14,16 +14,29 @@ fi
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FORMAT_JQ="$SCRIPTDIR/../util/format_recipe.jq"
+
+# 1. Select the Protein/Category folder first
+# We look for directories one level deep and get their base names
+category=$(find "$RECIPES_FOLDER" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | \
+    fzf --prompt="Select Category > " --height=40% --reverse)
+
+# Exit if no category was selected (ESC or Ctrl-C)
+[[ -z "$category" ]] && exit 0
+
+TARGET_DIR="$RECIPES_FOLDER/$category"
+
 # compute a rough preview width in columns (60% of terminal width)
 PREVIEW_WIDTH=$(tput cols 2>/dev/null || echo 80)
 PREVIEW_WIDTH=$(( PREVIEW_WIDTH * 85 / 100 ))
 
+# 2. Select the Recipe within that folder
 selection=$(
-    $QOL_SCRIPTS_PATH/bin/tools/find-files -f "$RECIPES_FOLDER" -e json | \
+    $QOL_SCRIPTS_PATH/bin/tools/find-files -f "$TARGET_DIR" -e json | \
     while IFS= read -r p; do
         n=${p##*/}; n=${n%.*}
         printf '%s\t%s\n' "$n" "$p"
     done | fzf --delimiter=$'\t' --with-nth=1 \
+        --prompt="$category > " \
         --preview 'jq -r -f '"$FORMAT_JQ"' {2} | fold -s -w '$PREVIEW_WIDTH'' \
         --preview-window=right:60%:wrap
 )
