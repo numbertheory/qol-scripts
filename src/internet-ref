@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+# Description: Reference lists for internet and programming standards
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+# Source preamble for dependency checking and color variables
+if [[ -f "$SCRIPT_DIR/tools/qol-preamble" ]]; then
+    source "$SCRIPT_DIR/tools/qol-preamble" --fzf-verify --colors
+elif [[ -f "$SCRIPT_DIR/../bin/tools/qol-preamble" ]]; then
+    source "$SCRIPT_DIR/../bin/tools/qol-preamble" --fzf-verify --colors
+elif [[ -n "$QOL_SCRIPTS_PATH" && -f "$QOL_SCRIPTS_PATH/bin/tools/qol-preamble" ]]; then
+    source "$QOL_SCRIPTS_PATH/bin/tools/qol-preamble" --fzf-verify --colors
+fi
+
+# Help flag
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: internet-ref"
+    echo ""
+    echo "Interactive reference lists for internet and programming standards."
+    echo "Select an article using arrow keys to print its contents to the terminal."
+    exit 0
+fi
+
+# Resolve resources directory (top level of repository)
+if [[ -n "$QOL_SCRIPTS_PATH" && -d "$QOL_SCRIPTS_PATH/resources" ]]; then
+    RESOURCES_DIR="$QOL_SCRIPTS_PATH/resources"
+elif [[ -d "$SCRIPT_DIR/../resources" ]]; then
+    RESOURCES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)/resources"
+elif [[ -d "$SCRIPT_DIR/resources" ]]; then
+    RESOURCES_DIR="$SCRIPT_DIR/resources"
+else
+    RESOURCES_DIR="${QOL_SCRIPTS_PATH:-$SCRIPT_DIR/..}/resources"
+fi
+
+if [[ ! -d "$RESOURCES_DIR" ]]; then
+    echo -e "${RED}Error:${RESET} Resources folder not found at ${RESOURCES_DIR}"
+    exit 1
+fi
+
+# Dynamically gather all article files in the resources directory
+articles=()
+while IFS= read -r -d '' file; do
+    articles+=("$file")
+done < <(find "$RESOURCES_DIR" -type f ! -name ".*" -print0 | sort -z)
+
+if [[ ${#articles[@]} -eq 0 ]]; then
+    echo -e "${YELLOW}No reference articles found in ${RESOURCES_DIR}.${RESET}"
+    exit 0
+fi
+
+# Build menu entries: Topic Title <TAB> Relative Filename <TAB> Full Path
+# Allows searching by both title and filename while displaying only the clean title
+selection=$(
+    for file in "${articles[@]}"; do
+        relpath="${file#$RESOURCES_DIR/}"
+        # Extract title from first markdown header if available
+        topic=$(grep -m 1 -E '^#[[:space:]]+' "$file" 2>/dev/null | sed -E 's/^#[[:space:]]+//')
+        if [[ -z "$topic" ]]; then
+            base=$(basename "$file")
+            topic="${base%.*}"
+            topic="${topic//[-_]/ }"
+        fi
+        printf '%s\t%s\t%s\n' "$topic" "$relpath" "$file"
+    done | fzf --ansi \
+        --delimiter=$'\t' \
+        --with-nth=1 \
+        --height=20% \
+        --reverse \
+        --no-border \
+        --no-input
+)
+
+# Exit cleanly if canceled
+[[ -z "$selection" ]] && exit 0
+
+# Extract file path from the third tab-delimited column
+file_path=$(printf '%s' "$selection" | cut -f3-)
+
+if [[ -n "$file_path" && -f "$file_path" ]]; then
+    cat "$file_path"
+fi
