@@ -1,7 +1,34 @@
 #!/usr/bin/env bash
 
 # Description: Reference lists for internet and programming standards
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+# Resolve real script location through symlinks
+SOURCE="${BASH_SOURCE[0]}"
+while [[ -h "$SOURCE" ]]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+
+# Ensure QOL_SCRIPTS_PATH is set even when launched outside interactive shell
+if [[ -z "$QOL_SCRIPTS_PATH" ]]; then
+    if [[ -d "$SCRIPT_DIR/.." && -d "$SCRIPT_DIR/../resources" ]]; then
+        export QOL_SCRIPTS_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
+    elif [[ -d "$HOME/.local/qol-scripts" ]]; then
+        export QOL_SCRIPTS_PATH="$HOME/.local/qol-scripts"
+    fi
+fi
+
+# GUI flag: trigger the Quickshell overlay
+if [[ "$1" == "--gui" ]]; then
+    if command -v omarchy-shell >/dev/null 2>&1; then
+        exec omarchy-shell shell toggle internet-ref
+    else
+        echo "omarchy-shell not found" >&2
+        exit 1
+    fi
+fi
 
 # Source preamble for dependency checking and color variables
 if [[ -f "$SCRIPT_DIR/tools/qol-preamble" ]]; then
@@ -14,10 +41,17 @@ fi
 
 # Help flag
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "Usage: internet-ref"
+    echo "Usage: internet-ref [options] [article]"
     echo ""
     echo "Interactive reference lists for internet and programming standards."
-    echo "Select an article using arrow keys to print its contents to the terminal."
+    echo ""
+    echo "Options:"
+    echo "  --list-json       List available reference articles in JSON format"
+    echo "  --gui             Open the interactive Quickshell overlay (Super+R)"
+    echo "  -h, --help        Show this help message"
+    echo ""
+    echo "If [article] is provided (name, path, or partial match), its contents are printed."
+    echo "If no arguments are given in a terminal, interactive fzf selection is used."
     exit 0
 fi
 
@@ -33,7 +67,7 @@ else
 fi
 
 if [[ ! -d "$RESOURCES_DIR" ]]; then
-    echo -e "${RED}Error:${RESET} Resources folder not found at ${RESOURCES_DIR}"
+    echo -e "${RED}Error:${RESET} Resources folder not found at ${RESOURCES_DIR}" >&2
     exit 1
 fi
 
@@ -44,8 +78,54 @@ while IFS= read -r -d '' file; do
 done < <(find "$RESOURCES_DIR" -type f ! -name ".*" -print0 | sort -z)
 
 if [[ ${#articles[@]} -eq 0 ]]; then
+    if [[ "$1" == "--list-json" ]]; then
+        echo "[]"
+        exit 0
+    fi
     echo -e "${YELLOW}No reference articles found in ${RESOURCES_DIR}.${RESET}"
     exit 0
+fi
+
+# Output JSON list of articles if requested
+if [[ "$1" == "--list-json" ]]; then
+    items=()
+    for file in "${articles[@]}"; do
+        relpath="${file#$RESOURCES_DIR/}"
+        topic=$(grep -m 1 -E '^#[[:space:]]+' "$file" 2>/dev/null | sed -E 's/^#[[:space:]]+//')
+        if [[ -z "$topic" ]]; then
+            base=$(basename "$file")
+            topic="${base%.*}"
+            topic="${topic//[-_]/ }"
+        fi
+        items+=("$(jq -nc --arg title "$topic" --arg rel "$relpath" --arg path "$file" '{title: $title, filename: $rel, path: $path}')")
+    done
+    printf '[%s]\n' "$(IFS=,; echo "${items[*]}")"
+    exit 0
+fi
+
+# Direct article print: if an argument is passed (and not --fzf)
+if [[ $# -gt 0 && "$1" != "--fzf" ]]; then
+    target="$1"
+    if [[ -f "$target" ]]; then
+        cat "$target"
+        exit 0
+    elif [[ -f "$RESOURCES_DIR/$target" ]]; then
+        cat "$RESOURCES_DIR/$target"
+        exit 0
+    elif [[ -f "$RESOURCES_DIR/$target.md" ]]; then
+        cat "$RESOURCES_DIR/$target.md"
+        exit 0
+    else
+        # Try finding a matching file in RESOURCES_DIR
+        match=$(find "$RESOURCES_DIR" -type f \( -iname "*$target*" -o -iname "*$target*.md" \) ! -name ".*" | head -n 1)
+        if [[ -n "$match" && -f "$match" ]]; then
+            cat "$match"
+            exit 0
+        else
+            echo "Article not found: $target" >&2
+            exit 1
+        fi
+    fi
 fi
 
 # Build menu entries: Topic Title <TAB> Relative Filename <TAB> Full Path
