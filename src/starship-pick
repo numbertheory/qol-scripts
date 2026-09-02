@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+
+# Description: Select and apply a Starship prompt theme using fzf
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+if [[ -f "$SCRIPT_DIR/tools/qol-preamble" ]]; then
+    source "$SCRIPT_DIR/tools/qol-preamble" --colors --fzf-verify
+elif [[ -n "$QOL_SCRIPTS_PATH" && -f "$QOL_SCRIPTS_PATH/bin/tools/qol-preamble" ]]; then
+    source "$QOL_SCRIPTS_PATH/bin/tools/qol-preamble" --colors --fzf-verify
+elif [[ -f "$SCRIPT_DIR/../bin/tools/qol-preamble" ]]; then
+    source "$SCRIPT_DIR/../bin/tools/qol-preamble" --colors --fzf-verify
+fi
+
+# Fallback color defaults if preamble was not loaded
+RESET="${RESET:-\033[0m}"
+BOLD="${BOLD:-\033[1m}"
+DIM="${DIM:-\033[2m}"
+GREEN="${GREEN:-\033[38;5;2m}"
+CYAN="${CYAN:-\033[38;5;6m}"
+YELLOW="${YELLOW:-\033[38;5;3m}"
+RED="${RED:-\033[38;5;1m}"
+BLUE="${BLUE:-\033[38;5;4m}"
+
+THEMES_DIR="${STARSHIP_THEMES_PATH:-$HOME/dev/starship-themes}"
+LIST_ONLY=false
+TARGET_THEME_ARG=""
+
+print_usage() {
+    echo -e "${BOLD}Usage:${RESET} starship-pick [options] [theme-name]"
+    echo
+    echo -e "${BOLD}Options:${RESET}"
+    echo -e "  -d, --dir <path>   Specify the starship themes directory (default: ~/dev/starship-themes)"
+    echo -e "  -l, --list         List all available themes without launching interactive selector"
+    echo -e "  -h, --help         Show this help message"
+    echo
+    echo -e "${BOLD}Description:${RESET}"
+    echo -e "  Interactively selects a Starship theme from ~/dev/starship-themes using fzf"
+    echo -e "  and sets it as the default theme by copying it to ~/dev/starship-themes/custom/starship.toml."
+    echo -e "  The target custom/starship.toml file is excluded from selection."
+}
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -d|--dir)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                THEMES_DIR="$2"
+                shift 2
+            else
+                echo -e "${RED}Error:${RESET} Argument for $1 is missing." >&2
+                exit 1
+            fi
+            ;;
+        -l|--list)
+            LIST_ONLY=true
+            shift
+            ;;
+        -h|--help)
+            print_usage
+            exit 0
+            ;;
+        -*)
+            echo -e "${RED}Unknown option:${RESET} $1" >&2
+            print_usage
+            exit 1
+            ;;
+        *)
+            TARGET_THEME_ARG="$1"
+            shift
+            ;;
+    esac
+done
+
+# Validate themes directory
+if [[ ! -d "$THEMES_DIR" ]]; then
+    echo -e "${RED}Error:${RESET} Themes directory not found: ${BOLD}$THEMES_DIR${RESET}" >&2
+    echo -e "Please ensure the directory exists or specify it via ${CYAN}--dir <path>${RESET} or ${CYAN}STARSHIP_THEMES_PATH${RESET}." >&2
+    exit 1
+fi
+
+# Ensure custom directory exists
+CUSTOM_DIR="$THEMES_DIR/custom"
+mkdir -p "$CUSTOM_DIR"
+
+TARGET_FILE="$CUSTOM_DIR/starship.toml"
+
+# Helper to find themes (relative to THEMES_DIR), excluding .git and custom/starship.toml
+get_themes() {
+    (
+        cd "$THEMES_DIR" || exit 1
+        find . -type f -name "*.toml" ! -path "./.git/*" ! -path "./custom/starship.toml" | \
+            sed 's|^\./||' | \
+            sort
+    )
+}
+
+THEME_LIST=$(get_themes)
+
+if [[ -z "$THEME_LIST" ]]; then
+    echo -e "${YELLOW}Warning:${RESET} No Starship theme (.toml) files found in ${BOLD}$THEMES_DIR${RESET}." >&2
+    exit 1
+fi
+
+if [[ "$LIST_ONLY" == "true" ]]; then
+    echo -e "${BLUE}===== Available Starship Themes =====${RESET}"
+    while IFS= read -r theme; do
+        echo -e "  ${CYAN}•${RESET} $theme"
+    done <<< "$THEME_LIST"
+    exit 0
+fi
+
+SELECTED_THEME=""
+
+# If theme name was passed as argument, resolve it
+if [[ -n "$TARGET_THEME_ARG" ]]; then
+    # Exact relative match
+    if echo "$THEME_LIST" | grep -Fxq "$TARGET_THEME_ARG"; then
+        SELECTED_THEME="$TARGET_THEME_ARG"
+    # Match with .toml extension
+    elif echo "$THEME_LIST" | grep -Fxq "${TARGET_THEME_ARG}.toml"; then
+        SELECTED_THEME="${TARGET_THEME_ARG}.toml"
+    # Match starship_<name>.toml
+    elif echo "$THEME_LIST" | grep -Fxq "starship_${TARGET_THEME_ARG}.toml"; then
+        SELECTED_THEME="starship_${TARGET_THEME_ARG}.toml"
+    # Case-insensitive substring search
+    else
+        MATCHES=$(echo "$THEME_LIST" | grep -i "$TARGET_THEME_ARG")
+        MATCH_COUNT=$(echo "$MATCHES" | grep -c . || true)
+        if [[ $MATCH_COUNT -eq 1 ]]; then
+            SELECTED_THEME="$MATCHES"
+        elif [[ $MATCH_COUNT -gt 1 ]]; then
+            echo -e "${YELLOW}Multiple themes matched '$TARGET_THEME_ARG':${RESET}"
+            echo "$MATCHES"
+            echo -e "Please specify a more specific name."
+            exit 1
+        else
+            echo -e "${RED}Error:${RESET} No theme found matching '${TARGET_THEME_ARG}'." >&2
+            exit 1
+        fi
+    fi
+else
+    # Launch interactive fzf
+    SELECTED_THEME=$(echo "$THEME_LIST" | fzf \
+        --ansi \
+        --layout=reverse \
+        --border=rounded \
+        --prompt="🚀 Starship Theme > " \
+        --header="Select a Starship theme to set as default (Enter: Apply, Esc: Cancel)" \
+        --preview="if command -v bat >/dev/null 2>&1; then bat --style=numbers --color=always '$THEMES_DIR/{}'; else cat '$THEMES_DIR/{}'; fi" \
+        --preview-window=right:60%:wrap)
+fi
+
+# If user cancelled selection
+if [[ -z "$SELECTED_THEME" ]]; then
+    echo -e "${DIM}Selection cancelled.${RESET}"
+    exit 0
+fi
+
+SOURCE_FILE="$THEMES_DIR/$SELECTED_THEME"
+
+if [[ ! -f "$SOURCE_FILE" ]]; then
+    echo -e "${RED}Error:${RESET} Selected file does not exist: $SOURCE_FILE" >&2
+    exit 1
+fi
+
+# Copy the selected theme to custom/starship.toml
+cp -f "$SOURCE_FILE" "$TARGET_FILE"
+CP_STATUS=$?
+
+if [[ $CP_STATUS -eq 0 ]]; then
+    echo -e "${GREEN}✓ Starship theme successfully updated!${RESET}"
+    echo -e "  ${BOLD}Theme applied:${RESET} ${CYAN}$SELECTED_THEME${RESET}"
+    echo -e "  ${BOLD}Destination:${RESET}   ${DIM}$TARGET_FILE${RESET}"
+
+    # Verify if STARSHIP_CONFIG is pointing to the target file
+    if [[ -n "$STARSHIP_CONFIG" && "$STARSHIP_CONFIG" != "$TARGET_FILE" ]]; then
+        echo
+        echo -e "${YELLOW}Notice:${RESET} Your current environment has ${CYAN}STARSHIP_CONFIG=\"$STARSHIP_CONFIG\"${RESET}."
+        echo -e "To ensure Starship always uses the default theme, set in your ~/.bashrc:"
+        echo -e "  ${BOLD}export STARSHIP_CONFIG=\"$TARGET_FILE\"${RESET}"
+    fi
+else
+    echo -e "${RED}Error:${RESET} Failed to copy theme to $TARGET_FILE" >&2
+    exit 1
+fi
