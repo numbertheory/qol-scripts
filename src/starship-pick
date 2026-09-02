@@ -141,12 +141,11 @@ else
     # Launch interactive fzf
     SELECTED_THEME=$(echo "$THEME_LIST" | fzf \
         --ansi \
+        --height=~50% \
         --layout=reverse \
         --border=rounded \
-        --prompt="🚀 Starship Theme > " \
-        --header="Select a Starship theme to set as default (Enter: Apply, Esc: Cancel)" \
-        --preview="if command -v bat >/dev/null 2>&1; then bat --style=numbers --color=always '$THEMES_DIR/{}'; else cat '$THEMES_DIR/{}'; fi" \
-        --preview-window=right:60%:wrap)
+        --no-input \
+        --header="Select a Starship theme to set as default (Enter: Apply, Esc: Cancel)")
 fi
 
 # If user cancelled selection
