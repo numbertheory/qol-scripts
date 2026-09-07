@@ -156,9 +156,14 @@ Cached images are stored in `$QOL_SCRIPTS_PATH/cache/emoji/`.
 - Ensure you are running inside a Kitty terminal window.
 - Generate pre-cached images by running `emoji-picker --cache`.
 
-### Emoji does not copy to clipboard on Linux
-- Ensure `xclip` or `xsel` is installed:
-  ```bash
-  sudo pacman -S xclip   # Arch Linux / CachyOS
-  sudo apt install xclip  # Debian / Ubuntu
-  ```
+### Tools required for copying directly to the clipboard from the terminal 
+- macOS: The native `pbcopy` tool is used to copy the emoji to the clipboard. Unless you've significantly modified your macOS set up, this should work with no additional installation required.
+
+- Linux: For Linux, there are different tools, depending on your compositor (X11 vs. Wayland):
+    - Wayland: `wl-copy` is used, no flags are needed.
+    - X11: Install either `xsel` or `xclip`
+        - xclip is tested for first and if found is used with these flags:
+             `xclip -selection clipboard <emoji-text>`
+        - If xclip is not found, xsel is used with these flags:
+             `xsel --clipboard --input`
+             
